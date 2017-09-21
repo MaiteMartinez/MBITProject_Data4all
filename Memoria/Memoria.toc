@@ -1,0 +1,32 @@
+\contentsline {chapter}{Resumen ejecutivo}{3}{chapter*.2}
+\contentsline {chapter}{Executive summary}{5}{chapter*.3}
+\contentsline {chapter}{\numberline {1}Planteamiento del proyecto}{7}{chapter.4}
+\contentsline {section}{\numberline {1.1}Descripci\'on}{7}{section.5}
+\contentsline {section}{\numberline {1.2}Contexto de negocio}{9}{section.13}
+\contentsline {section}{\numberline {1.3}Objetivos}{9}{section.14}
+\contentsline {section}{\numberline {1.4}Hip\'otesis y limitaciones}{9}{section.15}
+\contentsline {subsection}{\numberline {1.4.1}La Ley Orgánica 15/1999, de 13 de diciembre, de Protección de Datos de Carácter Personal}{9}{subsection.16}
+\contentsline {chapter}{\numberline {2}Planificación del proyecto}{11}{chapter.17}
+\contentsline {section}{\numberline {2.1}Equipo}{11}{section.18}
+\contentsline {section}{\numberline {2.2}Desarrollo temporal}{11}{section.19}
+\contentsline {chapter}{\numberline {3}Infraestructura}{13}{chapter.20}
+\contentsline {section}{\numberline {3.1}Repositorio GIT}{13}{section.21}
+\contentsline {section}{\numberline {3.2}Infraestructura para la obtención de datos}{13}{section.22}
+\contentsline {section}{\numberline {3.3}Desarrollo en la nube}{13}{section.23}
+\contentsline {chapter}{\numberline {4}Tratamiento inicial de los datos}{15}{chapter.24}
+\contentsline {section}{\numberline {4.1}Descripci\'on de los datos}{15}{section.25}
+\contentsline {section}{\numberline {4.2}Obtenci\'on de los datos}{15}{section.26}
+\contentsline {section}{\numberline {4.3}Almacenamiento}{15}{section.27}
+\contentsline {section}{\numberline {4.4}Limpieza de los datos}{15}{section.28}
+\contentsline {chapter}{\numberline {5}Preparaci\'on de los datos}{17}{chapter.29}
+\contentsline {section}{\numberline {5.1}Extracci\'on de la informaci\'on relevante}{17}{section.30}
+\contentsline {section}{\numberline {5.2}Almacenamiento}{17}{section.31}
+\contentsline {chapter}{\numberline {6}Modelado de los datos}{19}{chapter.32}
+\contentsline {section}{\numberline {6.1}Principales hip\'otesis}{19}{section.33}
+\contentsline {section}{\numberline {6.2}Algoritmos}{19}{section.34}
+\contentsline {section}{\numberline {6.3}Almacenamiento}{19}{section.35}
+\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{21}{chapter.36}
+\contentsline {section}{\numberline {7.1}Herramientas}{21}{section.37}
+\contentsline {section}{\numberline {7.2}Acceso web}{21}{section.38}
+\contentsline {chapter}{\numberline {8}\'Areas de mejora}{23}{chapter.39}
+\contentsline {chapter}{Bibliograf\'\i a}{25}{chapter*.40}
