@@ -7,22 +7,26 @@
 \usepackage{enumitem}
 \usepackage{wallpaper}
 \usepackage{sectsty}
+\usepackage[utf8]{inputenc} %para los acentos
 
+%%%%%% Fuente por defecto %%%%%%%%%%
 \renewcommand{\familydefault}{\sfdefault}
 
-
+%%%%%% Figuras especiales %%%%%%%%%%
 \newcommand\myfigure[1]{%
-\medskip\noindent\begin{minipage}{\linewidth}%{0.9\columnwidth}
+\bigskip\noindent\begin{minipage}{\linewidth}%{0.9\columnwidth}
 \centering%
 #1%
 %figure,caption, and label go here
 \end{minipage}\medskip}
 
-
-
+%%%%%% Nombres %%%%%%%%%%
 \renewcommand{\contentsname}{Contenidos}
 \renewcommand{\chaptername}{Cap\'\i tulo}
 \renewcommand{\bibname}{Bibliograf\'\i a}
+\renewcommand{\figurename}{Figura}
+
+%%%%%% Página en blanco %%%%%%%%%%
 
 \def\blankpage{%
       \clearpage%
@@ -44,11 +48,19 @@
 \sectionfont{\color{oblue}}
 \subsectionfont{\color{ogreen1}}
 \subsubsectionfont{\color{ogreen2}}
-\hypersetup{colorlinks, linkcolor=black, citecolor=oblue, urlcolor=oblue}
-
-\graphicspath{{../pdf/}{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Memoria/graphs/}}
 
 
+%%%%%% Referencias con color %%%%%%%%%%
+\hypersetup{colorlinks=true,
+			linkcolor = oblue,
+            urlcolor  = oblue,
+            citecolor = oblue,
+            anchorcolor = oblue}
+
+%%%%%% Gráficos %%%%%%%%%%			
+\graphicspath{{../pdf/}{C:/DATOS/MBIT/Memoria/graphs/}}
+
+%%%%%% Headers and footers %%%%%%%%%%
 \pagestyle{fancy}
 \renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
 \fancyhf{}
@@ -57,14 +69,11 @@
 
 \newcommand\PageBoxODD{
 	\setlength{\fboxrule}{0cm}
-	\fcolorbox{oyellow}{oyellow}{\begin{minipage}[t][0.75cm][c]{\textwidth}
-	\quad{\bf OCTOPUS} DATA INSIGHTS \hfill \thepage\quad$ $\end{minipage}}}
+	\fcolorbox{oyellow}{oyellow}{\begin{minipage}[t][0.75cm][c]{\textwidth}{\qquad\bf OCTOPUS} DATA INSIGHTS \hfill \thepage\qquad$ $\end{minipage}}}
 	
 \newcommand\PageBoxEVEN{
 	\setlength{\fboxrule}{0cm}
-	\fcolorbox{oyellow}{oyellow}{\begin{minipage}[t][0.75cm][c]{\textwidth}
-											{\quad\thepage\hfill\bf OCTOPUS} DATA INSIGHTS\quad$ $
-										\end{minipage}}}
+	\fcolorbox{oyellow}{oyellow}{\begin{minipage}[t][0.75cm][c]{\textwidth}{\qquad\thepage\hfill\bf OCTOPUS} DATA INSIGHTS\qquad$ $\end{minipage}}}
 
 \fancyfoot[CE]{\PageBoxEVEN}
 \fancyfoot[CO]{\PageBoxODD}
@@ -80,6 +89,11 @@
   \fancyfoot[CO]{\PageBoxODD}
 }
 
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{document}
 
 %Title  page
@@ -94,6 +108,10 @@
 \pgfputat{\pgfxy(0,5)}{\pgfbox[left,center]{\Huge\textbf{AN\'ALISIS DE REDES SOCIALES}}}
 \pgfputat{\pgfxy(0,4)}{\pgfbox[left,center]{\Huge\textbf{PARA RECURSOS HUMANOS}}}
 \pgfputat{\pgfxy(0,2)}{\pgfbox[left,center]{\textbf{Fabio Inui\qquad Teresa Mart\'\i nez \qquad Javier Quintana \qquad Silvia Santos }}}
+
+% PARA VERSIONES PRELIMINARES
+\pgfputat{\pgfxy(0,1)}{\pgfbox[left,center]{\textbf{Versión preliminar \today}}}
+
 \end{pgfpicture}
 \end {titlepage}
 
@@ -156,7 +174,7 @@ particulares y experiencias previas consignadas en el CV), y verificar el inter\
 con respecto a la oferta.
 \item {\bf Informe}: tras la entrevista inicial, se seleccionan los mejores candidatos para el puesto, y se realiza un informe
 donde se consignan los datos originales (el CV, por ejemplo) y los datos a\~nadidos en el curso de la entrevista inicial.
-\item Presentaci\'on de candidatos: el empleador recibe el informe elaborado en el punto anterior, y selecciona aquellos
+\item {\bf Presentaci\'on de candidatos}: el empleador recibe el informe elaborado en el punto anterior, y selecciona aquellos
 que mejor se ajusten a sus necesidades, muy habitualmente realizando nuevas entrevistas con ellos.
 \item {\bf Decisi\'on}: es el momento en que se elige el candidato al que se se le va a ofrecer el puesto, etapa en la 
 que puede complementarse la informaci\'on recogida hasta el momento con referencias recabadas de anteriores empleadores.
@@ -179,13 +197,32 @@ y redes sociales en general (LinkedIn, Twitter, Facebook, Instagram, etc.). Desd
 primeras contienen mucha informaci\'on sobre las aptitudes de los posibles candidatos, sus conocimientos, formaci\'on y 
 experiencia, ya que son portales donde los propios usuarios consignan sus curricula vitae, y tambi\'en sobre su situaci\'on laboral
 actual y expectativas. En el segundo grupo de fuentes, las redes sociales, hay algunas que tienen el car\'acter espec\'\i fico 
-de las primeras (LinkedIn es el ejemplo m\'as claro), y hay otras en las que se consigna informaci\'on diversa, tal vez en 
-mayor medida personal que profesional.
+de las primeras (LinkedIn es el ejemplo m\'as claro), y hay otras en las que se consigna informaci\'on diversa, llam\'emoslas de 
+prop\'osito general, tal vez en mayor medida personal que profesional.
 
 El objetivo de nuestro proyecto es complementar el 
 trabajo habitual de un departamento de Recursos Humanos o de un seleccionador de personal en
 los portales y redes sociales dedicados al mundo laboral, con informaci\'on laboral extra\'\i da 
-de fuentes menos est\'andar. 
+de fuentes menos est\'andar, como son las redes sociales de prop\'osito general. 
+Estas redes son a menudo aprovechadas por los usuarios para difundir mensajes relacionados con su actividad
+laboral, y una descripción de su actividad en las redes es relevante desde el punto de vista 
+de un reclutador, en la medida que da informaci\'on del compromiso de la persona con su actividad, su valoración por
+parte de otros usuarios, su proactividad, etc.
+
+En este trabajo hemos elegido la red social Twitter por diversos motivos: es una de las redes más dinámicas,
+con millones de usuarios activos en todo el mundo, fácil de usar, rápida y divertida. 
+
+\myfigure{\includegraphics[width=0.6\textwidth]{twitter_uso_y_empresa}%
+\figcaption{Twitter: uso y datos de la empresa, \url{https://about.twitter.com/es/company}.}
+\label{fig:twitter_uso_y_empresa} }
+
+
+Esta red da cabida a relaciones diversas, entre usuarios de variada índole. Dado que muchos de los usuarios 
+twitean información relacionada con su ocupación laboral, es natural esperar que en Twitter 
+se formen comunidades de individuos que comparten interés en diferentes aspectos de dicho ámbito.
+Nuestro propósito es definir e implementar un proceso que permita agregar información referente a 
+esas comunidades extraer de Twitter aquellos tuits 
+cuyo contenido sea 
 
 Es decir, tras el proceso habitual de:
 
@@ -273,17 +310,39 @@ http://www.slideshare.net/mcjenkins/how-sentiment-analysis-works
 
 
 \section{Contexto de negocio}
+Lo que hay hecho y lo que no.
 \section{Objetivos}
+Lo que queremos conseguir, qué significa que lo hayamos conseguido.
 \section{Hip\'otesis y limitaciones}
+Aquí todo lo que asumamos al plantear el proyecto, y hasta dónde puede llegar. Límites del uso de la información
+de las redes sociales, límites del proceso en sí (ventana temporal, no detección de todos los candidatos, etc.).
 \subsection{La Ley Orgánica 15/1999, de 13 de diciembre, de Protección de Datos
 de Carácter Personal}
+Cómo nos afecta. Malamente.
 
 \chapter{Planificación del proyecto}
 \section{Equipo}
+El equipo de Octopus Data Insights está formado por cuatro personas, con perfiles multidisciplinares y complementarios:
+\begin{itemize}
+\item Fabio Inui: 
+\item Teresa Martínez: matemática, con diez años de experiencia en investigación y docencia a nivel universitario,
+ocho en construcción de modelos de valoración de derivados en empresa financiera de primer nivel, y cuatro de
+gestión de fondos en una de las principales gestoras españolas.
+\item Javier Quintana: 
+\item Silvia Santos: 
+\end{itemize}
 \section{Desarrollo temporal}
 
 \chapter{Infraestructura}
+En esta sección describiremos la infraestructura que hemos construido para el desarrollo del proyecto.
 \section{Repositorio GIT}
+El código del proyecto, así como las presentaciones y memoria de este proyecto, está almacenado en el 
+repositorio \url{https://github.com/MaiteMartinez/MBITProject_Data4all}
+
+\myfigure{\includegraphics[width=0.6\textwidth]{repositorio_git1}%
+\figcaption{Repositorio del código del proyecto.}
+\label{fig:repositorio_git1} }
+
 \section{Infraestructura para la obtención de datos}
 \section{Desarrollo en la nube}
 
@@ -315,7 +374,7 @@ C\'omo hemos hecho para bajarlos, par\'ametros de la b\'usqueda de twits.
 % \myfigure{\includegraphics[width=.9\columnwidth]{Master_bond_avg_spr_table}%
 % \figcaption{Master Bond: ``mid-market" g-spreads by rating.}
 % \label{fig:Master_bond_avg_spr_table} }
-Octopus. Twitter for HHRR
+
 
 
 \input{bibliography}
