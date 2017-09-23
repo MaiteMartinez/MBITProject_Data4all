@@ -12,6 +12,7 @@
 %%%%%% Fuente por defecto %%%%%%%%%%
 \renewcommand{\familydefault}{\sfdefault}
 
+
 %%%%%% Figuras especiales %%%%%%%%%%
 \newcommand\myfigure[1]{%
 \bigskip\noindent\begin{minipage}{\linewidth}%{0.9\columnwidth}
@@ -58,7 +59,8 @@
             anchorcolor = oblue}
 
 %%%%%% Gráficos %%%%%%%%%%			
-\graphicspath{{../pdf/}{C:/DATOS/MBIT/Memoria/graphs/}}
+% \graphicspath{{../pdf/}{C:/DATOS/MBIT/Memoria/graphs/}}
+\graphicspath{{../pdf/}{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Memoria/graphs/}}
 
 %%%%%% Headers and footers %%%%%%%%%%
 \pagestyle{fancy}
@@ -381,6 +383,24 @@ C\'omo hemos hecho para bajarlos, par\'ametros de la b\'usqueda de twits.
 
 
 \newpage
+
+%%%%% añade una pagina en blanco si el numero final de la pagina es impar
+
+\cleardoublepage
+
+%%%%%%%%%%%%%%las dos paginas finales, tipeset with latex y contraportada
+
+\clearpage%
+\thispagestyle{empty}%
+\vspace*{\fill}
+\begin{center}
+    \sf This document was typeset by \LaTeX.
+\end{center}
+\vspace*{\fill}
+\addtocounter{page}{-1}%
+\null%
+\clearpage
+
 \pagestyle{empty}
 % Picture with pgf
 \begin{pgfpicture}{0cm}{0cm}{\textwidth}{\textheight}
