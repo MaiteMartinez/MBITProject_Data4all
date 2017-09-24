@@ -23,10 +23,10 @@ if __name__ == '__main__':
 	# The access tokens can be found on your applications's Details
 	# page located at https://dev.twitter.com/apps (located
 	# under "Your access token")
-	consumer_key= " "
-	consumer_secret= " "
-	access_token=" "
-	access_token_secret=" "
+	consumer_key= "XoZ54xxhuB4ec7BPDJj2ptot2"
+	consumer_secret= "wd2iBsAiBnxLslDZMiAaSWBnbA62e8sXnjey5Q3DCm4XX3RI3J"
+	access_token="906950076123185152-4NoTPkFaDBTB5GiipLLbWJ42SWRLzEJ"
+	access_token_secret="dqD1Tw9r0PBwaI2tkfwSvsqImTyBiKEBoTW5I7XtWcQik"
 	# If the authentication was successful, you should
 	# see the name of the account print out
 	api = getTwitterApi(consumer_key,consumer_secret,access_token, access_token_secret)
