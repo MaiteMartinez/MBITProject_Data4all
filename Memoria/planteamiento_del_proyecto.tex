@@ -1,3 +1,4 @@
+
 \chapter{Planteamiento del proyecto}
 
 En este cap\'\i tulo vamos a describir las ideas y contexto en el que vamos a desarrollar el contenido del proyecto.
@@ -52,21 +53,32 @@ laboral, y una descripción de su actividad en las redes es relevante desde el p
 de un reclutador, en la medida que da informaci\'on del compromiso de la persona con su actividad, su valoración por
 parte de otros usuarios, su proactividad, etc.
 
-En este trabajo hemos elegido la red social Twitter por diversos motivos: es una de las redes más dinámicas,
-con millones de usuarios activos en todo el mundo, fácil de usar, rápida y divertida. 
+En este trabajo hemos elegido la red social Twitter por diversos motivos: es una red muy dinámica, fácil de usar, rápida y divertida,
+que involucra cientos de millones de usuarios activos en todo el mundo: 328 millones según la web de la red. El crecimiento del número 
+de usuarios fue casi exponencial entre 2010 y 2014, si bien últimamente la velocidad a la que adquiere nuevos usuarios ha perido intensidad.
+Es también una red que, desde sus orígenes, ha puesto a disposición de los interesados los mecanismos necesarios para acceder a 
+la información que atesora, con ciertas limitaciones, pero de forma relativamente sencilla. 
 
-\myfigure{\includegraphics[width=0.6\textwidth]{twitter_uso_y_empresa}%
-\figcaption{Twitter: uso y datos de la empresa, \url{https://about.twitter.com/es/company}.}
-\label{fig:twitter_uso_y_empresa} }
+
+
+\myfigure{
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{usuarios_de_twitter}
+&\includegraphics[width=0.4\textwidth]{twitter_uso_y_empresa}
+\end{tabular}
+\figcaption{Twitter: evolución del número de usuarios (Statista 2017, 
+            \url{https://es.statista.com/grafico/10476/el-numero-de-usuarios-de-twitter-se-estanca })
+			y datos de la empresa, \url{https://about.twitter.com/es/company }.}
+\label{fig:Twitter_uso} }
 
 
 Esta red da cabida a relaciones diversas, entre usuarios de variada índole. Dado que muchos de los usuarios 
-''twitean" información relacionada con su ocupación laboral, es natural esperar que en Twitter 
+publican información relacionada con su ocupación laboral, es natural esperar que en Twitter 
 se formen comunidades de individuos que comparten interés en diferentes aspectos de dicho ámbito.
 Nuestro propósito es definir e implementar un proceso que permita agregar información referente a 
 esas comunidades a un determinado proceso de selección.
 
-Observemos las dos siguientes ofertas de trabajo publicadas recientemente (Septiembre 2017) en LinkedIn,
+Observemos las dos siguientes ofertas de trabajo aparecidas recientemente (Septiembre 2017) en LinkedIn,
 incluyendo los requisitos solicitados a los posibles candidatos:
 
 \myfigure{\begin{tabular}{cc}
@@ -84,21 +96,21 @@ incluyendo los requisitos solicitados a los posibles candidatos:
 \figcaption{Requisitos de las dos ofertas de empleo.}
 \label{fig:ofertas_requisitos} }
 
-En ambos casos, entre los requisitos del posible candidato se encuentran conocimientos sobre Python, R,
+En ambos casos, entre los requisitos se encuentran conocimientos sobre Python, R,
 SQL, machine learning y data mining. Un reclutador probablemente usará esas palabras clave para buscar
-posibles candidatos para algunos de los dos puestos, y construirá un conjunto de posibles candidatos (el
+los perfiles adecuados para alguno de los dos puestos, y construirá un conjunto de posibles candidatos (el
 primer paso en nuestra descripción del proceso de contratación). En esta fase, y gracias a Octopus Data Insights,
 nuestro reclutador contará con una ayuda extra. Octopus Data Insights le proporcionará una lista de usuarios
 de Twitter que hayan publicado contenido en el que aparezcan esas palabras clave, que complementarán
 el resultado que el reclutador haya obtenido por sus propios medios. La información proporcionada
 por Octopus Data Insights resultará relevante también más adelante en el proceso,
-cuando haya que tomar una decisión entre varios candidatos, para determinar cuáles son los más adecuados para el 
-puesto, ya que usando dicha información de Twitter, los usuarios de la lista estarán ordenados según 
+cuando haya que tomar una decisión entre varios candidatos para determinar cuáles son los más adecuados para el 
+puesto: usando la información de Twitter, los usuarios de la lista estarán ordenados según 
 diversos criterios de relevancia.
 
 El proceso para producir la información que ayudará al reclutador en el proceso es el siguiente:
 \begin{enumerate}
-\item Identificar los términos que determinan las habilidades que ha de poseer cualquier candidato
+\item Identificar los vocablos que determinan las habilidades que ha de poseer cualquier candidato
 para la oferta en cuestión y extraer de Twitter aquellos tuits con contenido relacionado con ellos.
 \item Dados esos tuits, construir un conjunto de usuarios, que entendemos como posibles candidatos 
 a la oferta.
@@ -109,12 +121,6 @@ número de tuits publicados sobre cada área).
 \item Estudiar la relación entre los usuarios de este conjunto, y determinar los más relevantes en sentido
 relativo (en términos de actividad en la red, cuáles son los más ``retuiteados", cuáles los más seguidos, etc.).
 \end{enumerate}
-
-
-
-
-
-
 
 
 
@@ -130,7 +136,7 @@ La hipótesis fundamental que estamos haciendo al iniciar este proceso, es que l
 acerca de un determinado tema (por ejemplo, publicar algo relacionado con Python), supone
 que el usuario en cuestión tiene conocimientos sobre dicho tema (en nuestro caso, entenderíamos que ese
 usuario posee conocimientos de Python). Esto es cuestionable, por supuesto, pero también ponderable
-si tenemos en cuenta que la actividad no sea esporádica. Si un usuario ``tuitea" sobre un tema
+si tenemos en cuenta que la actividad no sea esporádica. Si un usuario publica sobre un tema
 en numerosas ocasiones, la hipótesis de que ese tema no le resulta ajeno, va cobrando fuerza.
 
 Entre las limitaciones de las que adolece el proceso definido para llevar a cabo el proyecto, se encuentran las 
@@ -144,10 +150,46 @@ usuarios de Twitter, que no aparezcan en nuestros registros, por no presentar ac
 posible que los usuarios pierdad visibilidad en este proceso, 
 porque el contenido publicado por ellos no se encuentre entre el proporcionado por la red social durante el proceso
 de extracción de datos.
-
 \end{enumerate}
+
+
+Otra limitación del proceso es que la información que obtenemos de la red es a nivel de usuario de Twitter. 
+La dirección de correo o el nombre verdadero de la persona en cuestión, o cualquier dato que pudiera identificarla
+no está necesariamente disponible en la aplicación, salvo que el usuario lo haya querido hacer público explícitamente. 
+Esta información, y la forma en que se utilice, es clave para la usabilidad del resultado del proyecto, en dos aspectos principales:
+\begin{enumerate}
+\item para que el reclutador pueda hacer uso de la información, la persona ha de estar identificada, lo suficientemente
+como para abrir un canal de comunicación entre el reclutador y el posible candidato.
+\item desde el punto de vista de la comercialización del resultado del proyecto, el hecho de identificar usuarios en una red
+social y usar esa información con fines lucrativos, ha de ser implementado de forma muy cuidadosa. El impacto de la Ley 
+Orgánica de Protección de Datos de Carácter Personal (LOPD) es muy relevante en nuestro proyecto, y merece un apartado especial.
+Nos ocupamos de ello en la sección \ref{subsection:LOPD}.
+\end{enumerate}
+En relación al primer punto, evidentemente proporcionar un usuario de Twitter ya es abrir un canal de
+comunicación. Sin embargo, solo la información de las publicaciones del usuario no es suficiente para 
+incluirlo en un proceso de selección, incluso antes del primer contacto entre reclutador y candidato,
+y el primero probablemente  necesitará más información (por ejemplo un CV) para considerar al segundo. 
+Una forma de solventarlo sería cruzar la información de Twitter (el nombre de usuario)
+con la contenida en otros portales (como LinkedIn,  Facebook, Academia.edu, ResearchGate, Glassdoor, etc.),
+ya que a menudo el usuario de Twitter es parte de los datos consignados en los CV. Esta extensión
+del proyecto la hemos dejado deliberadamente fuera del planteamiento de este proyecto, aunque sería 
+{\em conditio sine qua non} para una implementación comercializable del proyecto.
+
+
+
+
 \subsection{La Ley Orgánica 15/1999, de 13 de diciembre, de Protección de Datos
 de Carácter Personal}
-Cómo nos afecta. Malamente.
+\label{subsection:LOPD}
 
 
+\myfigure{
+\includegraphics[width=0.4\textwidth]{LOPD1}
+\figcaption{Ayuda Ley de Protección de Datos
+           \url{https://ayudaleyprotecciondatos.es/2010/09/16/redes-sociales-empresas-y-proteccion-de-datos/ }}
+\label{fig:LOPD1} }
+
+
+
+Otra forma, sería implementar un sistema que 
+cuando un usuario de Twitter fuera a ser incluido en uno de los procesos 
