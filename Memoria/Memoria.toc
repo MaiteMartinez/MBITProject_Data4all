@@ -6,27 +6,27 @@
 \contentsline {section}{\numberline {1.3}Objetivos}{10}{section.21}
 \contentsline {section}{\numberline {1.4}Hip\'otesis y limitaciones}{10}{section.22}
 \contentsline {subsection}{\numberline {1.4.1}La Ley Org\IeC {\'a}nica 15/1999, de 13 de diciembre, de Protecci\IeC {\'o}n de Datos de Car\IeC {\'a}cter Personal}{12}{subsection.28}
-\contentsline {chapter}{\numberline {2}Planificaci\IeC {\'o}n del proyecto}{13}{chapter.30}
-\contentsline {section}{\numberline {2.1}Equipo}{13}{section.31}
-\contentsline {section}{\numberline {2.2}Desarrollo temporal}{13}{section.32}
-\contentsline {chapter}{\numberline {3}Infraestructura}{15}{chapter.33}
-\contentsline {section}{\numberline {3.1}Repositorio GIT}{15}{section.34}
-\contentsline {section}{\numberline {3.2}Infraestructura para la obtenci\IeC {\'o}n de datos}{15}{section.36}
-\contentsline {section}{\numberline {3.3}Desarrollo en la nube}{17}{section.39}
-\contentsline {chapter}{\numberline {4}Tratamiento inicial de los datos}{19}{chapter.40}
-\contentsline {section}{\numberline {4.1}Descripci\'on de los datos}{19}{section.41}
-\contentsline {section}{\numberline {4.2}Obtenci\'on de los datos}{19}{section.42}
-\contentsline {section}{\numberline {4.3}Almacenamiento}{19}{section.43}
-\contentsline {section}{\numberline {4.4}Limpieza de los datos}{19}{section.44}
-\contentsline {chapter}{\numberline {5}Preparaci\'on de los datos}{21}{chapter.45}
-\contentsline {section}{\numberline {5.1}Extracci\'on de la informaci\'on relevante}{21}{section.46}
-\contentsline {section}{\numberline {5.2}Almacenamiento}{21}{section.47}
-\contentsline {chapter}{\numberline {6}Modelado de los datos}{23}{chapter.48}
-\contentsline {section}{\numberline {6.1}Principales hip\'otesis}{23}{section.49}
-\contentsline {section}{\numberline {6.2}Algoritmos}{23}{section.50}
-\contentsline {section}{\numberline {6.3}Almacenamiento}{23}{section.51}
-\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{25}{chapter.52}
-\contentsline {section}{\numberline {7.1}Herramientas}{25}{section.53}
-\contentsline {section}{\numberline {7.2}Acceso web}{25}{section.54}
-\contentsline {chapter}{\numberline {8}\'Areas de mejora}{27}{chapter.55}
-\contentsline {chapter}{Bibliograf\'\i a}{29}{chapter*.56}
+\contentsline {chapter}{\numberline {2}Planificaci\IeC {\'o}n del proyecto}{17}{chapter.31}
+\contentsline {section}{\numberline {2.1}Equipo}{17}{section.32}
+\contentsline {section}{\numberline {2.2}Desarrollo temporal}{17}{section.33}
+\contentsline {chapter}{\numberline {3}Infraestructura}{19}{chapter.34}
+\contentsline {section}{\numberline {3.1}Repositorio GIT}{19}{section.35}
+\contentsline {section}{\numberline {3.2}Infraestructura para la obtenci\IeC {\'o}n de datos}{19}{section.37}
+\contentsline {section}{\numberline {3.3}Desarrollo en la nube}{21}{section.40}
+\contentsline {chapter}{\numberline {4}Tratamiento inicial de los datos}{23}{chapter.41}
+\contentsline {section}{\numberline {4.1}Descripci\'on de los datos}{23}{section.42}
+\contentsline {section}{\numberline {4.2}Obtenci\'on de los datos}{23}{section.43}
+\contentsline {section}{\numberline {4.3}Almacenamiento}{23}{section.44}
+\contentsline {section}{\numberline {4.4}Limpieza de los datos}{23}{section.45}
+\contentsline {chapter}{\numberline {5}Preparaci\'on de los datos}{25}{chapter.46}
+\contentsline {section}{\numberline {5.1}Extracci\'on de la informaci\'on relevante}{25}{section.47}
+\contentsline {section}{\numberline {5.2}Almacenamiento}{25}{section.48}
+\contentsline {chapter}{\numberline {6}Modelado de los datos}{27}{chapter.49}
+\contentsline {section}{\numberline {6.1}Principales hip\'otesis}{27}{section.50}
+\contentsline {section}{\numberline {6.2}Algoritmos}{27}{section.51}
+\contentsline {section}{\numberline {6.3}Almacenamiento}{27}{section.52}
+\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{29}{chapter.53}
+\contentsline {section}{\numberline {7.1}Herramientas}{29}{section.54}
+\contentsline {section}{\numberline {7.2}Acceso web}{29}{section.55}
+\contentsline {chapter}{\numberline {8}\'Areas de mejora}{31}{chapter.56}
+\contentsline {chapter}{Bibliograf\'\i a}{33}{chapter*.57}

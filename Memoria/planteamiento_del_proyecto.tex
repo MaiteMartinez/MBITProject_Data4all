@@ -160,7 +160,7 @@ Esta información, y la forma en que se utilice, es clave para la usabilidad del
 \begin{enumerate}
 \item para que el reclutador pueda hacer uso de la información, la persona ha de estar identificada, lo suficientemente
 como para abrir un canal de comunicación entre el reclutador y el posible candidato.
-\item desde el punto de vista de la comercialización del resultado del proyecto, el hecho de identificar usuarios en una red
+\item Desde el punto de vista de la comercialización del resultado del proyecto, el hecho de identificar usuarios en una red
 social y usar esa información con fines lucrativos, ha de ser implementado de forma muy cuidadosa. El impacto de la Ley 
 Orgánica de Protección de Datos de Carácter Personal (LOPD) es muy relevante en nuestro proyecto, y merece un apartado especial.
 Nos ocupamos de ello en la sección \ref{subsection:LOPD}.
@@ -182,14 +182,163 @@ del proyecto la hemos dejado deliberadamente fuera del planteamiento de este pro
 de Carácter Personal}
 \label{subsection:LOPD}
 
+La Agencia Española de Protección de Datos, AEDP, define un dato de carácter personal del siguiente modo:
 
 \myfigure{
-\includegraphics[width=0.4\textwidth]{LOPD1}
-\figcaption{Ayuda Ley de Protección de Datos
+\includegraphics[width=0.6\textwidth]{dato_personal}
+\figcaption{AEDP preguntas frecuentes,
+           \url{https://sedeagpd.gob.es/sede-electronica-web/vistas/infoSede/detallePreguntaFAQ.jsf;jsessionid=147951A8A98D206E87F2655B9E96E7EB?idPregunta=FAQ%2F00025%
+		   }} 
+\label{fig:dato_personal} }
+
+El perfil en Twitter de un usuario se puede considerar por tanto un dato de carácter personal, en tanto en cuanto
+permitiría localizar e identificar al usuario, tal vez a través de cruces de la información en Twitter con
+información adicional (por ejemplo, lo que comentábamos a propósito de encontrar el CV del usuario usando que
+frecuentemente, el usuario de Twitter es parte de la información contenida en el mismo, y el CV está disponible en otros 
+portales). Sin embargo, en la política de privacidad de Twitter (\url{https://twitter.com/es/privacy })
+se establece que
+\begin{center}
+\noindent\begin{minipage}{0.9\linewidth}%{0.9\columnwidth}
+\centering%
+{\em ''Al utilizar cualquiera de nuestros Servicios, usted da su consentimiento para la recopilación, 
+ la transferencia, la manipulación, el almacenamiento, la revelación y otros usos de su información 
+ según lo descrito en esta Política de Privacidad. Esto incluye cualquier información que elija proporcionar que 
+ se considere sensible según la legislación vigente."}
+\end{minipage}
+\end{center}
+Y también, en relación a la información del perfil o publicaciones:
+\begin{center}
+\noindent\begin{minipage}{0.9\linewidth}%{0.9\columnwidth}
+\centering%
+{\em ''{\bf Información básica de la cuenta}: si opta por crear una cuenta de Twitter, debe promocionar cierta información personal, 
+como su nombre, nombre de usuario, contraseña, dirección de correo electrónico o número de teléfono. 
+En Twitter, su nombre y nombre de usuario siempre se hacen públicos, incluso en su página de perfil y en los resultados de búsqueda, 
+y puede utilizar su nombre real o un seudónimo."
+
+''{\bf Tuits, gente que sigue, listas, perfil y otra información pública}: Twitter está principalmente diseñado para ayudarle a 
+compartir información con el mundo. La mayoría de la información que usted nos facilita a través de Twitter es información 
+que nos está pidiendo que hagamos pública. Puede facilitarnos información de perfil para hacerla pública en Twitter, como por 
+ejemplo, una breve biografía, su ubicación, su sitio web, fecha de nacimiento, o una fotografía. Además, su información pública 
+incluye los mensajes que tuitea; los metadatos facilitados con los tuits, tales como cuándo ha tuiteado y la aplicación cliente 
+que utilizó para tuitear; información sobre su cuenta, como el momento de su creación, el idioma, el país y la zona horaria; y las 
+listas que crea, las personas a las que sigue, los tuits que retuitea o marca como Me gusta, y las emisiones de Periscope en las que 
+hace clic o con las que se relaciona de alguna forma (por ejemplo, haciendo comentarios o clic en el icono de corazón) en Twitter. 
+Twitter disemina amplia e instantáneamente su información pública a una amplia gama de usuarios, clientes y servicios, incluyendo 
+motores de búsqueda, desarrolladores y editores que integran contenido de Twitter en sus servicios y organizaciones, tales como universidades, 
+agencias de salud pública y empresas de investigación de mercado que analizan la información en busque de tendencias y conocimiento."}
+\end{minipage}
+\end{center}
+A tenor de estas afirmaciones, la información que nosotros vamos a manejar en la implementación de este proyecto
+(nombre de usuario, información del perfil, tuits publicados)
+es una información de carácter público. 
+
+En su enunciado, la LOPD establece que
+(texto extraído del informe jurídico  2013-0184 de la AEPD
+\url{http://www.agpd.es/portalwebAGPD/canaldocumentacion/informes_juridicos/otras_cuestiones/common/pdfs/2013-0184_Red-social-y-creaci-oo-n-de-perfiles-de-empleados..pdf%
+})
+\begin{center}
+\noindent\begin{minipage}{0.9\linewidth}%{0.9\columnwidth}
+\centering%
+{\em Establece a este
+respecto la Ley Orgánica 15/1999 en su artículo 2 que ''El régimen de
+protección de los datos de carácter personal que se establece en la
+presente Ley Orgánica no será de aplicación: a) A los ficheros
+mantenidos por personas físicas en el ejercicio de actividades
+exclusivamente personales o domésticas."
+}
+\end{minipage}
+\end{center}
+
+Y define las actividades personales a continuación:
+
+\begin{center}
+\noindent\begin{minipage}{0.9\linewidth}%{0.9\columnwidth}
+\centering%
+{\em
+En cuanto a la determinación de que se entiende por actividades
+personales o domésticas dispone el Reglamento de desarrollo de la LOPD en
+su artículo 4 que ''Sólo se considerarán relacionados con actividades
+personales o domésticas los tratamientos relativos a las actividades que se
+inscriben en el marco de la vida privada o familiar de los particulares."
+Esta es también la interpretación del término ''personal" contenida en la
+Sentencia de la Audiencia Nacional de 15 de junio de 2006 al señalar que ''(…)
+Será personal cuando los datos tratados afecten a la esfera más íntima de la
+persona, a sus relaciones familiares y de amistad y que la finalidad del
+tratamiento no sea otra que surtir efectos en esos ámbitos.
+
+También dará lugar a la aplicación de la Ley Orgánica 15/1999, por
+superar el ámbito de la vida privada o familiar de los particulares la publicación
+de datos de terceros en la red cuando no existan limitaciones de acceso a su
+perfil, en cuanto que dicha publicación constituye una cesión de datos, definida
+en el artículo 3 j) de la LOPD como “Toda revelación de datos realizada a una
+persona distinta del interesado”, ya que en estos supuestos, como señalaba la
+sentencia la Sentencia de 6 de noviembre de 2003 (caso Bodil Lindqvist) del
+Tribunal de Justicia de las Comunidades Europeas, no se inscribe en el marco
+de la vida privada o familiar de los particulares “un tratamiento de datos
+personales consistente en la difusión de dichos datos por Internet de modo que
+resulten accesibles a un grupo indeterminado de personas.”}
+\end{minipage}
+\end{center}
+
+
+
+
+Refiriéndose incluso a datos de carácter público que aparecen en los datos,
+la interpretación de la LOPD respecto al uso de los mismos por terceros, especialmente
+en el caso en el que la finalidad de dicho uso sea comercial, es que el único medio
+para legitimar el uso es el consentimiento explícito de la persona cuyos datos van 
+a utilizarse. Este consentimiento ha de cumplir unas determinadas condiciones
+(de nuevo extraemos del informe jurídico  2013-0184 de la AEPD)
+\begin{center}
+\noindent\begin{minipage}{0.9\linewidth}%{0.9\columnwidth}
+\centering%
+{\em 
+El tratamiento de datos de carácter personal debe encontrarse fundado
+en alguna de las causas legitimadoras previstas en el artículo 6 de la Ley
+Orgánica 15/1999, disponiendo a este respecto su número primero que ''El
+tratamiento de los datos de carácter personal requerirá el consentimiento
+inequívoco del afectado, salvo que la ley disponga otra cosa."
+
+(\dots)
+
+Dicho
+consentimiento debe reunir las características señaladas en el
+artículo 3.h de la misma Ley que lo define como ''manifestación de
+voluntad, libre, inequívoca, específica e informada, mediante la que el
+interesado consienta el tratamiento de datos personales que le
+conciernen".
+
+Esta Agencia ha venido describiendo en sus informes dichas
+características de manera que se entiende por consentimiento libre aquel que
+ha sido obtenido sin la intervención de vicio alguno del consentimiento en los
+términos regulados por el Código Civil.
+}
+\end{minipage}
+\end{center}
+
+
+\myfigure{
+\includegraphics[width=0.6\textwidth]{LOPD1}
+\figcaption{Ayuda Ley de Protección de Datos, 
            \url{https://ayudaleyprotecciondatos.es/2010/09/16/redes-sociales-empresas-y-proteccion-de-datos/ }}
 \label{fig:LOPD1} }
 
 
+Como consecuencia de toda esta información, entendemos lo siguiente:
+\begin{itemize}
+\item que los datos del perfil de los usuarios de Twitter, así como sus publicaciones en dicha red,
+tienen carácter público.
+\item Que el carácter público de dichos datos no es óbice para poder manipularlos y distribuirlos
+a terceros, en ninguna actividad que no se circunscriba al ámbito personal o familiar.
+\item La elaboración de un proyecto de fin de máster no tiene por qué entenderse como una 
+actividad del ámbito personal o familiar, con lo cual no estaría en disposición de difundir esa información
+a terceros, salvo en las condiciones previstas en la LOPD.
+\item Cualquier versión comercializable de este proyecto debería contar con los mecanismos
+adecuados para obtener el consentimiento explícito de los usuarios para el uso de sus perfiles, 
+y posible inclusión en un proceso de selección de personal. Esta fase quedará fuera del plan de elaboración
+del proyecto.
+\end{itemize}
+Para eliminar el riesgo relativo a protección de datos en la elaboración del proyecto, 
+pero sin alterar su esencia, proponemos publicar los resultados enmascarando los nombres de usuario 
+de aquellos que aparezcan en nuestra base de datos.
 
-Otra forma, sería implementar un sistema que 
-cuando un usuario de Twitter fuera a ser incluido en uno de los procesos 
