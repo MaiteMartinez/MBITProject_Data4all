@@ -53,6 +53,24 @@ Entre los API REST y Streaming, hemos decidido utilizar el API REST con procesos
 como suficiente aproximación al tiempo real sin necesidad de usar un API Streaming que requeriría una arquitectura más compleja y robusta. 
 
 
+Entre los API REST (en concreto el API Search) y Streaming, hemos decidido utilizar el API Search 
+con procesos planificados de actualización frecuente,  ya que tiene las siguientes características
+adecuadas para el proyecto:
+\begin{itemize}
+\item Ventana temporal adecuada: es necesario extraer una ''foto" actual de la
+activida en Tweeter, y el API Search proporciona tuits de hasta 7 días de antigüedad.
+API Streaming proporciona tuits en tiempo real (tendríamos que hacer una consulta continua 
+durante varios días).
+\item En nuestro proyecto es clave la  búsqueda de tuits en función de una serie de palabras clave, 
+y el API Search proporciona filtros de búsqueda, entre ellos la búsqueda por palabras
+clave. 
+\item El volumen de información que obtendríamos con el API Streaming sería superior 
+que con el API Search, pero dado que la búsqueda en el API Search sigue criterios de relevancia, 
+nos parece una búsqueda más adecuada al proyecto.
+\end{itemize}
+
+
+ 
 
 
 
