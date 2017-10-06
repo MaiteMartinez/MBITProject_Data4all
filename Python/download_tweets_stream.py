@@ -35,10 +35,14 @@ def on_error(self, status):
 
 
 if __name__ == '__main__':
-	consumer_key= "XoZ54xxhuB4ec7BPDJj2ptot2"
-	consumer_secret= "wd2iBsAiBnxLslDZMiAaSWBnbA62e8sXnjey5Q3DCm4XX3RI3J"
-	access_token="906950076123185152-4NoTPkFaDBTB5GiipLLbWJ42SWRLzEJ"
-	access_token_secret="dqD1Tw9r0PBwaI2tkfwSvsqImTyBiKEBoTW5I7XtWcQik"
+	
+	keys_file  = open("twitter_keys.py", "r") 
+	keys_dict = eval(keys_file.read())
+	user = "Maite"
+	consumer_key= keys_dict[user]["consumer_key"]
+	consumer_secret= keys_dict[user]["consumer_secret"]
+	access_token= keys_dict[user]["access_token"]
+	access_token_secret= keys_dict[user]["access_token_secret"]
 
 
 	#This handles Twitter authetification and the connection to Twitter Streaming API
