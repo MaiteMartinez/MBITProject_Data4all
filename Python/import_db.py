@@ -3,18 +3,35 @@ import tweepy
 import pdb
 import pymongo
 import json
+from pprint import pprint
+from OpenMongoDB import MongoDBConnection
+import pymongo
+
+
 
 
 if __name__ == '__main__':
-
-	client = pymongo.MongoClient('localhost', 27017)
-	# print(client.database_names())
+	data_base_name = "query1_spanish"
+	collection_name = "col_" + data_base_name
+	# connection to mongodb
+	db = MongoDBConnection("set_up.py").client[data_base_name]
+	collection = db[collection_name]
 	# para ver la lista de las bases de datos que tiene el mongo instaladas
-	db = client.twitter_data_base
-	collection = db.twitter_collection
-	
-	one_tweet_text = collection.find_one()
+	# print(client.database_names())
 
+	print(collection.count())
+	my_tweet = {}	
+
+	for document in collection.find({"text": {"$regex" : "machine", "$options" : "i"}}):
+		print(document["id_str"])
+		try:			
+			pprint(document)
+			print(document["text"])
+			my_tweet[document["id_str"]] = document
+			if(len(my_tweet) >20): break
+		except:
+			continue
 	
- 
-	print(str(collection.find_one()).encode('utf-8'))
+	f = open("one_tweet.py","w")
+	pprint(my_tweet, f)
+	f.close()

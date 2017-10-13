@@ -1,6 +1,204 @@
 \chapter{Tratamiento inicial de los datos}
 \section{Descripci\'on de los datos}
-Estructura general de los tuits y campos necesarios para nuestro objetivo. 
+
+
+\begin{wrapfigure}[17]{R}{0.5\textwidth}
+\includegraphics[width=0.45\textwidth]{tuit_ejemplo}
+\caption{Ejemplo de tuit.}\label{fig:tuit_ejemplo}
+\end{wrapfigure} 
+
+
+En pantalla, un tuit relevante para nuestro proyecto podría ser el 
+mostrado en la figura ad\-ya\-cente. Sin embargo, cuando descargamos el mismo tuit a través del API Search de Twitter, 
+obtenemos mucha más información, en formato JSON. 
+
+El formato JSON ({\em Javascript Object Notation})\footnote{\url{http://www.json.org/json-es.html}} 
+es un formato ligero de intercambio de datos, fácilmente interpretable (por humanos y por
+máquinas). Es un formato ampliamente utilizado, siendo numerosos los
+lenguajes que son capaces de usar este formato (lenguajes de la familia C,Javascript, PHP, Python, etc.). 
+En JSON se pueden representar dos tipos
+de estructuras: un conjunto de pares (clave,valor) con la sintaxis \{clave1:valor1, clave2:valor2,\dots\}, también
+denominado {\em objeto}, y un conjunto ordenado de valores con la sintaxis [valor1, valor 2,\dots] (que se denomina {\em arreglo}). 
+Un valor puede ser una cadena de caracteres con comillas dobles, un número, un valor booleano o nulo, 
+un objeto o un arreglo. Esta flexibilidad permite representar datos de gran complejidad.
+
+Como veremos en el siguiente ejemplo de un tuit en formato JSON descargado a través del API Search de Twitter,
+puede resultar de ayuda pensar en un JSON como en un diccionario \{clave:valor\}, donde las claves
+son cadenas de texto, y el valor es algo flexible que acomoda desde una cadena de texto a un vector de objetos 
+o un nuevo diccionario. En particular, la información del tuit que considerábamos más arriba 
+luce de la siguiente manera:
+
+\bigskip
+
+
+\{'\_id': ObjectId('59e0cbb03842ed08188233d7'),
+
+\quad'contributors': None,
+
+\quad'coordinates': None,
+
+\quad'created\_at': 'Wed Oct 11 08:13:41 +0000 2017',
+
+\quad'entities': \{'hashtags': [\{'indices': [90, 106],'text': 'MachineLearning'\},
+
+				  \hspace{4cm}\{'indices': [107, 114],'text': 'Python'\}],
+
+	\hspace{2cm} 'symbols': [],
+
+	\hspace{2cm}'urls': [\{'display\_url': 'twitter.com/i/web/status/9…',
+
+				\hspace{3cm}'expanded\_url': 'https://twitter.com/i/web/status/918026805080182785',
+
+				\hspace{3cm}'indices': [116, 139],
+
+				\hspace{3cm}'url': 'https://t.co/1WuwNRzn8z'\}],
+
+	\hspace{2cm}'user\_mentions': []\},
+
+\quad'favorite\_count': 1,
+
+\quad'favorited': False,
+
+\quad'geo': None,
+
+\quad'id': 918026805080182785,
+
+\quad'id\_str': '918026805080182785',
+
+\quad'in\_reply\_to\_screen\_name': None,
+
+\quad'in\_reply\_to\_status\_id': None,
+
+\quad'in\_reply\_to\_status\_id\_str': None,
+
+\quad'in\_reply\_to\_user\_id': None,
+
+\quad'in\_reply\_to\_user\_id\_str': None,
+
+\quad'is\_quote\_status': False,
+
+\quad'lang': 'es',
+
+\quad'metadata': \{'iso\_language\_code': 'es',
+
+	 \hspace{2.3cm}'result\_type': 'recent'\},
+
+\quad'place': None,
+
+\quad'possibly\_sensitive': False,
+
+\quad'retweet\_count': 0,
+
+\quad'retweeted': False,
+
+\quad'source': '\verb|<a href="http://twitter.com"  rel="nofollow">Twitter Web Client</a>|',
+
+\quad'text': 'Vamos preparando el siguiente libro a estudiar que al final la movida 
+
+\hspace{1.7cm}me está gustando... \#MachineLearning \#Python… https://t.co/1WuwNRzn8z',
+
+\quad'truncated': True,
+
+\quad'user': \{'contributors\_enabled': False,
+
+\hspace{1.7cm}'created\_at': 'Sat Dec 12 09:13:46 +0000 2009',
+
+\hspace{1.7cm}'default\_profile': False,
+
+\hspace{1.7cm}'default\_profile\_image': False,
+
+\hspace{1.7cm}'description': 'Me gustan las camisetas y las  zapatillas // Desarrollo y '
+
+\hspace{3cm}'Diseño para sistemas Apple //  Creador de @GetPomodoroApp ·  '
+
+\hspace{3cm}'@GetAtentoApp · @MADatBUS ·  @GetMeteo y...',
+
+\hspace{1.7cm}'entities': \{'description': \{'urls': []\},
+
+\hspace{3.5cm}'url': \{'urls': [\{'display\_url': 'desappstre.com',
+
+\hspace{4.5cm}'expanded\_url': 'http://desappstre.com',
+
+\hspace{4.5cm}'indices': [0,23],
+
+\hspace{4.5cm}'url': 'https://t.co/oYY42NlHrT'\}]\}\},
+
+\hspace{1.7cm}'favourites\_count': 1512,
+
+\hspace{1.7cm}'follow\_request\_sent': False,
+
+\hspace{1.7cm}'followers\_count': 211,
+
+\hspace{1.7cm}'following': False,
+
+\hspace{1.7cm}'friends\_count': 209,
+
+\hspace{1.7cm}'geo\_enabled': True,
+
+\hspace{1.7cm}'has\_extended\_profile': True,
+
+\hspace{1.7cm}'id': 96309647,
+
+\hspace{1.7cm}'id\_str': '96309647',
+
+\hspace{1.7cm}'is\_translation\_enabled': False,
+
+\hspace{1.7cm}'is\_translator': False,
+
+\hspace{1.7cm}'lang': 'es',
+
+\hspace{1.7cm}'listed\_count': 109,
+
+\hspace{1.7cm}'location': 'Madrid — Mundo Real™',
+
+\hspace{1.7cm}'name': 'Adolfo ™',
+
+\hspace{1.7cm}'notifications': False,
+
+\hspace{1.7cm}'profile\_background\_color': '000000',
+
+\hspace{1.7cm}'profile\_background\_image\_url': 'http://abs.twimg.com/images/themes/theme2/bg.gif',
+
+\hspace{1.7cm}'profile\_background\_image\_url\_https': 'https://abs.twimg.com/images/themes/theme2/bg.gif',
+
+\hspace{1.7cm}'profile\_background\_tile': False,
+
+\hspace{1.7cm}'profile\_banner\_url': 'https://pbs.twimg.com/profile\_banners/96309647/1501577205',
+
+\hspace{1.7cm}'profile\_image\_url': 'http://pbs.twimg.com/profile\_images/888396793024794624/O6gHh-lJ\_normal.jpg',
+
+\hspace{1.7cm}'profile\_image\_url\_https': 'https://pbs.twimg.com/profile\_images/888396793024794624/O6gHh-lJ\_normal.jpg',
+
+\hspace{1.7cm}'profile\_link\_color': '1B95E0',
+
+\hspace{1.7cm}'profile\_sidebar\_border\_color': '000000',
+
+\hspace{1.7cm}'profile\_sidebar\_fill\_color': '000000',
+
+\hspace{1.7cm}'profile\_text\_color': '000000',
+
+\hspace{1.7cm}'profile\_use\_background\_image': False,
+
+\hspace{1.7cm}'protected': False,
+
+\hspace{1.7cm}'screen\_name': 'FitoMAD',
+
+\hspace{1.7cm}'statuses\_count': 6893,
+
+\hspace{1.7cm}'time\_zone': 'Madrid',
+
+\hspace{1.7cm}'translator\_type': 'none',
+
+\hspace{1.7cm}'url': 'https://t.co/oYY42NlHrT',
+
+\hspace{1.7cm}'utc\_offset': 7200,
+
+\hspace{1.7cm}'verified': False\}\}
+
+\bigskip
+
+La descripción de cada campo de los que integran el tuit puede encontarse en la página web de Twitter para 
+desarrolladores, \url{https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object}.
 \section{Obtenci\'on de los datos}
 C\'omo hemos hecho para bajarlos, par\'ametros de la b\'usqueda de twits.
 \section{Almacenamiento}

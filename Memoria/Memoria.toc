@@ -15,18 +15,18 @@
 \contentsline {section}{\numberline {3.3}Desarrollo en la nube}{21}{section.40}
 \contentsline {chapter}{\numberline {4}Tratamiento inicial de los datos}{23}{chapter.41}
 \contentsline {section}{\numberline {4.1}Descripci\'on de los datos}{23}{section.42}
-\contentsline {section}{\numberline {4.2}Obtenci\'on de los datos}{23}{section.43}
-\contentsline {section}{\numberline {4.3}Almacenamiento}{23}{section.44}
-\contentsline {section}{\numberline {4.4}Limpieza de los datos}{23}{section.45}
-\contentsline {chapter}{\numberline {5}Preparaci\'on de los datos}{25}{chapter.46}
-\contentsline {section}{\numberline {5.1}Extracci\'on de la informaci\'on relevante}{25}{section.47}
-\contentsline {section}{\numberline {5.2}Almacenamiento}{25}{section.48}
-\contentsline {chapter}{\numberline {6}Modelado de los datos}{27}{chapter.49}
-\contentsline {section}{\numberline {6.1}Principales hip\'otesis}{27}{section.50}
-\contentsline {section}{\numberline {6.2}Algoritmos}{27}{section.51}
-\contentsline {section}{\numberline {6.3}Almacenamiento}{27}{section.52}
-\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{29}{chapter.53}
-\contentsline {section}{\numberline {7.1}Herramientas}{29}{section.54}
-\contentsline {section}{\numberline {7.2}Acceso web}{29}{section.55}
-\contentsline {chapter}{\numberline {8}\'Areas de mejora}{31}{chapter.56}
-\contentsline {chapter}{Bibliograf\'\i a}{33}{chapter*.57}
+\contentsline {section}{\numberline {4.2}Obtenci\'on de los datos}{26}{section.45}
+\contentsline {section}{\numberline {4.3}Almacenamiento}{26}{section.46}
+\contentsline {section}{\numberline {4.4}Limpieza de los datos}{26}{section.47}
+\contentsline {chapter}{\numberline {5}Preparaci\'on de los datos}{27}{chapter.48}
+\contentsline {section}{\numberline {5.1}Extracci\'on de la informaci\'on relevante}{27}{section.49}
+\contentsline {section}{\numberline {5.2}Almacenamiento}{27}{section.50}
+\contentsline {chapter}{\numberline {6}Modelado de los datos}{29}{chapter.51}
+\contentsline {section}{\numberline {6.1}Principales hip\'otesis}{29}{section.52}
+\contentsline {section}{\numberline {6.2}Algoritmos}{29}{section.53}
+\contentsline {section}{\numberline {6.3}Almacenamiento}{29}{section.54}
+\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{31}{chapter.55}
+\contentsline {section}{\numberline {7.1}Herramientas}{31}{section.56}
+\contentsline {section}{\numberline {7.2}Acceso web}{31}{section.57}
+\contentsline {chapter}{\numberline {8}\'Areas de mejora}{33}{chapter.58}
+\contentsline {chapter}{Bibliograf\'\i a}{35}{chapter*.59}
