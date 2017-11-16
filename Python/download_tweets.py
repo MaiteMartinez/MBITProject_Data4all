@@ -24,7 +24,7 @@ if __name__ == '__main__':
 	db = MongoDBConnection("set_up.py").client[data_base_name]
 	collection = db[collection_name]
 	# ojo, esto borra todo lo que hubiera almacenado
-	collection.delete_many({})
+	# collection.delete_many({})
 
 	for data in tweepy.Cursor(api.search,q=query1, lang="es").items():		
 		tweet_json = json.loads(json.dumps(data._json))

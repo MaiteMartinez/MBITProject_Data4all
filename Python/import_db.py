@@ -11,7 +11,7 @@ import pymongo
 
 
 if __name__ == '__main__':
-	data_base_name = "query1_spanish"
+	data_base_name = "query1_spanish_stream"
 	collection_name = "col_" + data_base_name
 	# connection to mongodb
 	db = MongoDBConnection("set_up.py").client[data_base_name]
@@ -19,16 +19,23 @@ if __name__ == '__main__':
 	# para ver la lista de las bases de datos que tiene el mongo instaladas
 	# print(client.database_names())
 
-	print(collection.count())
+	print("**************************"+ str(collection.count()))
 	my_tweet = {}	
 
-	for document in collection.find({"text": {"$regex" : "machine", "$options" : "i"}}):
-		print(document["id_str"])
+	# for document in collection.find({"text": {"$regex" : "machine", "$options" : "i"}}):
+	for document in collection.find():
+		# print(document["id_str"])
 		try:			
-			pprint(document)
-			print(document["text"])
-			my_tweet[document["id_str"]] = document
-			if(len(my_tweet) >20): break
+			# pprint(document)
+			# print(document["text"])
+			t = {}
+			t["user"] = document["user"]["name"]
+			t["user_description"] = document["user"]["description"]
+			t["text"] = document["text"]
+			pprint(t)
+			my_tweet[document["id_str"]] = t
+
+			if(len(my_tweet) >200): break
 		except:
 			continue
 	
