@@ -21,9 +21,8 @@ if __name__ == '__main__':
 
 	print("**************************"+ str(collection.count()))
 	my_tweet = {}	
-
 	# for document in collection.find({"text": {"$regex" : "machine", "$options" : "i"}}):
-	for document in collection.find():
+	for document in collection.find():		
 		# print(document["id_str"])
 		try:			
 			# pprint(document)
@@ -32,6 +31,7 @@ if __name__ == '__main__':
 			t["user"] = document["user"]["name"]
 			t["user_description"] = document["user"]["description"]
 			t["text"] = document["text"]
+			t["created at"] = document["created_at"]
 			pprint(t)
 			my_tweet[document["id_str"]] = t
 

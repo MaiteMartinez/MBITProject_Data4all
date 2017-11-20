@@ -49,27 +49,43 @@ afectan a las versiones gratuitas de los APIs. Hay una versión de pago de este 
 que garantiza como respuesta el 100\% de los tuits que cumplan los criterios de la búsqueda.
 Para el desarrollo de este proyecto nos hemos servido del API gratuito, por limitación de costes. 
 
-Entre los API REST y Streaming, hemos decidido utilizar el API REST con procesos planificados de actualización frecuente 
-como suficiente aproximación al tiempo real sin necesidad de usar un API Streaming que requeriría una arquitectura más compleja y robusta. 
+Entre los API REST y Streaming, hemos decidido utilizar el API Streaming, mediante un script
+en Python usando Tweepy. Este método tiene diversas ventajas y desventajas que pasamos
+a revisar:
+\begin{enumerate}
+\item El API Streaming proporciona tuits en tiempo real, y funciona como una especie de \lq\lq grabadora\rq\rq,
+con la que se van registrando todos los tuits a medida que se van produciendo.
+\item Como es un proceso que se mantiene a la escucha y va reflejando entradas según
+se producen, la infraestructura necesaria para que funcione es algo  más complicada que para
+el API Search. Se necesita, por ejemplo, una conexión contínua a Internet, ya que el tiempo que
+el proceso no esté corriendo, no estaremos recogiendo tuits.
+\item El límite de bajada de los tuits en el API Stream es de 50 tuits por segundo.
+En nuestro caso, el número de tuits que se producen no pasan de unas decenas por minuto, con
+lo cual nos aseguramos un barrido bastante exhaustivo de la actividad relevante.
+\item Además, al ir bajando tuits consecutivamente, no tenemos el problema de tener tuits repetidos.
+\item Como desventaja, no podemos acceder a tuits antiguos, y solo tendremos aquellos que 
+se produzcan en el tiempo que esté el proceso de \lq\lq escucha\rq\rq levantado.
+\end{enumerate}
 
+Con respecto al segundo punto, hemos bajado los tuits mediante un script de Python, 
+que usa la librería Tweepy, y 
+en el que a medida que van llegando los tuits a un proceso de escucha, los vamos 
+almacenando en una base de datos MongoDB. 
 
-Entre los API REST (en concreto el API Search) y Streaming, hemos decidido utilizar el API Search 
-con procesos planificados de actualización frecuente,  ya que tiene las siguientes características
-adecuadas para el proyecto:
-\begin{itemize}
-\item Ventana temporal adecuada: es necesario extraer una ''foto" actual de la
-activida en Tweeter, y el API Search proporciona tuits de hasta 7 días de antigüedad.
-API Streaming proporciona tuits en tiempo real (tendríamos que hacer una consulta continua 
-durante varios días).
-\item En nuestro proyecto es clave la  búsqueda de tuits en función de una serie de palabras clave, 
-y el API Search proporciona filtros de búsqueda, entre ellos la búsqueda por palabras
-clave. 
-\item El volumen de información que obtendríamos con el API Streaming sería superior 
-que con el API Search, pero dado que la búsqueda en el API Search sigue criterios de relevancia, 
-nos parece una búsqueda más adecuada al proyecto.
-\end{itemize}
+\myfigure{\includegraphics[width=0.6\textwidth]{streamlistener1}%
+\figcaption{Función de escucha de tuits.}
+\label{fig:streamlistener1} }
 
+Para mantener vivo el proceso de escucha y que no caiga frente a errores o timeouts,
+incluimos en el script un control de incidencias:
 
+\myfigure{\includegraphics[width=0.6\textwidth]{streamlistener2}%
+\figcaption{Gestión de incidencias en el proceso de escucha.}
+\label{fig:streamlistener2} }
+
+Y para refrescar el proceso, y que la conexión con Twitter funcione correctamente
+de forma continua, se programaron relanzamientos diarios del script en el programador 
+de tareas de Windows.
  
 
 
