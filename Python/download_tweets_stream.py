@@ -78,7 +78,7 @@ def main():
 
 	#query to search tweets: ',' is or, ' ' is and
 	query = ["#machine learning", "#machinelearning", "#datamining", "#data mining",\
-			"#Python","#SQL", "#hadoop", "#bigdata", "#tableau", "#pentaho"]
+			"#Python","#SQL", "#hadoop", "#bigdata", "#tableau", "#pentaho", "#rstats"]
 	exit = False
 	while not exit: # Making permanent streaming with exception handling 
 		try:
