@@ -32,10 +32,10 @@ if __name__ == '__main__':
 			t["user_description"] = document["user"]["description"]
 			t["text"] = document["text"]
 			t["created at"] = document["created_at"]
-			pprint(t)
-			my_tweet[document["id_str"]] = t
+			pprint(document)
+			my_tweet[document["id_str"]] = document #t
 
-			if(len(my_tweet) >200): break
+			if(len(my_tweet) >20): break
 		except:
 			continue
 	
