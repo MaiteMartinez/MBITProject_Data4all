@@ -12,21 +12,25 @@
 \contentsline {chapter}{\numberline {3}Infraestructura}{19}{chapter.34}
 \contentsline {section}{\numberline {3.1}Repositorio GIT}{19}{section.35}
 \contentsline {section}{\numberline {3.2}Infraestructura para la obtenci\IeC {\'o}n de datos}{19}{section.37}
-\contentsline {section}{\numberline {3.3}Desarrollo en la nube}{22}{section.47}
-\contentsline {chapter}{\numberline {4}Tratamiento inicial de los datos}{23}{chapter.48}
-\contentsline {section}{\numberline {4.1}Descripci\'on de los datos}{23}{section.49}
-\contentsline {section}{\numberline {4.2}Obtenci\'on de los datos}{26}{section.52}
-\contentsline {section}{\numberline {4.3}Almacenamiento}{26}{section.53}
-\contentsline {section}{\numberline {4.4}Limpieza de los datos}{26}{section.54}
-\contentsline {chapter}{\numberline {5}Preparaci\'on de los datos}{27}{chapter.55}
-\contentsline {section}{\numberline {5.1}Extracci\'on de la informaci\'on relevante}{27}{section.56}
-\contentsline {section}{\numberline {5.2}Almacenamiento}{27}{section.57}
-\contentsline {chapter}{\numberline {6}Modelado de los datos}{29}{chapter.58}
-\contentsline {section}{\numberline {6.1}Principales hip\'otesis}{29}{section.59}
-\contentsline {section}{\numberline {6.2}Algoritmos}{29}{section.60}
-\contentsline {section}{\numberline {6.3}Almacenamiento}{29}{section.61}
-\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{31}{chapter.62}
-\contentsline {section}{\numberline {7.1}Herramientas}{31}{section.63}
-\contentsline {section}{\numberline {7.2}Acceso web}{31}{section.64}
-\contentsline {chapter}{\numberline {8}\'Areas de mejora}{33}{chapter.65}
-\contentsline {chapter}{Bibliograf\'\i a}{35}{chapter*.66}
+\contentsline {section}{\numberline {3.3}Desarrollo en la nube}{23}{section.50}
+\contentsline {chapter}{\numberline {4}Tratamiento inicial de los datos}{25}{chapter.51}
+\contentsline {section}{\numberline {4.1}Descripci\'on de los datos}{25}{section.52}
+\contentsline {section}{\numberline {4.2}Obtenci\'on de los datos}{28}{section.55}
+\contentsline {section}{\numberline {4.3}Almacenamiento}{28}{section.56}
+\contentsline {section}{\numberline {4.4}Revisi\IeC {\'o}n inicial de los datos}{29}{section.57}
+\contentsline {section}{\numberline {4.5}Limpieza de los datos}{29}{section.58}
+\contentsline {subsection}{\numberline {4.5.1}Detecci\IeC {\'o}n del idioma}{29}{subsection.59}
+\contentsline {subsection}{\numberline {4.5.2}Tipo de usuario}{29}{subsection.60}
+\contentsline {subsection}{\numberline {4.5.3}Naturaleza del tuit}{29}{subsection.61}
+\contentsline {chapter}{\numberline {5}Preparaci\'on de los datos}{31}{chapter.62}
+\contentsline {section}{\numberline {5.1}Extracci\'on de la informaci\'on relevante}{31}{section.63}
+\contentsline {section}{\numberline {5.2}Almacenamiento}{31}{section.64}
+\contentsline {chapter}{\numberline {6}Modelado de los datos}{33}{chapter.65}
+\contentsline {section}{\numberline {6.1}Principales hip\'otesis}{33}{section.66}
+\contentsline {section}{\numberline {6.2}Algoritmos}{33}{section.67}
+\contentsline {section}{\numberline {6.3}Almacenamiento}{33}{section.68}
+\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{35}{chapter.69}
+\contentsline {section}{\numberline {7.1}Herramientas}{35}{section.70}
+\contentsline {section}{\numberline {7.2}Acceso web}{35}{section.71}
+\contentsline {chapter}{\numberline {8}\'Areas de mejora}{37}{chapter.72}
+\contentsline {chapter}{Bibliograf\'\i a}{39}{chapter*.73}

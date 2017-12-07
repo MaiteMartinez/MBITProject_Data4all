@@ -22,23 +22,21 @@ if __name__ == '__main__':
 	print("**************************"+ str(collection.count()))
 	my_tweet = {}	
 	# for document in collection.find({"text": {"$regex" : "machine", "$options" : "i"}}):
-	for document in collection.find():		
+	for document in collection.find({"id_str" : "936219943137357824"}):		
 		# print(document["id_str"])
-		try:			
-			# pprint(document)
-			# print(document["text"])
-			t = {}
-			t["user"] = document["user"]["name"]
-			t["user_description"] = document["user"]["description"]
-			t["text"] = document["text"]
-			t["created at"] = document["created_at"]
+		try:	
+			# t = {}
+			# t["user"] = document["user"]["name"]
+			# t["user_description"] = document["user"]["description"]
+			# t["text"] = document["text"]
+			# t["created at"] = document["created_at"]
 			pprint(document)
 			my_tweet[document["id_str"]] = document #t
-
 			if(len(my_tweet) >20): break
 		except:
 			continue
-	
+
+
 	f = open("one_tweet.py","w")
 	pprint(my_tweet, f)
 	f.close()

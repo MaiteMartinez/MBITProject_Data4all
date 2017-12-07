@@ -199,7 +199,73 @@ luce de la siguiente manera:
 
 La descripción de cada campo de los que integran el tuit puede encontarse en la página web de Twitter para 
 desarrolladores, \url{https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object}.
+
 \section{Obtenci\'on de los datos}
-C\'omo hemos hecho para bajarlos, par\'ametros de la b\'usqueda de twits.
+Los tuits que componen nuestro corpus de datos los hemos obtenido a través del API Streaming
+de Twitter, a través de una búsqueda dirigida en el API Streaming. Esta búsqueda dirigida 
+se ha realizado a través de palabras clave, asociadas a la actividad de data science, concretamente:
+
+\begin{center}
+\begin{tabular}{ccccc}
+\lq\lq machine learning\rq\rq  &\lq\lq machinelearning\rq\rq  &\lq\lq datamining\rq\rq  &\lq\lq data mining\rq\rq 
+&\lq\lq Python\rq\rq\\
+\lq\lq SQL\rq\rq & \lq\lq hadoop\rq\rq  &\lq\lq bigdata\rq\rq  &\lq\lq big data\rq\rq  &\lq\lq pentaho\rq\rq\\
+\lq\lq rstats\rq\rq &\lq\lq SAS\rq\rq &\lq\lq tableau\rq\rq
+\end{tabular}
+\end{center}
+
+Esta petición se define como un vector en Python, donde la coma significa \lq\lq OR\rq\rq y el espacio
+dentro de las comillas significa \lq\lq AND\rq\rq, y se incluyeron dichos términos con y sin el símbolo
+\#.
+
+También hemos incluido en la búsqueda un filtro por idioma, incluyendo el parámetro 
+\lq\lq languages = ["es"]\rq\rq en la llamada al API, con el objetivo de bajar solo tuits
+en un idioma. Sin embargo, el efecto de este parámetro es limitado, puesto que aunque efectivamente
+solo obtenemos tuits de personas adheridas al idioma español como usuarios, esto no quiere decir
+que los tuits que obtengamos sean solo en español, ya que no es un filtro por el idioma del texto del tuit.
+En realidad, veremos que de hecho bajamos tuits en otros idiomas (inglés, sobre todo), lo que
+nos obligará a incluir esta variable en el proceso de selección de usuarios, como veremos en la sección 
+\ref{sect:limpieza_de_los_datos}.
+
+El script en el que se realiza la llamada al API de Twitter y el primer almacenamiento de los tuits
+es el script llamado {\bf download\_tweets\_stream.py}. Este script importa otros
+denuestro proyecto, como {\bf OpenMongoDB.py}, que gestiona la conexión a la base de datos MongoDB
+en el que se almacenarán los tuits. El lanzamiento programado de la tarea se hizo con una entrada en el gestor
+de Tareas Programadas del portátil, a través del archivo {\bf streaming\_upload.bat}. Todos estos
+archivos se encuentran en el repositorio de GitHub descrito en la sección \ref{sect:repositorio}.
+
+
 \section{Almacenamiento}
+Según van produciéndose los tuits, y nuestra \lq\lq grabadora\rq\rq los va detectando, los hemos almacenado
+en una base de datos de MongoDB, en local.
+
+
+\section{Revisión inicial de los datos}
+Una vez almacenados los tuits, realizamos un análisis exploratorio para estudiar con qué material contábamos para el desarrollo del proyecto. Este estudio se lleva a cabo en el archivo {\bf analisis\_exploratotio.py} del repositorio de
+GitHub.
+
+* Tuits originales frente a tuits retuiteados. proporcion.
+ojo, hay tuits que parece que son retuits de otros (que comienzan por RT), pero luego
+no tienen los campos "retweeted\_status" o "quoted\_status". Parece que esos pueden ser bots, que 
+mandan mensajes automáticos. Contarlos también.
+
+* tuits descargados a lo largo del tiempo (por día, por hora, etc.). histograma
+
+* número de retuits por tuit (detección de eventos): for those twits that are a retwit of another one, look for the number of times that twit has been retwitted
+
+* relación entre número de tuits descargados y número de usuarios distintos (a lo largo del tiempo, acumulado)
+* número de tuits por usuario
+* localización de los tuits: ¿cuántos tienen el dato disponible? Consecuencias para geolocalización de los candidatos
+* hashtags: distribución.número de hashtags por tuit.
+
+
 \section{Limpieza de los datos}
+\label{sect:limpieza_de_los_datos}
+
+\subsection{Detección del idioma} 
+texto del tuit
+\subsection{Tipo de usuario}
+persona, bot, empresa análisis bio
+\subsection{Naturaleza del tuit}
+texto del tuit:  IT, cientifico, analista o nodatascience (diccionarios de palabras)
+					/Binario, data science o no data science

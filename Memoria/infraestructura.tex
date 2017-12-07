@@ -2,6 +2,7 @@
 \chapter{Infraestructura}
 En esta sección describiremos la infraestructura que hemos construido para el desarrollo del proyecto.
 \section{Repositorio GIT}
+\label{sect:repositorio}
 El código del proyecto, así como las presentaciones y memoria de este proyecto, está almacenado en el 
 repositorio \url{https://github.com/MaiteMartinez/MBITProject_Data4all}
 
@@ -62,7 +63,7 @@ el proceso no esté corriendo, no estaremos recogiendo tuits.
 \item El límite de bajada de los tuits en el API Stream es de 50 tuits por segundo.
 En nuestro caso, el número de tuits que se producen no pasan de unas decenas por minuto, con
 lo cual nos aseguramos un barrido bastante exhaustivo de la actividad relevante.
-\item Además, al ir bajando tuits consecutivamente, no tenemos el problema de tener tuits repetidos.
+\item Además, al ir bajando tuits consecutivamente, minimizamos el problema de tener tuits repetidos.
 \item Como desventaja, no podemos acceder a tuits antiguos, y solo tendremos aquellos que 
 se produzcan en el tiempo que esté el proceso de \lq\lq escucha\rq\rq levantado.
 \end{enumerate}
@@ -88,7 +89,33 @@ de forma continua, se programaron relanzamientos diarios del script en el progra
 de tareas de Windows.
  
 
+Para el desarrollo de la mayor parte de la lógica del proyecto hemos elegido Python 3.6 (a través de la
+instalación de Anaconda). Esta elección tiene diversas ventajas, en las varias fases del proyecto, ya
+que este lenguaje facilita las siguientes tareas:
+\begin{itemize}
+\item Comunicación con el API Streaming de Twitter a través del paquete Tweepy.
+\item Sencilla interacción con el formato JSON, que es en el que los tuits son descargados desde el API, gracias al paquete json.
+\item  Comunicación con la base de datos documental MongoDB, a través del paquete pymongo.
+\item Incorporación nativa del encoding UTF-8 (\lq\lq Unicode Transformation Format\rq\rq con números de 8 bits), 
+lo que nos ahorra muchos quebraderos de cabeza al tratar con caracteres especiales del español (tildes, ñ, etc.)
+y la presencia de emojis en los textos de los tuits.\footnote{\url{https://docs.python.org/3/howto/unicode.html. }}
+\end{itemize}
 
-
+Para la primera toma de contacto con los datos descargados del API de Twitter, nos hemos decantado por 
+almacenarlos según íbamos recogiéndolos en una base de datos MongoDB. Las razones son varias:
+\begin{itemize}
+\item MongoDB trata de forma natural documentos en formato JSON.
+\item También maneja sin problemas documentos con encoding UTF-8\footnote{
+\url{https://docs.mongodb.com/v3.4/reference/bson-types/ }}, lo que nos ayuda a no tener problemas de encoding al
+almacenar los tuits.
+\item Se integra muy bien en programas en Python gracias al paquete pymongo.
+\item No necesita una definición de la estructura del documento, lo que es muy conveniente
+para tratar tuits, donde el número de campos que obtenemos del API y el contenido de esos campos no siempre
+sigue el mismo formato. Este punto es en particular relevante si el API de Twitter cambiase, o se introdujeran nuevos 
+campos. Por ejemplo: a partir del 26 de Septiembre de 2017,  Twitter cambió el límite de 140 caracteres
+a un límite de 280 caracteres a algunos usuarios, y eso provocó que aparecieran nuevos campos en el cuerpo de cada
+tuit\footnote{\url{https://developer.twitter.com/en/docs/tweets/tweet-updates }}.
+\item Es una base de datos bastante rápida, y escalable.
+\end{itemize}
 
 \section{Desarrollo en la nube}
