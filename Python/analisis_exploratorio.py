@@ -375,8 +375,6 @@ def create_tuits_by_user_graph(df, figure_path = "images/tuits_by_user_graph.png
 	plt.clf()
 	# para cada user id, nos quedamos con el número de tuits suyos que tenemos
 	new_df2 = new_df.groupby(new_df['users'], as_index = False).count()
-	print("new_df2")
-	print(new_df2[:10])
 	new_df2.plot(kind="hist", color = [oblue], legend = None, bins = 20)
 	plt.xticks(rotation=90)
 	plt.xlabel("Numero de tuits")
@@ -387,8 +385,6 @@ def create_tuits_by_user_graph(df, figure_path = "images/tuits_by_user_graph.png
 	plt.clf()
 	new_df3 = new_df2.groupby(new_df2['tweet_id'], as_index = False).count()
 	plt.scatter(x= new_df3["tweet_id"], y=new_df3["users"], color = [oblue])
-	# L = plt.legend()
-	# L.get_texts()[0].set_text('Numero de tuits')	
 	plt.xticks(rotation=90)
 	plt.xlabel("Numero de tuits")
 	plt.ylabel("Numero de usuarios")
@@ -402,8 +398,120 @@ def create_tuits_by_user_graph(df, figure_path = "images/tuits_by_user_graph.png
 	for i in range(explore):
 		print ("El usuario numero "+str(i+1)+" por numero de tuits ha publicado" + str(list1[i]) + " tuits")
 		print ("El id de este usuario es " + str(list2[i]))
-	
-	
+
+# *********************************************
+# number of tuits with localization data
+# *********************************************
+def create_geolocalized_graph(twitter_cursor, figure_path = "images/geolocalized_proportions.png"):
+	localized = []
+	ct = 0
+	for t in twitter_cursor:
+		if t["place"] is not None:
+			localized.append(t["id_str"])
+		ct +=1
+	sizes = [len(localized), ct-len(localized)]
+	labels = 'Con localización', 'Sin localización' 
+	explode = (0.1, 0)  # only "explode" the 1st slice (i.e. 'con')
+
+	fig1, ax1 = plt.subplots()
+	ax1.pie(sizes, 
+			explode=explode, 
+			labels=labels, 
+			autopct='%1.1f%%',
+			shadow=True, 
+			startangle=90,
+			colors = [oyellow, oblue])
+	ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+	# plt.show()
+	plt.savefig(figure_path)
+
+# *********************************************
+# hashtags info
+# *********************************************
+
+def hashtags_cloud(hashtags_vector, figure_path):
+	h = [p for p in set(hashtags_vector)]
+	text = h[0]
+	for i in range(1,len(h)):
+		text += " "+h[i]
+	img_mask = imread("images/originals/hash2.png")
+	wcloud = WordCloud(background_color = "black", 
+						max_words = 3000,
+						max_font_size = 60,
+						mask = img_mask,
+						width=18000,
+						height=14000)
+	wcloud.generate(text)
+	plt.figure()
+	plt.imshow(wcloud)
+	plt.axis("off")
+	# plt.show()
+	plt.savefig(figure_path)
+
+def hashtag_bar_graph(hashtags_vector, toprint, titulo, figure_path):
+	h = deepcopy(hashtags_vector)
+	occ = [1]*len(h)
+	new_df = pd.DataFrame({'h':h,'occ':occ })	
+	# para cada hashtag, nos quedamos con el número de veces que ha aparecido
+	new_df2 = new_df.groupby(new_df['h'], as_index = False).count()
+	hashtags = [x for x in new_df2["h"]]
+	occurrences = [x for x in new_df2["occ"]]
+	list1, list2  = zip(*sorted(zip(occurrences, hashtags), reverse=True))
+	# for i in range(toprint):
+		# print ("El hashtag "+str(list2[i])+" ha aparecido " + str(list1[i]) + " veces")
+	idx = [x for x in range(toprint)]
+	plt.clf()
+	fig,ax = plt.subplots()
+	ax.bar(idx, list1[:toprint], width=0.8, color=oyellow, )
+	ax.set_xticks(idx)
+	ax.set_xticklabels(list2[:toprint], rotation=90)
+	plt.xlabel("")
+	plt.tight_layout()
+	plt.title(titulo)
+	plt.savefig(figure_path)
+
+
+def create_hashtags_info(twitter_cursor, figure_path = "images/hashtags.png"):
+	hashtags_host = []
+	hashtags_total = []
+	for t in twitter_cursor:		
+		try:
+			host_hashtag_obj = t['extended_tweet']['entities']['hashtags']
+		except:
+			host_hashtag_obj = t['entities']['hashtags']
+		hashtags_host.extend([d["text"] for d in host_hashtag_obj])
+		hashtags_total.extend([d["text"] for d in host_hashtag_obj])
+
+		# hashtags of quoted tuit, if any
+		quoted_hashtag_obj = []
+		try:
+			quoted_hashtag_obj = t['quoted_status']['extended_tweet']['entities']['hashtags']
+		except:
+			try:
+				quoted_hashtag_obj = t['quoted_status']['entities']['hashtags']
+			except:
+				pass
+		hashtags_total.extend([d["text"] for d in quoted_hashtag_obj])
+
+		# hashtags of retweeted tuit, if any
+		rt_hashtag_obj = []
+		try:
+			rt_hashtag_obj = t['retweeted_status']['extended_tweet']['entities']['hashtags']
+		except:
+			try:
+				rt_hashtag_obj = t['retweeted_status']['entities']['hashtags']
+			except:
+				pass
+		hashtags_total.extend([d["text"] for d in rt_hashtag_obj])
+
+	hashtags_cloud(hashtags_total, figure_path.replace(".png", "_total_wordcloud.png"))
+	hashtags_cloud(hashtags_host, figure_path.replace(".png", "_host_wordcloud.png"))
+	toprint = 20
+	hashtag_bar_graph(hashtags_total, toprint, "Totales", figure_path.replace(".png", "_total_occurs.png"))
+	hashtag_bar_graph(hashtags_host, toprint, "Tuits principales", figure_path.replace(".png", "_host_occurs.png"))
+
+
+
 def main():
 	#MongoDB connection
 	data_base_name = "query1_spanish_stream"
@@ -414,25 +522,28 @@ def main():
 
 	fn = 'tweets_table.xlsx'
 	# # build a table with relevant fields
-	# df = get_relevant_fields(collection.find(), file_path = fn)
+	df = get_relevant_fields(collection.find(), file_path = fn)
 	# # in case we already have the file
-	df = pd.read_excel(fn)
+	# df = pd.read_excel(fn)
 	
-	# total_tuits, unique_tuits = are_there_duplicated_tuits(collection.find())
+	total_tuits, unique_tuits = are_there_duplicated_tuits(collection.find())
 
-	# create_word_cloud(collection.find(),
-					# font_path="fonts/CabinSketch-Regular.ttf",
-					# original_figure_path = "images/originals/twitter_image.png",
-					# figure_path = "images/twitter_worldcloud.png")
-	# create_retweeted_proportion_graph(collection.find(), figure_path = "images/retweeted_proportions.png")
-	# create_time_graph(df, figure_path = "images/time_histogram.png")
+	create_word_cloud(collection.find(),
+					font_path="fonts/CabinSketch-Regular.ttf",
+					original_figure_path = "images/originals/twitter_image.png",
+					figure_path = "images/twitter_worldcloud.png")
+	create_retweeted_proportion_graph(collection.find(), figure_path = "images/retweeted_proportions.png")
+	create_time_graph(df, figure_path = "images/time_histogram.png")
 
-	# # for those twits that are a retwit of another one, look for the number of times that twit has been
-	# # retwitted
-	# twitter_cursor = collection.find({"text": {'$regex' : '^RT'}})
-	# create_times_retweeted_graph(twitter_cursor, figure_path = "images/retweeted_graph.png")
-	# create_tuits_distict_users_relations_graph(df, figure_path = "images/tuits_users_graph.png")
+	# for those twits that are a retwit of another one, look for the number of times that twit has been
+	# retwitted
+	twitter_cursor = collection.find({"text": {'$regex' : '^RT'}})
+	create_times_retweeted_graph(twitter_cursor, figure_path = "images/retweeted_graph.png")
+	create_tuits_distict_users_relations_graph(df, figure_path = "images/tuits_users_graph.png")
 	create_tuits_by_user_graph(df, figure_path = "images/tuits_by_user_graph.png")
+	create_geolocalized_graph(collection.find(), figure_path = "images/geolocalized_proportions.png")
+	create_hashtags_info(collection.find(), figure_path = "images/hashtags.png")
+	
 
 
 if __name__ == '__main__':

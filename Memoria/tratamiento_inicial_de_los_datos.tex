@@ -256,6 +256,11 @@ mandan mensajes automáticos. Contarlos también.
 * relación entre número de tuits descargados y número de usuarios distintos (a lo largo del tiempo, acumulado)
 * número de tuits por usuario
 * localización de los tuits: ¿cuántos tienen el dato disponible? Consecuencias para geolocalización de los candidatos
+\footnote{\url{https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/geo-objects }}
+Tweets can be associated with a location, generating a Tweet that has been ‘geo-tagged.’ Tweet locations can be assigned by using the Twitter user-interface or when posting a Tweet using the API. Tweet locations can be an exact ‘point’ location, or a Twitter Place with a ‘bounding box’ that describes a larger area ranging from a venue to an entire region.
+
+There are two ‘root-level’ JSON objects used to describe the location associated with a Tweet: coordinates and place.
+The place object is always present when a Tweet is geo-tagged, while the coordinates object is only present (non-null) when the Tweet is assigned an exact location
 * hashtags: distribución.número de hashtags por tuit.
 
 

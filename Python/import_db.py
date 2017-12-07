@@ -22,7 +22,8 @@ if __name__ == '__main__':
 	print("**************************"+ str(collection.count()))
 	my_tweet = {}	
 	# for document in collection.find({"text": {"$regex" : "machine", "$options" : "i"}}):
-	for document in collection.find({"id_str" : "936219943137357824"}):		
+	# for document in collection.find({"id_str" : "936219943137357824"}):		
+	for document in collection.find():		
 		# print(document["id_str"])
 		try:	
 			# t = {}
@@ -31,6 +32,8 @@ if __name__ == '__main__':
 			# t["text"] = document["text"]
 			# t["created at"] = document["created_at"]
 			pprint(document)
+			# print("**************")
+			# print("is place none"+str(document["place"] is None))
 			my_tweet[document["id_str"]] = document #t
 			if(len(my_tweet) >20): break
 		except:
