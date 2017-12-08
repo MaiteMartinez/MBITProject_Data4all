@@ -144,74 +144,6 @@ def create_word_cloud(tweet_cursor,
 	show_words_cloud(word_lista,font_path, original_figure_path, figure_path)
 
 # *********************************************
-# relevant fields
-# *********************************************
-
-def get_relevant_fields(tweet_cursor, file_path = 'tweets_table.xlsx'):
-	tweet_id = []
-	text = []
-	user = []
-	user_id = []
-	user_bio = []
-	is_retweet = []
-	created_at = []
-	times_retweeted = []
-	location = []
-	hashtags = []
-	
-	for t in tweet_cursor:		
-		tweet_id.append(t["id_str"])
-		# treatment of extended tweets
-		txt = t["text"]
-		try:
-			txt = t["extended_tweet"]["full_text"]
-		except:
-			pass
-		if txt.startswith("RT"):
-			try:
-				try:
-					txt = "RT " + t["retweeted_status"]["extended_tweet"]["full_text"]
-				except:
-					txt = "RT " + t["quoted_status"]["extended_tweet"]["full_text"]
-				# print("retweet de tweet extendido")
-			except:
-				pass
-		else:
-			try: 
-				txt = t["extended_tweet"]["full_text"]
-				# print("tweet extendido")
-			except:
-				pass
-		text.append(txt)
-		user.append(t["user"]["name"])
-		user_id.append(t["user"]["id_str"])
-		user_bio.append(t["user"]["description"])
-		is_retweet.append(1 if t["text"].startswith("RT") else 0)
-		created_at.append(t["created_at"])
-		times_retweeted.append(t["retweet_count"])
-		location.append(t["place"])
-		hashtags.append([d["text"] for d in t["entities"]["hashtags"]])
-	df = pd.DataFrame({'tweet_id': tweet_id,
-						'text':text,
-						'user':user,
-						'user_id':user_id,
-						'user_bio':user_bio,
-						'is_retweet':is_retweet,
-						'created_at':created_at,
-						'times_retweeted':times_retweeted,
-						'location':location,
-						'hashtags':hashtags})
-	# Create a Pandas Excel writer using XlsxWriter as the engine.
-	writer = pd.ExcelWriter(file_path, engine='xlsxwriter')
-
-	# Convert the dataframe to an XlsxWriter Excel object.
-	df.to_excel(writer, sheet_name='Sheet1')
-
-	# Close the Pandas Excel writer and output the Excel file.
-	writer.save()
-	return df
-
-# *********************************************
 # retwitted proportion. original tuits,
 # true retuits and retuits without information of retweeted status or quoted status
 # *********************************************
@@ -259,10 +191,10 @@ def create_retweeted_proportion_graph(twitter_cursor, figure_path = "retweeted_p
 # number of twits per day
 # *********************************************
 
-def create_time_graph(df, figure_path = "time_histogram.png"):
+def create_time_graph(twitter_cursor, figure_path = "time_histogram.png"):	
 	ts = [time.strftime('%Y-%m-%d %H:%M:%S', 
-						time.strptime(x,'%a %b %d %H:%M:%S +0000 %Y')) 
-						for x in df["created_at"]]
+						time.strptime(t["created_at"],'%a %b %d %H:%M:%S +0000 %Y')) 
+						for t in twitter_cursor]
 	ts2 = [datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S').date() for x in ts]
 	new_df = pd.DataFrame(pd.to_datetime(ts2), columns=['dates'])
 	plt.clf()
@@ -343,11 +275,13 @@ def create_times_retweeted_graph(RT_twitter_cursor, figure_path = "images/retwee
 # *********************************************
 # number of tuits vs number of users and distinct users
 # *********************************************
-def create_tuits_distict_users_relations_graph(df, figure_path = "images/tuits_users_graph.png"):
-	ts = [time.strftime('%Y-%m-%d %H:%M:%S', 
-						time.strptime(x,'%a %b %d %H:%M:%S +0000 %Y')) 
-						for x in df["created_at"]]
-	users = df["user_id"]
+def create_tuits_distict_users_relations_graph(twitter_cursor, figure_path = "images/tuits_users_graph.png"):
+	ts = []
+	users = []
+	for t in twitter_cursor:
+		ts.append(time.strftime('%Y-%m-%d %H:%M:%S', 
+				time.strptime(t["created_at"],'%a %b %d %H:%M:%S +0000 %Y')))
+		users.append(t["user"]["id_str"])
 	print ("Tenemos "+str(len(set(users)))+" usuarios distintos")
 	list1, list2 = zip(*sorted(zip(ts, users)))
 	distinct_users = []
@@ -368,9 +302,16 @@ def create_tuits_distict_users_relations_graph(df, figure_path = "images/tuits_u
 # number of tuits by user
 # *********************************************
 
-def create_tuits_by_user_graph(df, figure_path = "images/tuits_by_user_graph.png"):
-	users = df["user_id"]
-	tweet_id = df["tweet_id"]
+def create_tuits_by_user_graph(twitter_cursor, figure_path = "images/tuits_by_user_graph.png"):
+	users=[]
+	tweet_id = []
+	user_names = []
+	user_screen_names = []
+	for t in twitter_cursor:
+		users.append(t["user"]["id_str"])
+		tweet_id.append(t["id_str"])
+		user_names.append(t["user"]["name"])
+		user_screen_names.append(t["user"]["screen_name"])
 	new_df = pd.DataFrame({'users':users,'tweet_id':tweet_id })
 	plt.clf()
 	# para cada user id, nos quedamos con el número de tuits suyos que tenemos
@@ -394,10 +335,14 @@ def create_tuits_by_user_graph(df, figure_path = "images/tuits_by_user_graph.png
 	explore = 5	
 	n_tuits = [x for x in new_df2["tweet_id"]]
 	users_id = [x for x in new_df2["users"]]
-	list1, list2  = zip(*sorted(zip(n_tuits, users_id), reverse=True))
+	list1, list2, = zip(*sorted(zip(n_tuits, users_id), reverse=True))
 	for i in range(explore):
 		print ("El usuario numero "+str(i+1)+" por numero de tuits ha publicado" + str(list1[i]) + " tuits")
 		print ("El id de este usuario es " + str(list2[i]))
+
+	# hashtag_bar_graph(hashtags_vector, toprint, titulo, figure_path)
+	hashtag_bar_graph(user_names, 20, "", figure_path.replace(".png", "_bargraph.png"))
+	
 
 # *********************************************
 # number of tuits with localization data
@@ -511,6 +456,9 @@ def create_hashtags_info(twitter_cursor, figure_path = "images/hashtags.png"):
 	hashtag_bar_graph(hashtags_host, toprint, "Tuits principales", figure_path.replace(".png", "_host_occurs.png"))
 
 
+# *********************************************
+# MAIN
+# *********************************************
 
 def main():
 	#MongoDB connection
@@ -520,12 +468,6 @@ def main():
 	db = mongo_conn.client[data_base_name]
 	collection = db[collection_name]
 
-	fn = 'tweets_table.xlsx'
-	# # build a table with relevant fields
-	df = get_relevant_fields(collection.find(), file_path = fn)
-	# # in case we already have the file
-	# df = pd.read_excel(fn)
-	
 	total_tuits, unique_tuits = are_there_duplicated_tuits(collection.find())
 
 	create_word_cloud(collection.find(),
@@ -533,14 +475,14 @@ def main():
 					original_figure_path = "images/originals/twitter_image.png",
 					figure_path = "images/twitter_worldcloud.png")
 	create_retweeted_proportion_graph(collection.find(), figure_path = "images/retweeted_proportions.png")
-	create_time_graph(df, figure_path = "images/time_histogram.png")
+	create_time_graph(collection.find(), figure_path = "images/time_histogram.png")
 
 	# for those twits that are a retwit of another one, look for the number of times that twit has been
 	# retwitted
 	twitter_cursor = collection.find({"text": {'$regex' : '^RT'}})
 	create_times_retweeted_graph(twitter_cursor, figure_path = "images/retweeted_graph.png")
-	create_tuits_distict_users_relations_graph(df, figure_path = "images/tuits_users_graph.png")
-	create_tuits_by_user_graph(df, figure_path = "images/tuits_by_user_graph.png")
+	create_tuits_distict_users_relations_graph(collection.find(), figure_path = "images/tuits_users_graph.png")
+	create_tuits_by_user_graph(collection.find(), figure_path = "images/tuits_by_user_graph.png")
 	create_geolocalized_graph(collection.find(), figure_path = "images/geolocalized_proportions.png")
 	create_hashtags_info(collection.find(), figure_path = "images/hashtags.png")
 	

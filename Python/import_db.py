@@ -6,6 +6,7 @@ import json
 from pprint import pprint
 from OpenMongoDB import MongoDBConnection
 import pymongo
+from analisis_exploratorio import get_relevant_fields
 
 
 
@@ -22,8 +23,9 @@ if __name__ == '__main__':
 	print("**************************"+ str(collection.count()))
 	my_tweet = {}	
 	# for document in collection.find({"text": {"$regex" : "machine", "$options" : "i"}}):
+	# get_relevant_fields(collection.find({"id_str" : "936219943137357824"}), file_path = 'one_tuit_table.xlsx')
 	# for document in collection.find({"id_str" : "936219943137357824"}):		
-	for document in collection.find():		
+	for document in collection.find({"user.name":"narodin80"}):		
 		# print(document["id_str"])
 		try:	
 			# t = {}

@@ -244,25 +244,193 @@ en una base de datos de MongoDB, en local.
 Una vez almacenados los tuits, realizamos un análisis exploratorio para estudiar con qué material contábamos para el desarrollo del proyecto. Este estudio se lleva a cabo en el archivo {\bf analisis\_exploratotio.py} del repositorio de
 GitHub.
 
-* Tuits originales frente a tuits retuiteados. proporcion.
-ojo, hay tuits que parece que son retuits de otros (que comienzan por RT), pero luego
-no tienen los campos "retweeted\_status" o "quoted\_status". Parece que esos pueden ser bots, que 
-mandan mensajes automáticos. Contarlos también.
+\subsubsection{Tuits repetidos}
+Aunque hemos usado una conexión con el API Streaming de Twitter, que va almacenando los
+tuits según van publicándose,  de los $14.736$ documentos que hemos recogido en la base de datos, 
+solo $14.727$ son únicos, y hay $9$ repetidos. Esto es extraño, pero podría deberse a dos procesos
+de Streaming corriendo en paralelo sobre la misma base de datos momentáneamente. Como son muy pocos,
+no los hemos eliminado para hacer este estudio previo de los datos.
 
-* tuits descargados a lo largo del tiempo (por día, por hora, etc.). histograma
+\subsubsection{El texto de los tuits}
+Nuestra primera duda es si los tuits que hemos bajado corresponden realmente a contenido relacionado
+con la ciencia de datos. Esto será objeto de una sección propia a la hora de limpiar los datos.
+De momento, una forma gráfica de estudiar si los textos de los tuits se corresponden con el tema
+que nos interesa es construir una nube de palabras con dichos textos:
 
-* número de retuits por tuit (detección de eventos): for those twits that are a retwit of another one, look for the number of times that twit has been retwitted
+\myfigure{\includegraphics[width=0.8\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/twitter_worldcloud.png}%
+\figcaption{Texto de los tuits}
+\label{fig:twitter_worldcloud} }
 
-* relación entre número de tuits descargados y número de usuarios distintos (a lo largo del tiempo, acumulado)
-* número de tuits por usuario
-* localización de los tuits: ¿cuántos tienen el dato disponible? Consecuencias para geolocalización de los candidatos
-\footnote{\url{https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/geo-objects }}
-Tweets can be associated with a location, generating a Tweet that has been ‘geo-tagged.’ Tweet locations can be assigned by using the Twitter user-interface or when posting a Tweet using the API. Tweet locations can be an exact ‘point’ location, or a Twitter Place with a ‘bounding box’ that describes a larger area ranging from a venue to an entire region.
+Aparentemente no hay grandes desviaciones del tema a tratar, ciencia de datos y big data.
 
-There are two ‘root-level’ JSON objects used to describe the location associated with a Tweet: coordinates and place.
-The place object is always present when a Tweet is geo-tagged, while the coordinates object is only present (non-null) when the Tweet is assigned an exact location
-* hashtags: distribución.número de hashtags por tuit.
+\subsubsection{Tuits originales frente a tuits retuiteados}
+Nos interesaba saber qué proporción de tuits de los que hemos bajado son tuits originales
+y qué proporción son tuits retuiteados. En general, en los documentos obtenidos a través
+del API Streaming, Twitter marca con un \lq\lq RT\rq\rq
+al comienzo del texto del tuit aquellos que son retuiteados, a la vez que incluye en el cuerpo del
+tuit la información completa sobre el tuit que ha sido retuiteado.Hemos observado
+que hay tuits que parece que son retuits de otros (que comienzan por  \lq\lq RT\rq\rq), pero luego
+no tienen los campos \lq\lq retweeted\_status\rq\rq o \lq\lq quoted\_status\rq\rq. Estos podrían ser mensajes procedentes
+de bots, que los envían de forma automática. De los $14.736$ tuits,  hay 
+$6.421$ originales, $8.048$ retweets estándar y $267$ aparentes retuits que no tienen información
+de lo retuiteado.
 
+\myfigure{\includegraphics[width=0.6\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/retweeted_proportions.png}%
+\figcaption{Proporción de tuits originales y retuiteados.}
+\label{fig:tuits_originales_y_retuiteados} }
+
+\subsubsection{Número de retuits por tuit}
+A la vista del gráfico anterior, parece que la actividad principal que hemos captado es
+una actividad de difusión, en la que los usuarios retuitean información de otros usuarios.
+Entre estos tuits retuiteados, nos interesa estudiar el número de veces que 
+cada tuit ha sido retuiteado. Nos vamos a fijar en aquellos tuits que aparecen como retuiteados en nuestra muestra, es decir, aquellos tuits cuya información viene en los campos \lq\lq retweeted\_status\rq\rq o \lq\lq quoted\_status\rq\rq,
+ya que son indicativos de los temas que interesan a los usuarios.
+En los $8.048$ tuits de nuestro corpus que son retuits con info de lo retuiteado, se han retuiteado $2.686$ tuits distintos. La distribución del número de retuits por cada uno de estos $2.686$ aparece en las siguientes
+gráficas.
+
+\myfigure{
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/retweeted_graph_hist.png}
+&\includegraphics[width=0.4\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/retweeted_graph_scatter.png}
+\end{tabular}
+\figcaption{Retuits: número de retuits por tuit.}
+\label{fig:numero_retuits_por_tuit} }
+
+Tanto en el histograma con en el gráfico de puntos, es claro que la mayoría de tuits han sido retuiteados unas pocas
+veces (entre 1 y 5), y que solo unos pocos han sido retuiteados muchas veces. Los dos más tuiteados aparecen en la siguiente figura:
+
+\myfigure{
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{tuit_mas_retuiteado}
+&\includegraphics[width=0.4\textwidth]{tuit_mas_retuiteado2}
+\end{tabular}
+\figcaption{Retuits: los dos tuits más retuiteados.}
+\label{fig:tuit_mas_tuiteado} }
+
+Viendo los tuits, parece que podemos encontrar usuarios relevantes para nuestro proyecto no solo en
+los usuarios que han publicado los tuits que hemos descargado, sino también en los usuarios que han publicado 
+los tuits que los primeros han retuiteado.
+
+\subsubsection{Tuits descargados a lo largo del tiempo}
+Hemos descargado tuits durante dos semanas a finales de Noviembre de 2017. La distribución
+temporal del número de tuits obtenidos es la siguiente:
+
+\myfigure{\includegraphics[width=0.6\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/time_histogram.png}%
+\figcaption{Tuits descargados diariamente.}
+\label{fig:tuits_descargados_diariamente}}
+
+El día 19 de Noviembre fue domingo, parece por tanto que se aprecia cierto patrón estacional en la actividad
+(tuiteándose más entresemana que en fin de semana). Los días 22 y 23 de Noviembre hubo un evento
+BigData, el V Encuentro de Big Data en Castilla y León, que tal vez tenga relación con la mayor actividad
+durante esos días.
+
+\subsubsection{Relación entre número de tuits descargados y número de usuarios distintos}
+Para nuestro proyecto, lo más relevante de la base de datos con la que trabajamos hasta ahora es
+qué información sobre los usuarios podemos extraer a partir de los tuits almacenados. El primer paso 
+suele ser contar, y por ello miramos cuántos usuarios distintos podemos obtener de ella. 
+El siguiente gráfico representa el número de usuarios distintos en función del número de tuits
+descargados, a lo largo del tiempo.
+
+\myfigure{\includegraphics[width=0.6\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/tuits_users_graph.png}%
+\figcaption{Número de usuarios distintos frente a número de tuits descargados diariamente.}
+\label{fig:tuits_users_graph}}
+
+Este gráfico no presenta sorpresas, y se aprecia que la relación entre el número de tuits descargados y el número
+de usuarios distintos es prácticamente lieal.
+
+Tenemos $6.890$ usuarios distintos (en los usuarios de los tuits descargados, sin contar los usuarios
+de los tuits que estos usuarios hayan podido retuitear), lo que arroja una media de unos $2.13$ tuits
+por usuario. Ya sabemos que la media es una medida muy poco robusta. Si queremos hacernos una idea de la
+actividad de nuestros usuarios, mejor estudiamos un poco más la distribución de esa variable.
+
+\subsubsection{Número de tuits por usuario}
+Al igual que hicimos con el número de retuits por tuit retuiteado, veamos un poco más en detalle
+la distribución del número de tuits que cada usuario ha publicado:
+
+\myfigure{
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/tuits_by_user_graph.png}
+&\includegraphics[width=0.4\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/tuits_by_user_graph_scatter.png}
+\end{tabular}
+\figcaption{Número de tuits por usuario.}
+\label{fig:tuits_by_user_graph_scatter} }
+
+También en este caso se aprecia que la mayoría de los usuarios han tuiteado una vez, pero que hay algunos usuarios con
+un número muy elevado de tuits:
+
+\myfigure{\includegraphics[width=0.6\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/tuits_by_user_graph_bargraph.png}%
+\figcaption{Número de tuits de los usuarios más activos.}
+\label{fig:tuits_by_user_graph_bargraph}}
+
+De estos usuarios:
+
+\begin{itemize}
+\item Natalia Rodín, Sistema BigData, Steak Hutsee parece que ya no existen en Twitter
+\item IoT World Online es un grupo de personas interesadas en el mundo del Big Data.
+\item IT User Big Data, validado, Data Entry Services, IT User Storage no está claro si son personas 
+(solo retuits, sin bio o con bio poco descriptiva).
+\item Salud Big Data es un portal de noticias
+\item IT Knowingness es un feed 
+\item KohoraaBot, Machine Maximilien son bots
+\end{itemize}
+
+En resumen, solo ocho de los veinte usuarios con mayor actividad parecen adecuados para
+nuestro proyecto. Esto es indicativo de que la labor de filtrado de la base de datos
+va a ser clave para producir un producto exitoso.
+
+\subsubsection{Localización de los tuits}
+Desde el punto de vista de la comercialización del producto, parece relevante incorporar información
+geográfica acerca de los candidatos. Para ello, siguiendo el enfoque de este trabajo, deberíamos
+usar información de este tipo extraída del corpus de tuits descargados de Twitter. Esto nos lleva a 
+preguntarnos cuántos de ellos tienen el dato disponible. 
+
+Según la documentación del API de Twitter\footnote{\url{https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/geo-objects }},
+los tuits pueden asociarse con una localización, generando un tuit que ha sido \lq\lq geolocalizado\rq\rq,
+y estas localizaciones pueden ser un punto exacto (con coordinadas de longitud y latitud) o un lugar como una
+ciudad o país o un área definida mediante una \lq\lq bounding box\rq\rq. Hay dos campos en un tuit que se usan
+para describir la geolocalización: \lq\lq coordinates\rq\rq y \lq\lq place\rq\rq. El objeto \lq\lq place\rq\rq
+siempre está presente en el caso de que el tuit esté geolocalizado, mientras que las coordinadas solo en el caso 
+en el que el tuit tenga asignada una localización exacta. En el siguiente gráfico hemos 
+representado el porcentaje de tuits con el campo \lq\lq place\rq\rq con valores:
+
+\myfigure{\includegraphics[width=0.6\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/geolocalized_proportions.png}%
+\figcaption{Proporción de tuits geolocalizados.}
+\label{fig:geolocalized_proportions}}
+
+Claramente, salvo que cambiásemos la búsqueda en Twitter, no es un campo que vayamos a poder usar en el 
+análisis.
+
+\subsubsection{Hashtags: distribución}
+En nuestro proyecto, va a ser muy importante cómo clasifiquemos los contenidos de los tuits. 
+Los propios usuarios clasifican los contenidos de los tuits cuando los etiquetan a través
+de los denominados \lq\lq hashtags\rq\rq,  que son palabras precedidas por el símbolo \#.
+
+Hemos estudiado los hashtags incluidos en los tuits de la base de datos, tanto los de los tuits
+descargados, como de aquellos citados o retuiteados en ellos. Los siguientes gráficos dan una idea 
+de los hashtags presentes en ambos casos:
+
+
+
+\myfigure{
+\begin{tabular}{c}
+\includegraphics[width=\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/hashtags_host_wordcloud.png}\\
+\vspace{-3cm}\\
+\includegraphics[width=\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/hashtags_total_wordcloud.png}\\
+\end{tabular}
+\figcaption{Hashtags en los tuits descargados (arriba) y en los tuits descargados y citados y retuiteados en ellos.}
+\label{fig:hashtags_wordcloud} }
+
+En principio parece que no difieren mucho. Vamos a comparar los hashtags más frecuentes
+en ambos conjuntos de tuits:
+
+\myfigure{
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/hashtags_host_occurs.png}
+&\includegraphics[width=0.4\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/hashtags_total_occurs.png}
+\end{tabular}
+\figcaption{Hashtags más frecuentes en los tuits descargados (izq.) y en los tuits descargados y citados y retuiteados en ellos.}
+\label{fig:hashtags_occurs} }
+ 
 
 \section{Limpieza de los datos}
 \label{sect:limpieza_de_los_datos}
