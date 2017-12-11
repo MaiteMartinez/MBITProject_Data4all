@@ -338,7 +338,23 @@ adecuados para obtener el consentimiento explícito de los usuarios para el uso 
 y posible inclusión en un proceso de selección de personal. Esta fase quedará fuera del plan de elaboración
 del proyecto.
 \end{itemize}
-Para eliminar el riesgo relativo a protección de datos en la elaboración del proyecto, 
-pero sin alterar su esencia, proponemos publicar los resultados enmascarando los nombres de usuario 
-de aquellos que aparezcan en nuestra base de datos.
+% Para eliminar el riesgo relativo a protección de datos en la elaboración del proyecto, 
+% pero sin alterar su esencia, proponemos publicar los resultados enmascarando los nombres 
+% de usuario de aquellos que aparezcan en nuestra base de datos.
 
+\section{Esquema de desarrollo del proyecto}
+En las siguientes secciones de la memoria iremos estudiando y describiendo las distintas
+fases que componen el proyecto, que podemos dividir en tres grandes subgrupos:
+\begin{enumerate}
+\item Comenzaremos por hacer un análisis descriptivo de la base de datos recogida a partir del API de Twitter, en relación con el problema que nos ocupa. Estudiaremos la proporción de tuits originales
+frente a retuiteados, número de tuits descargados por día, número de retuits, relación entre el 
+número de tuits descargados y el número de usuarios distintos, el número de tuits por usuario, y
+los hastags presentes en los mensajes. Esta tarea la llevaremos a cabo en el capítulo \ref{chap:tratamiento_inicial_de_los_datos}.
+
+\item A continuación, comienza la fase de proceso de la información. Nuestro objetivo es 
+constuir una lista de usuarios que podamos recomendar a un profesional de Recursos Humanos como
+posibles candidatos para una oferta. El primer paso, realizado en el capítulo \ref{chap:extraccion_de_usuarios}, es entonces seleccionar, a partir de la información descargada de Twitter, los usuarios de interés. 
+
+\item La fase final será, con esa lista de usuarios extraídos en la fase anterior, ordenarlos
+en función de su comportamiento en Twitter. La metodología empleada en este apartado, así como una descripción de los resultados, se abordan en el capítulo \ref{chap:ordenacion_de_usuarios}.
+\end{enumerate}

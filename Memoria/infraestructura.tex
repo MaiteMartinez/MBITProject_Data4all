@@ -88,6 +88,7 @@ Y para refrescar el proceso, y que la conexión con Twitter funcione correctamen
 de forma continua, se programaron relanzamientos diarios del script en el programador 
 de tareas de Windows.
  
+\section{Lenguajes de implementación}
 
 Para el desarrollo de la mayor parte de la lógica del proyecto hemos elegido Python 3.6 (a través de la
 instalación de Anaconda). Esta elección tiene diversas ventajas, en las varias fases del proyecto, ya
@@ -101,8 +102,9 @@ lo que nos ahorra muchos quebraderos de cabeza al tratar con caracteres especial
 y la presencia de emojis en los textos de los tuits.\footnote{\url{https://docs.python.org/3/howto/unicode.html. }}
 \end{itemize}
 
-Para la primera toma de contacto con los datos descargados del API de Twitter, nos hemos decantado por 
-almacenarlos según íbamos recogiéndolos en una base de datos MongoDB. Las razones son varias:
+
+\section{Almacenamiento y manipulación de los datos}
+Para la primera toma de contacto con los datos descargados del API de Twitter, nos hemos decantado por almacenarlos según íbamos recogiéndolos en una base de datos MongoDB. Las razones son varias:
 \begin{itemize}
 \item MongoDB trata de forma natural documentos en formato JSON.
 \item También maneja sin problemas documentos con encoding UTF-8\footnote{
