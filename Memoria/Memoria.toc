@@ -31,15 +31,15 @@
 \contentsline {subsubsection}{Localizaci\IeC {\'o}n de los tuits}{35}{section*.80}
 \contentsline {subsubsection}{Hashtags: distribuci\IeC {\'o}n}{35}{section*.83}
 \contentsline {chapter}{\numberline {5}Limpieza de datos: extracci\IeC {\'o}n de usuarios relevantes}{39}{chapter.86}
-\contentsline {subsection}{\numberline {5.0.1}Detecci\IeC {\'o}n del idioma}{39}{subsection.87}
-\contentsline {subsection}{\numberline {5.0.2}Tipo de usuario}{40}{subsection.89}
-\contentsline {subsection}{\numberline {5.0.3}Naturaleza del tuit}{40}{subsection.90}
-\contentsline {chapter}{\numberline {6}Modelado de los datos: ordenaci\IeC {\'o}n de los usuarios}{41}{chapter.91}
-\contentsline {section}{\numberline {6.1}Principales hip\'otesis}{41}{section.92}
-\contentsline {section}{\numberline {6.2}Algoritmos}{41}{section.93}
-\contentsline {section}{\numberline {6.3}Almacenamiento}{41}{section.94}
-\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{43}{chapter.95}
-\contentsline {section}{\numberline {7.1}Herramientas}{43}{section.96}
-\contentsline {section}{\numberline {7.2}Acceso web}{43}{section.97}
-\contentsline {chapter}{\numberline {8}\'Areas de mejora}{45}{chapter.98}
-\contentsline {chapter}{Bibliograf\'\i a}{47}{chapter*.99}
+\contentsline {section}{\numberline {5.1}Detecci\IeC {\'o}n del idioma}{39}{section.87}
+\contentsline {section}{\numberline {5.2}Tipo de usuario}{42}{section.92}
+\contentsline {section}{\numberline {5.3}Naturaleza del tuit}{43}{section.94}
+\contentsline {chapter}{\numberline {6}Modelado de los datos: ordenaci\IeC {\'o}n de los usuarios}{45}{chapter.95}
+\contentsline {section}{\numberline {6.1}Principales hip\'otesis}{45}{section.96}
+\contentsline {section}{\numberline {6.2}Algoritmos}{45}{section.97}
+\contentsline {section}{\numberline {6.3}Almacenamiento}{45}{section.98}
+\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{47}{chapter.99}
+\contentsline {section}{\numberline {7.1}Herramientas}{47}{section.100}
+\contentsline {section}{\numberline {7.2}Acceso web}{47}{section.101}
+\contentsline {chapter}{\numberline {8}\'Areas de mejora}{49}{chapter.102}
+\contentsline {chapter}{Bibliograf\'\i a}{51}{chapter*.103}

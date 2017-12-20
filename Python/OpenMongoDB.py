@@ -7,11 +7,12 @@ class MongoDBConnection:
 	def __init__(self, mongo_server_path_file):
 		s = subprocess.check_output('tasklist', shell=True)
 		if ("mongod.exe" not in str(s)):
-			print("MongoDB connection not available, opening one")
-			path_file  = open(mongo_server_path_file, "r") 
-			mypath = eval(path_file.read())["MongoDB_path"]
-			file = mypath + "mongod.exe"
-			subprocess.call([file])
+			raise Exception ("IITIALIZE MONGO DB")
+			# print("MongoDB connection not available, opening one")
+			# path_file  = open(mongo_server_path_file, "r") 
+			# mypath = eval(path_file.read())["MongoDB_path"]
+			# file = mypath + "mongod.exe"
+			# subprocess.call([file])
 		else:
 			print("Connecting with current MongoDB")
 		self.client = pymongo.MongoClient('localhost', 27017)

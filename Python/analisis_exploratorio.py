@@ -407,7 +407,7 @@ def hashtag_bar_graph(hashtags_vector, toprint, titulo, figure_path):
 	idx = [x for x in range(toprint)]
 	plt.clf()
 	fig,ax = plt.subplots()
-	ax.bar(idx, list1[:toprint], width=0.8, color=oyellow, )
+	ax.bar(idx, list1[:toprint], width=0.8, color = oyellow, )
 	ax.set_xticks(idx)
 	ax.set_xticklabels(list2[:toprint], rotation=90)
 	plt.xlabel("")
