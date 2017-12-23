@@ -65,6 +65,26 @@ def process(text, tokenizer = TweetTokenizer(), stopwords=[]):
 
 def random_color_func_twitter(word=None, font_size=None, position=None,  orientation=None, font_path=None, random_state=None):
 	rgb = [85.0, 172.0, 238.0] # azul de twitter en rgb
+	h,s,l = get_h_s_l_from_rgb(rgb)
+	return "hsl({}, {}%, {}%)".format(h,s,l)
+
+def random_color_func_bios(word=None, font_size=None, position=None,  orientation=None, font_path=None, random_state=None):
+	rgb = [x*255. for x in oblue] # azul de twitter en rgb
+	h,s,l = get_h_s_l_from_rgb(rgb)
+	return "hsl({}, {}%, {}%)".format(h,s,l)
+
+
+def random_color_func_project_colors(word=None, font_size=None, position=None,  orientation=None, font_path=None, random_state=None):
+	project_colors =[oyellow, oblue, ogreen1, ogreen2, ored]
+	rgb_vector = [[x*255. for x in c] for c in project_colors] # azul de twitter en rgb
+	hsl_vector = []
+	for rgb in rgb_vector:
+		hsl_vector.append(get_h_s_l_from_rgb(rgb))
+	h,s,l = hsl_vector[np.random.random_integers(0, high=len(hsl_vector)-1)]
+	return "hsl({}, {}%, {}%)".format(h,s,l)
+
+
+def get_h_s_l_from_rgb(rgb):
 	rgb = [x/255. for x in rgb]
 	mn = min(rgb)
 	mx = max(rgb)
@@ -86,36 +106,45 @@ def random_color_func_twitter(word=None, font_size=None, position=None,  orienta
 	h = int(60*h)
 	s = int(100*s) 
 	l = int(100*l*uniform(60,95)/100.)
+	return h, s, l
 	
-	return "hsl({}, {}%, {}%)".format(h,s,l)
+
 
 
 def show_words_cloud(text,
 					font_path="fonts/CabinSketch-Regular.ttf",
 					original_figure_path = "images/originals/twitter_image.png",
-					figure_path = "images/twitter_worldcloud.png"):
+					figure_path = "images/twitter_worldcloud.png",
+					color_function = None):
 	plt.clf()
-	twitter_mask = imread(original_figure_path)
+	if original_figure_path is not None:
+		twitter_mask = imread(original_figure_path)
+		max_words = 3000
+	else:
+		twitter_mask = None
+		max_words = 8000
 	wcloud = WordCloud(font_path = font_path,
-						background_color = "white", 
-						max_words = 3000,
+						background_color = None, 
 						mask = twitter_mask, 
+						mode = "RGBA",
+						max_words = max_words,
+						color_func=color_function,
+						stopwords=STOPWORDS.add("RT"),
 						max_font_size = 60,
-						width=1800000,
-						height=1400000,
-						color_func=random_color_func_twitter,
-						stopwords=STOPWORDS.add("RT"))
+						relative_scaling=1)
 	wcloud.generate(text)
 	plt.figure()
 	plt.imshow(wcloud)
+	plt.tight_layout()
 	plt.axis("off")
-	# plt.show()
-	plt.savefig(figure_path)
+	plt.savefig(figure_path, bbox_inches='tight')
 
 def create_word_cloud(tweet_cursor,
+					fields = ["text"],
 					font_path="fonts/CabinSketch-Regular.ttf",
 					original_figure_path = "images/originals/twitter_image.png",
-					figure_path = "images/twitter_worldcloud.png"):
+					figure_path = "images/twitter_worldcloud.png",
+					color_function = None):
 		
 	tweet_tokenizer = TweetTokenizer()
 	punct = list(string.punctuation)
@@ -127,11 +156,17 @@ def create_word_cloud(tweet_cursor,
 
 	t_count = 0
 	for docto in tweet_cursor:		
-		tokens = process(text=docto["text"],
-						 tokenizer = tweet_tokenizer,
-						 stopwords=stopword_list)
-		tf.update(tokens)
-		t_count +=1		
+		obj = docto
+		for f in fields: obj = obj[f]
+		try:
+			tokens = process(text = obj,
+							 tokenizer = tweet_tokenizer,
+							 stopwords=stopword_list)
+			tf.update(tokens)	
+			t_count +=1	
+		except:
+			pass
+			
 		# if(t_count > 100): break
 	print("La word cloud ha procesado el texto de "+str(t_count)+" tuits")
 	word_lista = ' '
@@ -141,7 +176,7 @@ def create_word_cloud(tweet_cursor,
 		# except:
 			# pass
 		word_lista = word_lista+','+tag
-	show_words_cloud(word_lista,font_path, original_figure_path, figure_path)
+	show_words_cloud(word_lista,font_path, original_figure_path, figure_path, color_function)
 
 # *********************************************
 # retwitted proportion. original tuits,
@@ -380,18 +415,19 @@ def hashtags_cloud(hashtags_vector, figure_path):
 	for i in range(1,len(h)):
 		text += " "+h[i]
 	img_mask = imread("images/originals/hash2.png")
-	wcloud = WordCloud(background_color = "black", 
+	wcloud = WordCloud(background_color = None, 
 						max_words = 3000,
 						max_font_size = 60,
 						mask = img_mask,
-						width=18000,
-						height=14000)
+						mode = "RGBA",
+						relative_scaling=1,
+						color_func = random_color_func_project_colors)
 	wcloud.generate(text)
 	plt.figure()
 	plt.imshow(wcloud)
+	plt.tight_layout()
 	plt.axis("off")
-	# plt.show()
-	plt.savefig(figure_path)
+	plt.savefig(figure_path, bbox_inches='tight')
 
 def hashtag_bar_graph(hashtags_vector, toprint, titulo, figure_path):
 	h = deepcopy(hashtags_vector)
@@ -470,10 +506,12 @@ def main():
 
 	total_tuits, unique_tuits = are_there_duplicated_tuits(collection.find())
 
+	# # tuits text word cloud
 	create_word_cloud(collection.find(),
 					font_path="fonts/CabinSketch-Regular.ttf",
 					original_figure_path = "images/originals/twitter_image.png",
-					figure_path = "images/twitter_worldcloud.png")
+					figure_path = "images/twitter_worldcloud.png",
+					color_function = random_color_func_twitter)
 	create_retweeted_proportion_graph(collection.find(), figure_path = "images/retweeted_proportions.png")
 	create_time_graph(collection.find(), figure_path = "images/time_histogram.png")
 
@@ -485,7 +523,21 @@ def main():
 	create_tuits_by_user_graph(collection.find(), figure_path = "images/tuits_by_user_graph.png")
 	create_geolocalized_graph(collection.find(), figure_path = "images/geolocalized_proportions.png")
 	create_hashtags_info(collection.find(), figure_path = "images/hashtags.png")
-	
+
+	# # wordcloud for users descriptions with a figure shape
+	create_word_cloud(collection.find(),
+					fields = ["user", "description"],
+					font_path="fonts/CabinSketch-Regular.ttf",
+					original_figure_path = "images/originals/two_people.jpg",
+					figure_path = "images/bios_worldcloud.png",
+					color_function = random_color_func_project_colors)
+	# square wordcloud for users descriptions
+	create_word_cloud(collection.find(),
+					fields = ["user", "description"],
+					font_path="fonts/MiriamLibre-Regular.ttf",
+					original_figure_path = None,
+					figure_path = "images/bios_worldcloud2.png",
+					color_function = random_color_func_project_colors)
 
 
 if __name__ == '__main__':

@@ -30,16 +30,17 @@
 \contentsline {subsubsection}{N\IeC {\'u}mero de tuits por usuario}{33}{section*.77}
 \contentsline {subsubsection}{Localizaci\IeC {\'o}n de los tuits}{35}{section*.80}
 \contentsline {subsubsection}{Hashtags: distribuci\IeC {\'o}n}{35}{section*.83}
-\contentsline {chapter}{\numberline {5}Limpieza de datos: extracci\IeC {\'o}n de usuarios relevantes}{39}{chapter.86}
-\contentsline {section}{\numberline {5.1}Detecci\IeC {\'o}n del idioma}{39}{section.87}
-\contentsline {section}{\numberline {5.2}Tipo de usuario}{42}{section.92}
-\contentsline {section}{\numberline {5.3}Naturaleza del tuit}{43}{section.94}
-\contentsline {chapter}{\numberline {6}Modelado de los datos: ordenaci\IeC {\'o}n de los usuarios}{45}{chapter.95}
-\contentsline {section}{\numberline {6.1}Principales hip\'otesis}{45}{section.96}
-\contentsline {section}{\numberline {6.2}Algoritmos}{45}{section.97}
-\contentsline {section}{\numberline {6.3}Almacenamiento}{45}{section.98}
-\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{47}{chapter.99}
-\contentsline {section}{\numberline {7.1}Herramientas}{47}{section.100}
-\contentsline {section}{\numberline {7.2}Acceso web}{47}{section.101}
-\contentsline {chapter}{\numberline {8}\'Areas de mejora}{49}{chapter.102}
-\contentsline {chapter}{Bibliograf\'\i a}{51}{chapter*.103}
+\contentsline {subsubsection}{Perfiles de los usuarios}{37}{section*.86}
+\contentsline {chapter}{\numberline {5}Limpieza de datos: extracci\IeC {\'o}n de usuarios relevantes}{39}{chapter.89}
+\contentsline {section}{\numberline {5.1}Detecci\IeC {\'o}n del idioma}{39}{section.90}
+\contentsline {section}{\numberline {5.2}Tipo de usuario}{42}{section.95}
+\contentsline {section}{\numberline {5.3}Naturaleza del tuit}{43}{section.97}
+\contentsline {chapter}{\numberline {6}Modelado de los datos: ordenaci\IeC {\'o}n de los usuarios}{45}{chapter.98}
+\contentsline {section}{\numberline {6.1}Principales hip\'otesis}{45}{section.99}
+\contentsline {section}{\numberline {6.2}Algoritmos}{45}{section.100}
+\contentsline {section}{\numberline {6.3}Almacenamiento}{45}{section.101}
+\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{47}{chapter.102}
+\contentsline {section}{\numberline {7.1}Herramientas}{47}{section.103}
+\contentsline {section}{\numberline {7.2}Acceso web}{47}{section.104}
+\contentsline {chapter}{\numberline {8}\'Areas de mejora}{49}{chapter.105}
+\contentsline {chapter}{Bibliograf\'\i a}{51}{chapter*.106}

@@ -256,7 +256,7 @@ con la ciencia de datos. Esto será objeto de una sección propia a la hora de l
 De momento, una forma gráfica de ver si los textos de los tuits se corresponden con el tema
 que nos interesa es construir una nube de palabras con dichos textos. Aparentemente no hay grandes desviaciones del tema a tratar, ciencia de datos y big data:
 
-\myfigure{\includegraphics[width=0.8\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/twitter_worldcloud.png}%
+\myfigure{\includegraphics[scale = 1.15]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/twitter_worldcloud.png}%
 \figcaption{Texto de los tuits}
 \label{fig:twitter_worldcloud} }
 
@@ -393,7 +393,7 @@ descargados, como de aquellos citados o retuiteados en ellos. Los siguientes gr�
 \myfigure{
 \begin{tabular}{c}
 \includegraphics[width=\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/hashtags_host_wordcloud.png}\\
-\vspace{-3cm}\\
+\vspace{-1cm}\\
 \includegraphics[width=\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/hashtags_total_wordcloud.png}\\
 \end{tabular}
 \figcaption{Hashtags en los tuits descargados (arriba) y en los tuits descargados y citados y retuiteados en ellos.}
@@ -409,4 +409,28 @@ en ambos conjuntos de tuits:
 \end{tabular}
 \figcaption{Hashtags más frecuentes en los tuits descargados (izq.) y en los tuits descargados y citados y retuiteados en ellos.}
 \label{fig:hashtags_occurs} }
- 
+
+\subsubsection{Perfiles de los usuarios}
+A la hora de desarrollar el proyecto y construir la lista de usuarios recomendados, es importante
+filtrar aquellos que sean efectivamente personas, y desechar aquellos que sean empresas, bots, cuentas
+oficiales de organismos públicos, etc.
+
+Este análisis lo llevaremos a cabo usando la información contenida en el campo \lq\lq user\rq\rq
+de los tuits, y será necesario para ello examinar el texto de la bio que incorpora, campo que
+registra la información que los propios usuarios facilitan sobre ellos mismos. 
+Para hacernos una idea del tipo de texto y contenidos a los que nos enfrentamos, hemos dibujado también
+una nube de palabras que represente esta información.
+
+
+\myfigure{
+\includegraphics[width=\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/bios_worldcloud2.png}
+\figcaption{Wordcloud de las descripciones de los usuarios.}
+\label{fig:bios_worldcloud2} }
+
+\myfigure{
+\includegraphics[width=\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/bios_worldcloud.png}
+\figcaption{Wordcloud de las descripciones de los usuarios.}
+\label{fig:bios_worldcloud}}
+
+Aparentemente, las descripciones de los usuarios coinciden con los perfiles que nos interesan.
+
