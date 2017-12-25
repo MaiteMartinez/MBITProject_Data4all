@@ -3,55 +3,9 @@ import tweepy
 from OpenMongoDB import MongoDBConnection
 import pymongo
 import json
-import sys, string, os
-import csv
-import pdb
-import time
-import codecs
+from TweeterAPIConnection import TweeterAPIConnection
 import datetime
-
-
-#Import the necessary methods from tweepy library
-from tweepy.streaming import StreamListener
-from tweepy import OAuthHandler
-from tweepy import Stream
-
-
-#Listener
-class StreamListener_to_db(StreamListener):
-	def __init__(self, collection):		
-		self.collection = collection
-		print("************  New stream created at " + str(datetime.datetime.now()))
-
-	def on_data(self, data):
-		tweet_json = json.loads(data)
-		try:
-			tweetid = self.collection.insert_one(tweet_json).inserted_id
-			print ( "========   twit loaded " + str(tweetid) +" at "+str(datetime.datetime.now()) )
-			return True # keep stream alive
-		except BaseException as e:
-			print ('failed ondata,',str(e))
-			time.sleep(5) # reload stream
-
-
-	def on_error(self, status):
-		text_error = '*********** ERROR ** Status code = %s at %s\n' % (status_code,datetime.datetime.now())
-		print (text_error)
-		return True # keep stream alive
-
-	def on_exception(self,exception):
-		text_error = '*********** EXCEPTION  ** %s at %s\n' % (exception,datetime.datetime.now())
-		print (text_error) 
-		return True # keep stream alive
-
-	def on_timeout(self):
-		#print 'paso por on_timeout\n'
-		text_error = '*********** TIMEOUT at %s\n' % ( datetime.datetime.now())
-		print (text_error)
-		return False #restart streaming
- 
-
-
+import pandas as pd
 
 
 def main():
@@ -63,33 +17,75 @@ def main():
 	access_token= keys_dict["Twitter_keys"]["access_token"]
 	access_token_secret= keys_dict["Twitter_keys"]["access_token_secret"]
 
+	# wait_on_rate_limit=True to wait until rate limits reset, instead of failing
+	# rate limit when getting followed/followers is easily reached
+	api = TweeterAPIConnection(keys_file_name = "set_up.py").getTwitterApi(wait_on_rate_limit=True)
+
 	#MongoDB connection
-	data_base_name = "query1_spanish_stream"
-	collection_name = "col_" + data_base_name
-	mongo_conn = MongoDBConnection("set_up.py")
+	data_base_name = "timelines"	
+	mongo_conn = MongoDBConnection("set_up.py")	
+	# borramos la database:
+	mongo_conn.client.drop_database(data_base_name)
 	db = mongo_conn.client[data_base_name]
-	collection = db[collection_name]
 
-	#stream connection
-	l = StreamListener_to_db(collection)
-	auth = OAuthHandler(consumer_key, consumer_secret)
-	auth.set_access_token(access_token, access_token_secret)
-	
+	# users info
+	file_name = "C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/all_tweets_lang_class.xlsx"
+	df_columns = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0).columns
+	converter = {col: str for col in df_columns} 
+	df = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0, converters = converter)
+	na_value =  "None"
+	df2 = df.fillna(value = na_value)
+	people_net={}
+	for i in range(len(df2["user_id"])):
+		# TIMELINES
+		collection_name = "col_" + str(df2["user_id"][i])
+		collection = db[collection_name]
+		user_id = df2["user_id"][i]
+		user_cursor = api.user_timeline(user_id = user_id,
+										screen_name = df2["user_screenname"][i],
+										count=2)
+		for status in user_cursor:
+			# process status here				
+			tweet_json = json.loads(json.dumps((status._json)))
+			try:
+				tweetid = collection.insert_one(tweet_json).inserted_id
+			except Exception as e:
+				print ("Tweet load failed *******  "+str(e))
+			try:
+				print(df2["user_name"][i]+"   "+str(tweet_json["user"]["name"]))
+			except:
+				pass
 
-	#query to search tweets: ',' is or, ' ' is and
-	query = ["#machine learning", "#machinelearning", "#datamining", "#data mining",\
-			"#Python","#SQL", "#hadoop", "#bigdata", "#tableau", "#pentaho", "#rstats"]
-	exit = False
-	while not exit: # Making permanent streaming with exception handling 
-		try:
-			stream = Stream(auth, l)
-			stream.filter(track=query,languages = ["es"])
-		except KeyboardInterrupt:
-			print ('\nGoodbye! ')
-			exit = True
-		except:			
-			print ("Error. Restarting Stream....  ")
-			time.sleep(5)			
+		# FOLLOWERS and FOLLOWED
+		people_net[str(user_id)] = {}
+		people_net[str(user_id)]["follower_ids"] = get_followers_ids(user_id, api)
+		people_net[str(user_id)]["followed_ids"] = get_friends_ids(user_id, api)
+		if i > 10:break
+	f = open("users_net.py", "w")
+	from pprint import pprint 
+	pprint(people_net,f)
+	f.close()
+# https://codereview.stackexchange.com/questions/101905/get-all-followers-and-friends-of-a-twitter-user
+
+def get_followers_ids(user_id, api):
+    ids = []
+    page_count = 0
+    for page in tweepy.Cursor(api.followers_ids, id=user_id, count=5000).pages():
+        page_count += 1
+        # print 'Getting page {} for followers ids'.format(page_count)
+        ids.extend(page)
+
+    return ids
+
+def get_friends_ids(user_id, api):
+    ids = []
+    page_count = 0
+    for page in tweepy.Cursor(api.friends_ids, id=user_id, count=5000).pages():
+        page_count += 1
+        # print 'Getting page {} for friends ids'.format(page_count)
+        ids.extend(page)
+    return ids
+
 	
 
 if __name__ == '__main__':

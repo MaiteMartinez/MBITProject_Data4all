@@ -25,6 +25,7 @@ from pylab import rcParams
 import time
 import matplotlib.dates as mdates
 from copy import deepcopy
+from utilities import frequency_bar_graph, highlighted_pie_graph
 
 # *********************************************
 # RGB project colors
@@ -76,10 +77,8 @@ def random_color_func_bios(word=None, font_size=None, position=None,  orientatio
 
 def random_color_func_project_colors(word=None, font_size=None, position=None,  orientation=None, font_path=None, random_state=None):
 	project_colors =[oyellow, oblue, ogreen1, ogreen2, ored]
-	rgb_vector = [[x*255. for x in c] for c in project_colors] # azul de twitter en rgb
-	hsl_vector = []
-	for rgb in rgb_vector:
-		hsl_vector.append(get_h_s_l_from_rgb(rgb))
+	rgb_vector = [[x*255. for x in c] for c in project_colors] 
+	hsl_vector = [get_h_s_l_from_rgb(rgb) for rgb in rgb_vector]
 	h,s,l = hsl_vector[np.random.random_integers(0, high=len(hsl_vector)-1)]
 	return "hsl({}, {}%, {}%)".format(h,s,l)
 
@@ -209,18 +208,9 @@ def create_retweeted_proportion_graph(twitter_cursor, figure_path = "retweeted_p
 	sizes = [original, retweets, weird_retweets]
 	labels = 'Original', 'Retweets', 'Weird retweets' 
 	explode = (0.1, 0, 0)  # only "explode" the 2nd slice (i.e. 'Original')
+	colors = [oyellow, oblue, ogreen1]
 
-	fig1, ax1 = plt.subplots()
-	ax1.pie(sizes, 
-			explode=explode, 
-			labels=labels, 
-			autopct='%1.1f%%',
-			shadow=True, 
-			startangle=90,
-			colors = [oyellow, oblue, ogreen1])
-	ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-	# plt.show()
-	plt.savefig(figure_path)
+	highlighted_pie_graph(sizes, labels, explode, colors, figure_path)
 
 # *********************************************
 # number of twits per day
@@ -375,8 +365,7 @@ def create_tuits_by_user_graph(twitter_cursor, figure_path = "images/tuits_by_us
 		print ("El usuario numero "+str(i+1)+" por numero de tuits ha publicado" + str(list1[i]) + " tuits")
 		print ("El id de este usuario es " + str(list2[i]))
 
-	# hashtag_bar_graph(hashtags_vector, toprint, titulo, figure_path)
-	hashtag_bar_graph(user_names, 20, "", figure_path.replace(".png", "_bargraph.png"))
+	frequency_bar_graph(user_names, 20, "", oyellow, figure_path.replace(".png", "_bargraph.png"))
 	
 
 # *********************************************
@@ -392,18 +381,9 @@ def create_geolocalized_graph(twitter_cursor, figure_path = "images/geolocalized
 	sizes = [len(localized), ct-len(localized)]
 	labels = 'Con localización', 'Sin localización' 
 	explode = (0.1, 0)  # only "explode" the 1st slice (i.e. 'con')
+	colors = [oyellow, oblue]
 
-	fig1, ax1 = plt.subplots()
-	ax1.pie(sizes, 
-			explode=explode, 
-			labels=labels, 
-			autopct='%1.1f%%',
-			shadow=True, 
-			startangle=90,
-			colors = [oyellow, oblue])
-	ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-	# plt.show()
-	plt.savefig(figure_path)
+	highlighted_pie_graph(sizes, labels, explode, colors, figure_path)
 
 # *********************************************
 # hashtags info
@@ -428,28 +408,6 @@ def hashtags_cloud(hashtags_vector, figure_path):
 	plt.tight_layout()
 	plt.axis("off")
 	plt.savefig(figure_path, bbox_inches='tight')
-
-def hashtag_bar_graph(hashtags_vector, toprint, titulo, figure_path):
-	h = deepcopy(hashtags_vector)
-	occ = [1]*len(h)
-	new_df = pd.DataFrame({'h':h,'occ':occ })	
-	# para cada hashtag, nos quedamos con el número de veces que ha aparecido
-	new_df2 = new_df.groupby(new_df['h'], as_index = False).count()
-	hashtags = [x for x in new_df2["h"]]
-	occurrences = [x for x in new_df2["occ"]]
-	list1, list2  = zip(*sorted(zip(occurrences, hashtags), reverse=True))
-	# for i in range(toprint):
-		# print ("El hashtag "+str(list2[i])+" ha aparecido " + str(list1[i]) + " veces")
-	idx = [x for x in range(toprint)]
-	plt.clf()
-	fig,ax = plt.subplots()
-	ax.bar(idx, list1[:toprint], width=0.8, color = oyellow, )
-	ax.set_xticks(idx)
-	ax.set_xticklabels(list2[:toprint], rotation=90)
-	plt.xlabel("")
-	plt.tight_layout()
-	plt.title(titulo)
-	plt.savefig(figure_path)
 
 
 def create_hashtags_info(twitter_cursor, figure_path = "images/hashtags.png"):
@@ -488,9 +446,66 @@ def create_hashtags_info(twitter_cursor, figure_path = "images/hashtags.png"):
 	hashtags_cloud(hashtags_total, figure_path.replace(".png", "_total_wordcloud.png"))
 	hashtags_cloud(hashtags_host, figure_path.replace(".png", "_host_wordcloud.png"))
 	toprint = 20
-	hashtag_bar_graph(hashtags_total, toprint, "Totales", figure_path.replace(".png", "_total_occurs.png"))
-	hashtag_bar_graph(hashtags_host, toprint, "Tuits principales", figure_path.replace(".png", "_host_occurs.png"))
+	frequency_bar_graph(hashtags_total, toprint, "Totales", oyellow, figure_path.replace(".png", "_total_occurs.png"))
+	frequency_bar_graph(hashtags_host, toprint, "Tuits principales", oyellow, figure_path.replace(".png", "_host_occurs.png"))
 
+# *********************************************
+# source info
+# *********************************************
+def clean_source(source):
+	value = re.findall(pattern="<[^>]+>([^<]+)</a>", string=source)
+	if len(value) > 0:
+		return value[0]
+	else:
+		return ""
+	return source
+
+def create_source_info(twitter_cursor, figure_path = "images/source.png"):
+	source_host = []
+	source_total = []
+	for t in twitter_cursor:		
+		source_host.append(clean_source(t['source']))
+		source_total.append(clean_source(t['source']))
+		
+		# source of quoted tuit, if any
+		quoted_source = None
+		try:
+			quoted_source = t['quoted_status']["source"]
+		except:
+			pass
+		if quoted_source is not None:
+			source_total.append(clean_source(quoted_source))
+
+		# source of retweeted tuit, if any
+		retweeted_source = None
+		try:
+			retweeted_source = t['retweeted_status']["source"]
+		except:
+			pass
+		if retweeted_source is not None:
+			source_total.append(clean_source(retweeted_source))
+
+	toprint = 20
+	print (len(source_total))
+	print (len(source_host))
+	frequency_bar_graph(source_total, toprint, "Totales", oyellow, figure_path.replace(".png", "_total.png"))
+	frequency_bar_graph(source_host, toprint, "Tuits principales", oyellow, figure_path.replace(".png", "_host.png"))
+
+	
+	person_sources = ["twitter web client", "twitter for android", "twitter for iphone", "twitter for ipad", "twitter lite", "tweet old post", "voicestorm"]
+	count = Counter(source_host)
+	p = sum(count[k] if k.lower() in person_sources else 0 for k in count.keys())/len(source_host)
+	sizes = [p, 1.-p]
+	labels = ["possible person", "others"]
+	explode = (0.1, 0) 
+	colors = [oblue, oyellow]
+	highlighted_pie_graph(sizes, labels, explode, colors, figure_path.replace(".png", "_people_percentage_host.png"))
+	count = Counter(source_total)
+	p = sum(count[k] if k.lower() in person_sources else 0 for k in count.keys())/len(source_total)
+	sizes = [p, 1.-p]
+	highlighted_pie_graph(sizes, labels, explode, colors, figure_path.replace(".png", "_people_percentage_total.png"))
+
+	
 
 # *********************************************
 # MAIN
@@ -538,7 +553,8 @@ def main():
 					original_figure_path = None,
 					figure_path = "images/bios_worldcloud2.png",
 					color_function = random_color_func_project_colors)
-
+	
+	create_source_info(collection.find(), figure_path = "images/sources.png")
 
 if __name__ == '__main__':
 	try:

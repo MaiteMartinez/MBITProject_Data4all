@@ -12,7 +12,6 @@ from nltk.tokenize import wordpunct_tokenize
 from languages_names import to_two_letters, from_two_letters
 from stop_words import my_stop_words
 import matplotlib.pyplot as plt
-from collections import Counter
 from utilities import frequency_bar_graph, highlighted_pie_graph
 
 # *********************************************

@@ -23,70 +23,6 @@ import time
 import matplotlib.dates as mdates
 from copy import deepcopy
 
-
-# *********************************************
-# relevant fields
-# *********************************************
-
-# def get_relevant_fields(tweet_cursor, file_path = 'tweets_table.xlsx'):
-	# tweet_id = []
-	# text = []
-	# user = []
-	# user_id = []
-	# user_bio = []
-	# is_retweet = []
-	# created_at = []
-	# times_retweeted = []
-	# location = []
-	# hashtags = []
-	
-	
-	# for t in tweet_cursor:		
-		# tweet_id.append(t["id_str"])
-		# # treatment of extended tweets
-		# txt = t["text"]
-		# try:
-			# txt = t["extended_tweet"]["full_text"]
-		# except:
-			# pass
-		# if txt.startswith("RT"):
-			# try:
-				# try:
-					# txt = "RT " + t["retweeted_status"]["extended_tweet"]["full_text"]
-				# except:
-					# txt = "RT " + t["quoted_status"]["extended_tweet"]["full_text"]
-				# # print("retweet de tweet extendido")
-			# except:
-				# pass
-		# else:
-			# try: 
-				# txt = t["extended_tweet"]["full_text"]
-				# # print("tweet extendido")
-			# except:
-				# pass
-		# text.append(txt)
-		# user.append(t["user"]["name"])
-		# user_id.append(t["user"]["id_str"])
-		# user_bio.append(t["user"]["description"])
-		# is_retweet.append(1 if t["text"].startswith("RT") else 0)
-		# created_at.append(t["created_at"])
-		# times_retweeted.append(t["retweet_count"])
-		# location.append(t["place"])
-		# hashtags.append([d["text"] for d in t["entities"]["hashtags"]])
-	# df = pd.DataFrame({'tweet_id': tweet_id,
-						# 'text':text,
-						# 'user':user,
-						# 'user_id':user_id,
-						# 'user_bio':user_bio,
-						# 'is_retweet':is_retweet,
-						# 'created_at':created_at,
-						# 'times_retweeted':times_retweeted,
-						# 'location':location,
-						# 'hashtags':hashtags})
-		
-	# save_df(df, file_path = file_path)
-	# return df
-
 # *********************************************
 # relevant text/users fields from db
 # *********************************************
@@ -95,6 +31,7 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 	# host tuit fields
 	tweet_id = []
 	host_text = []
+	host_source = []
 	host_user_id = []
 	host_user_name = []
 	host_user_screenname = []
@@ -103,6 +40,7 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 	# retweeted tuit fields, if any
 	retweeted_id = []
 	retweeted_text = []
+	retweeted_source = []
 	retweeted_user_id = []
 	retweeted_user_name = []
 	retweeted_user_screenname = []
@@ -111,6 +49,7 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 	# quoted tuit fields, if any
 	quoted_id = []
 	quoted_text = []
+	quoted_source = []
 	quoted_user_id = []
 	quoted_user_name = []
 	quoted_user_screenname = []
@@ -125,6 +64,7 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 			host_text.append(t["extended_tweet"]["full_text"])			
 		except:
 			host_text.append(t["text"])
+		host_source.append(t["source"])
 		host_user_id.append(t["user"]["id_str"])
 		host_user_name.append(t["user"]["name"])
 		host_user_screenname.append(t["user"]["screen_name"])
@@ -138,6 +78,7 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 				retweeted_text.append(obj["extended_tweet"]["full_text"])			
 			except:
 				retweeted_text.append(obj["text"])
+			retweeted_source.append(obj["source"])
 			retweeted_user_id.append(obj["user"]["id_str"])
 			retweeted_user_name.append(obj["user"]["name"])
 			retweeted_user_screenname.append(obj["user"]["screen_name"])
@@ -146,6 +87,7 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 		except:
 			retweeted_id.append(na_value)
 			retweeted_text.append(na_value)			
+			retweeted_source.append(na_value)			
 			retweeted_user_id.append(na_value)
 			retweeted_user_name.append(na_value)
 			retweeted_user_screenname.append(na_value)
@@ -159,6 +101,7 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 				quoted_text.append(obj["extended_tweet"]["full_text"])			
 			except:
 				quoted_text.append(obj["text"])
+			quoted_source.append(obj["source"])
 			quoted_user_id.append(obj["user"]["id_str"])
 			quoted_user_name.append(obj["user"]["name"])
 			quoted_user_screenname.append(obj["user"]["screen_name"])
@@ -167,6 +110,7 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 		except:
 			quoted_id.append(na_value)
 			quoted_text.append(na_value)			
+			quoted_source.append(na_value)
 			quoted_user_id.append(na_value)
 			quoted_user_name.append(na_value)
 			quoted_user_screenname.append(na_value)
@@ -177,6 +121,7 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 		
 	df = pd.DataFrame({"tweet_id" : tweet_id,
 						"host_text" : host_text,
+						"host_source" : host_source,
 						"host_user_id" : host_user_id,
 						"host_user_name" : host_user_name,
 						"host_user_screenname" : host_user_screenname,
@@ -185,6 +130,7 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 
 						"retweeted_id" : retweeted_id,
 						"retweeted_text" : retweeted_text,
+						"retweeted_source" : retweeted_source,
 						"retweeted_user_id" : retweeted_user_id,
 						"retweeted_user_name" : retweeted_user_name,
 						"retweeted_user_screenname" : retweeted_user_screenname,
@@ -193,6 +139,7 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 
 						"quoted_id" : quoted_id,
 						"quoted_text" : quoted_text,
+						"quoted_source" : quoted_source,
 						"quoted_user_id" : quoted_user_id,
 						"quoted_user_name" : quoted_user_name,
 						"quoted_user_screenname" : quoted_user_screenname,
@@ -208,6 +155,7 @@ def get_all_users_info(df, na_value = "None"):
 	# host tuit fields
 	tweet_id = [x for x in df["tweet_id"]]
 	text = [x for x in df["host_text"]]
+	source = [x for x in df["host_source"]]
 	user_id = [x for x in df["host_user_id"]]
 	user_name = [x for x in df["host_user_name"]]
 	user_screenname =[x for x in df["host_user_screenname"]]
@@ -221,6 +169,7 @@ def get_all_users_info(df, na_value = "None"):
 		if df["retweeted_id"][i] != na_value:
 			tweet_id.append(df["retweeted_id"][i])
 			text.append(df["retweeted_text"][i])
+			source.append(df["retweeted_source"][i])
 			user_id.append(df["retweeted_user_id"][i])
 			user_name.append(df["retweeted_user_name"][i])
 			user_screenname.append(df["retweeted_user_screenname"][i])
@@ -235,6 +184,7 @@ def get_all_users_info(df, na_value = "None"):
 		if df["quoted_id"][i] != na_value:
 			tweet_id.append(df["quoted_id"][i])
 			text.append(df["quoted_text"][i])
+			source.append(df["quoted_source"][i])
 			user_id.append(df["quoted_user_id"][i])
 			user_name.append(df["quoted_user_name"][i])
 			user_screenname.append(df["quoted_user_screenname"][i])
@@ -246,6 +196,7 @@ def get_all_users_info(df, na_value = "None"):
 	
 	df = pd.DataFrame({"tweet_id" : tweet_id,
 						"text" : text,
+						"source" : source,
 						"user_id" : user_id,
 						"user_name" : user_name,
 						"user_screenname" : user_screenname,

@@ -434,3 +434,72 @@ una nube de palabras que represente esta información.
 
 Aparentemente, las descripciones de los usuarios coinciden con los perfiles que nos interesan.
 
+\subsubsection{Origen de los tuits}
+Otro elemento que nos va a proporcionar información relevante para nuestro objetivo
+es la aplicación de origen del tuit. Un tuit emitido desde un dispositivo móvil es muy
+probable que haya sido emitido por una persona y no por un bot o una empresa. 
+Entre los campos del tuit, hay uno que refleja esta información: \lq\lq source\rq\rq\footnote{
+\url{https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object }}.
+Este campo describe la utilidad empleada para publicar el tuit y 
+está consignada en formato HTML. Los tuits publicados desde la web
+de la aplicación tienen un valor en el campo \lq\lq web\rq\rq.
+
+A continuación describimos los principales orígenes de los tuits almacenados en 
+nuestra base de datos, y al igual que con los hashtags, comparamos los de los tuits
+descargados, y los de aquellos citados o retuiteados en ellos:
+
+\myfigure{
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/sources_host.png}
+&\includegraphics[width=0.4\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/sources_total.png}
+\end{tabular}
+\figcaption{Orígenes más frecuentes en los tuits descargados (izq.) y en los tuits descargados y citados y retuiteados en ellos.}
+\label{fig:sources} }
+
+Estos orígenes quieren decir:
+\begin{itemize}
+\item Twitter web client: son tuits producidos desde la página web de Twitter
+\item Twitter for Android, Twitter for iPhone, Twitter for iPad: tuits enviados desde las aplicaciones
+de Twitter para los sistemas operativos de los dispositivos móviles.
+\item IFTTT, Hootsuite, Paper.li, RoundTeam: son herramientas que sirven para gestionar 
+la actividad en plataformas
+sociales, por ejemplo publicar automáticamente contenidos (Twitter entre otras).
+\item Statistics for IT, Koica retweeter: parecen retuits automáticos por parte
+de alguna organización.
+\item TweetDeck es una herramienta oficial creada por Twitter para gestionar y controlar 
+varias cuentas desde un solo lugar. Se pueden controlar notificaciones, menciones, 
+mensajes y la actividad en general de una o varias cuentas, y por supuesto programar envíos
+de tuits.
+\item Botize es una herramienta para automatizar tareas, en particular en Twitter. 
+Los tuits con este origen serán probablemente de bots.
+\item PowerApps and Flow: PowerApps es un servicio de Microsoft 
+orientado fundamentalmente a empresas para crear aplicaciones. Microsoft Flow 
+es un servicio también enfocado sobre todo a empresas, para principalmente ayudarles a 
+automatizar tareas entre sus sistemas y algunos de terceros (Twitter entre ellos).
+\item Twitter Lite: es una versión oficial de Twitter, enfocada sobre todo a usuarios 
+de países emergentes, que funciona a través del explorador y que minimiza el uso de datos 
+y mejora la velocidad de carga en conexiones lentas.
+\item Tweet Old Post: es un plugin de WordPress, que retuitea de forma aleatoria y 
+automática entradas antiguas de un blog alojado en dicha plataforma.
+\item Buffer, Py\_FeS2, tempfiles, twitterbot\_validado: no está muy claro lo que representan. 
+En Twitter, @Py\_FeS2 es un usuario nuevo, de Noviembre de 2017, que por el volumen 
+tuiteado parece un bot.
+\item VoiceStorm: es una aplicación que permite a los empleados de una empresa
+promocionar la entidad en la que trabajan a través de las redes sociales.
+\end{itemize}
+
+De este análisis parece que si un tuit proviene de un origen como Twitter web client,
+Twitter for Android, Twitter for iPhone, Twitter for iPad, Twitter Lite, Tweet Old Post
+y VoiceStorm, es bastante probable que el usuario sea una persona (y por tanto un posible
+usuario relevante para el objetivo del proyecto). A continuación mostramos
+los tuits clasificados como \lq\lq posibles personas\rq\rq y \lq\lq posibles otros\rq\rq
+atendiendo a este criterio:
+
+\myfigure{
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/sources_people_percentage_host.png}
+&\includegraphics[width=0.4\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/sources_people_percentage_total.png}
+\end{tabular}
+\figcaption{Porcentaje en los datos de los tuits cuyo origen indican posibles personas en 
+los tuits descargados (izq.) y en los tuits descargados y citados y retuiteados en ellos.}
+\label{fig:sources_percentage} }
