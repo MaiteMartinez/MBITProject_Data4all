@@ -24,7 +24,7 @@ que mejor se ajusten a sus necesidades, muy habitualmente realizando nuevas entr
 que puede complementarse la informaci\'on recogida hasta el momento con referencias recabadas de anteriores empleadores.
 \item {\bf Oferta}: etapa en la que la empresa presenta al candidato la oferta en firme, habitualmente por escrito, consignando 
 la voluntad de la empresa de incorporar al candidato y los detalles econ\'omicos. 
-\item: {\bf Seguimiento}:  para comprobar que una vez incorporado a la empresa, tanto empleado como empleador est\'an conformes con
+\item {\bf Seguimiento}:  para comprobar que una vez incorporado a la empresa, tanto empleado como empleador est\'an conformes con
 el resultado del proceso.
 \end{enumerate}
 
@@ -125,13 +125,183 @@ relativo (en términos de actividad en la red, cuáles son los más ``retuiteado
 
 
 \section{Contexto de negocio}
-Lo que hay hecho y lo que no.
-\section{Objetivos}
-Lo que queremos conseguir, qué significa que lo hayamos conseguido.
-\section{Hip\'otesis y limitaciones}
-Aquí todo lo que asumamos al plantear el proyecto, y hasta dónde puede llegar. Límites del uso de la información
-de las redes sociales, límites del proceso en sí (ventana temporal, no detección de todos los candidatos, etc.).
+El área de Recursos Humanos de una compañía, incluso de una de las grandes\footnote{O
+una empresa de {\em head hunting}, aunque en esta sección nos referimos solo a departamentos
+de RRHH.}, no es el primer área 
+en la que suele pensarse cuando hablamos de aplicaciones de las técnicas Big Data en el mundo
+empresarial. En general,
+parece difícil que los departamentos de RRHH de las compañías,  incluso de las mayores, produzcan
+tradicionalmente tanta información propia como para necesitar el software y las herramientas especiales
+que las técnicas Big Data proporcionan\footnote{\url{https://hbr.org/2017/06/theres-no-such-thing-as-big-data-in-hr }}:
+muchas compañías tienen miles, no millones, de empleados, y la información que recogen con respecto a ellos
+suele ser anual o cuatrimestral. En algunas ocasiones, el problema puede estar más incluso en
+poder acceder a los datos de forma unificada (por el uso de distintos sistemas de almacenamiento),
+y en entender y respetar las restricciones legales que aplican a los datos personales de los empleados
+a la hora de manejarlos y trasladar los resultados a otros departamentos.
 
+Desde que los primeros departamentos de Recursos Humanos aparecieron (en Estados Unidos
+en los primeros años del siglo XX\footnote{\url{http://www.whatishumanresource.com/the-historical-background-of-human-resource-management }}),
+se ha estudiado mucho la labor y la función de estos departamentos dentro de las organizaciones
+empresariales, y las mejores técnicas y recursos para llevarlos a cabo, y existe abundante bibliografía
+al respecto (ver, por ejemplo \url{http://www.whatishumanresource.com/hrm-text-books } para una
+primera aproximación). Seguramente, la componente humana del profesional de RRHH no puede ser sustituida
+en numerosas circunstancias. Sin embargo, el cambio que las tecnologías digitales
+suponen en todos los ámbitos de la actividad humana sin duda impacta en las
+actividades de los departamentos de RRHH. El principal uso del Big Data y del análisis
+de datos debe ser la ayuda en la toma de decisiones, idealmente en todos los niveles
+organizativos. Y es en los departamentos de RRHH donde se toman muchas decisiones sobre el
+activo más valorable que compone las organizaciones: las personas.
+
+Es por ello que el proceso de transformación digital de las empresas también
+debiera incluir a los departamentos de Recursos Humanos, aprovechando los beneficios 
+que les podría aportar un enfoque fundamentado en los datos para acometer su tarea.
+Puede encontrarse abundante discusión en la red acerca del papel que las tecnologías y
+técnicas Big Data pueden jugar en el área de RRHH\footnote{Entre muchos otros:
+
+\noindent\url{https://www.business.com/articles/how-to-utilize-big-data-for-human-resources/ }, 
+
+\noindent\url{https://blog.cake.hr/8-ways-use-hr-analytics-big-data-workplace/ }, 
+
+\noindent\url{http://searchhrsoftware.techtarget.com/feature/Ready-or-not-here-comes-HR-analytics }, 
+
+\noindent\url{https://www.forbes.com/sites/forbeshumanresourcescouncil/2017/02/02/six-powerful-ways-your-hr-team-can-leverage-big-data/\# 282624d65de9 }, 
+
+\noindent\url{http://www.digitalistmag.com/future-of-work/2017/08/31/5-powerful-ways-hr-can-leverage-big-data-05242673 }, 
+
+\noindent\url{https://www.villanovau.com/resources/hr/the-role-of-big-data-in-hr/\# .WkVNst_ibtQ }, 
+
+\noindent\url{https://www.villanovau.com/resources/hr/big-data-changing-hr/\# .Wkdf39_ibtQ }, 
+
+\noindent\url{https://www.cornerstoneondemand.com/glossary/big-data-hr }
+} y también recientes estudios que intentan formalizar y dar contexto a dicho papel \cite{libro_rrhh}.
+Entre otras, algunos de los aspectos de la labor de los departamentos de RRHH en los que
+la aplicación de la tecnología Big Data puede ser de utilidad son los siguientes:
+\begin{itemize}
+\item \label{item:puntodeproyecto} Procesos de selección: incorporando datos de redes sociales y portales de empleo,
+los procesos de selección pueden ser más específicos y eficientes en encontrar candidatos 
+adecuados a las posiciones ofertadas. Este punto tiene gran importancia, puesto que
+las pérdidas debidas a una mala contratación pueden ser cuantiosas\footnote{\url{https://www.entrepreneur.com/article/244730 }}.
+\label{item:puntodeproyecto}
+
+\item Factores de calidad en la contratación: las técnicas Big Data pueden ayudar a los profesionales de
+RRHH a determinar qué factores en la trayectoria de un posible candidato son o no importantes a 
+la hora de valorar su adecuación a un puesto dado y su rendimiento posterior. A veces, factores que
+en principio pueden percibirse como muy importantes (años de experiencia pasada, si esa experiencia fue
+en puestos similares o no,\dots) pueden en realidad ser irrelevantes a la luz de los datos disponibles
+en la compañía (y cada una, en cada sector y momento, es distinta).
+
+\item Formación y evaluación: no se trata solo de contratar a los mejores candidatos, sino
+de que las personas se adapten pronto a sus nuevas labores y al nuevo entorno de trabajo,
+y mantener una continua formación que permita al trabajador adaptarse a los cambios en dicho
+entorno. Con las técnicas de análisis de datos, puede ser más fácil decidir qué formación es 
+la más adecuada para cada profesional, y evaluar los beneficios de dicha formación.
+
+\item Retención de los empleados: evaluando el historial de la compañía,
+las técnicas de análisis de datos pueden ayudar a identificar las causas por las que un empleado
+deja de formar parte de la misma. A partir de ahí, se pueden identificar aquellos que no 
+permanecerán en la compañía, así como aquellos factores que mejor funcionan para retener a los empleados,
+y potencialmente optimizar el uso de los recursos destinados a fidelización de empleados. 
+Medir la percepción de la sociedad de la compañía como lugar de trabajo a través de las impresiones
+reflejadas en redes sociales, por ejemplo, también puede ayudar a los profesionales de RRHH a
+identificar áreas de mejora o áreas a potenciar,
+a la hora de atraer candidatos para nuevos puestos y retener a los trabajadores.
+
+\item Medida del desempeño: las técnicas de análisis de datos también pueden ayudar a medir
+el desempeño de los empleados de forma más precisa, por ejemplo determinando la relación entre 
+franjas horarias trabajadas y rendimiento, identificando a los trabajadores más productivos de
+forma absolutamente objetiva, o llevando a cabo evaluaciones del desempeño
+más frecuentes que anualmente o trimestralmente. Otro aspecto importante en este punto es el uso de dispositivos 
+encaminados a monitorizar la actuación de los trabajadores: por ejemplo, plataformas de escucha 
+{\em online} para seguir en tiempo real el desempeño en un {\em call center}, o ayudar a los trabajadores
+en el trascurso de su quehacer. Este tipo de dispositivos también puede ayudar a los departamentos
+de RRHH a cuidar estrechamente la seguridad del trabajador, el cumplimiento de las políticas
+de buenas prácticas, etc.
+
+\item Compensación monetaria: el dinero que ganan los empleados con su trabajo es el
+factor básico de la satisfacción del empleado. Usando el análisis de datos, los equipos de 
+RRHH pueden desarrollar un modelo financiero optimizado. Esto es especialmente importante
+en compañías grandes, con empleados en distintas geografías, donde resulta difícil comparar 
+los distintos departamentos internacionales. Y es importante en cualquier compañía tener
+una guía de cómo realizar una promoción adecuada de los trabajadores optimizando
+los costes asociados.
+
+\item Planificación: el análisis de datos puede ayudar a las compañías a identificar tendencias y 
+planificar acciones. Por ejemplo, se pueden detectar épocas de mayor absentismo por cuestiones de 
+salud e implementar políticas para paliarlo (de prevención sanitaria o de contratación de refuerzos), o 
+detectar factores que conducen a una mayor incidencia de accidentes que pueden afectar a la producción
+y programar acciones para remediarlo.
+
+\end{itemize}
+
+En general, el uso de técnicas de análisis de datos y Big Data, ayudará a cambiar el enfoque
+de los departamentos de RRHH a un papel más proactivo, y a ampliar el rango de herramientas en las
+que apoyarse al tomar decisiones.
+
+El abanico de aplicaciones enfocadas a la gestión de Recursos humanos es bastante amplio
+(en \url{https://www.capterra.com/human-resource-software/ } podemos encontrar una lista con
+varias aplicaciones y soluciones enfocadas a este tema), y van desde soluciones propuestas
+por proveedores generales de tecnología Big Data y análisis de datos,
+como las de Oracle y SAP, a sistemas propuestos por proveedores más especializados, 
+como SumTotal Systems, PeopleFluent, Cornerstone, Talent Analytics, CakeHR.
+Algunas compañías han desarrollado soluciones propias,
+por ejemplo el {\em Project Oxygen} de Google, enfocada a evaluar la actividad de los managers y 
+ayudarlos en su desempeño.
+
+Nuestro proyecto se encuadra dentro del primer punto mencionado en la página 
+\pageref{item:puntodeproyecto}, y el objetivo es, como ya se ha mencionado,
+ayudar en la labor de localizar candidatos a un puesto de trabajo
+a través de la extracción y análisis de información de Twitter.
+Es por tanto un proyecto que clasificará perfiles de usuarios de Twitter.
+
+
+Varios  trabajos han explorado la clasificación de usuarios de Twitter
+atendiendo a su actividad (ver \cite{tesis_mariluz} y las referencias
+incluidas, \cite{user_class5}), para descubrir 
+características de usuarios como etnia o género(\cite{user_class1}, \url{https://www.kaggle.com/crowdflower/twitter-user-gender-classification }),
+para clasificar la orientación política (\cite{user_class2}) o 
+detectar usuarios similares adecuados para seguir (\cite{user_class3}),
+detección de bots (\cite{user_class4}), 
+entre otros enfoques.
+ 
+
+En cuanto a aplicaciones que extraigan información de Twitter y proporcionen 
+algún tipo de clasificación de usuarios, podemos encontrar una amplia variedad.
+Algunas de las más comentadas en la red son las siguientes:
+\begin{itemize}
+\item StatusPeople.com: analiza los seguidores de una cuenta de Twitter y los clasifica como buenos, malos o inactivos.
+\item Mentionmapp: crea un mapa interactivo que dibuja por menciones, la interacción de una cuenta de Twitter con las últimas 200 publicaciones de la cuenta. Sirve para determinar la calidad de la audiencia en Twitter y poder detectar y diferenciar entre seguidores, fans y superfans.
+\item Audiense (antes SocialBro): es una herramienta para identificar audiencias relevantes (de dónde proceden los followers, en qué idioma escriben, si sus cuentas son públicas o privadas, si son cuentas verificadas, identifica seguidores inactivos, etc.). También examina el contenido psicolingüístico de los tuits y permite a las marcas conocer los rasgos de personalidad que están detrás del comportamiento de compra de los usuarios.
+\item Twitter Audit: analiza una cuenta tomando como referencia 5.000 seguidores del usuario y le asigna una puntuación según el número de tuits, la fecha del último tuit y la proporción de seguidores/seguidos. Y a continuación, asigna un porcentaje de \lq\lq veracidad\rq\rq de los seguidores de dicha cuenta.
+\item Untweeps: averigua qué seguidores de una cuenta no han tuiteado en los últimos 30 días, y facilita dejar de seguirles.
+\item Followerwonk: busca usuarios por palabras clave en sus biografías de los usuarios y los muestra por orden de influencia, pudiendo filtrar por localización, número de followers, número de Tweets, etc. 
+\item Buzzsumo: esta herramienta sirve para localizar usuarios influyentes en Twitter a partir de palabras clave o para medir el rango de influencia de una persona o marca en concreto. 
+\item Klear: también para localizar usuarios influyentes en diversas plataformas, además de Twitter.
+\item Trolldor: ofrece una lista negra de cuentas de Twitter clasificadas como falsos usuarios influyentes o trolls.
+\item Klout: puntúa el perfil social según su influencia y facilita una lista de las bios más influyentes según la temática. Propone contenidos para mejorar la puntuación de una cuenta.
+\item Peerindex: también ayuda a encontrar usuarios influyentes, en diversas redes sociales además de Twitter.
+\end{itemize}
+
+Hasta donde conocemos, no hay ninguna aplicación, comercial o no, 
+ni trabajo académico, que tenga la misma orientación que el proyecto 
+que desarrollamos. Hay, por supuesto, referencias en las que nos apoyaremos
+para clasificar el lenguaje de los tuits y descripciones, para determinar qué perfiles
+son personas, y para clasificar el texto de los tuits, así como para luego ordenar
+por importancia y relevancia los usuarios detectados (de todas estas referencias hablaremos
+más concretamente en cada punto particular). Sin embargo, 
+la combinación de técnicas que proponemos en este proyecto no la hemos encontrado,
+y en particular, no la hemos encontrado enfocada al objetivo planteado: encontrar
+posibles candidatos relevantes para una oferta de trabajo a partir de
+la actividad relacionada en Twitter.
+
+
+
+\section{Objetivos y criterio de éxito}
+Como hemos mencionado anteriormente, nuestro objetivo final es proporcionar una lista de usuarios de Twitter que hayan publicado contenido relacionado con una oferta de trabajo, ordenados por relevancia, de forma que un reclutador pudiera usarla para contactar con ellos e incluirlos en su proceso de selección.
+
+Nuestro criterio de éxito es por tanto conseguir dicha clasificación de los usuarios,
+y aportar valor con un método propio, particularizable y eficiente, para conseguirlo. 
+
+\section{Hip\'otesis y limitaciones}
 La hipótesis fundamental que estamos haciendo al iniciar este proceso, es que la actividad en Twitter
 acerca de un determinado tema (por ejemplo, publicar algo relacionado con Python), supone
 que el usuario en cuestión tiene conocimientos sobre dicho tema (en nuestro caso, entenderíamos que ese

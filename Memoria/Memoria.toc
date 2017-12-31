@@ -3,45 +3,45 @@
 \contentsline {chapter}{\numberline {1}Planteamiento del proyecto}{7}{chapter.4}
 \contentsline {section}{\numberline {1.1}Descripci\'on}{7}{section.5}
 \contentsline {section}{\numberline {1.2}Contexto de negocio}{10}{section.20}
-\contentsline {section}{\numberline {1.3}Objetivos}{10}{section.21}
-\contentsline {section}{\numberline {1.4}Hip\'otesis y limitaciones}{10}{section.22}
-\contentsline {subsection}{\numberline {1.4.1}La Ley Org\IeC {\'a}nica 15/1999, de 13 de diciembre, de Protecci\IeC {\'o}n de Datos de Car\IeC {\'a}cter Personal}{12}{subsection.28}
-\contentsline {section}{\numberline {1.5}Esquema de desarrollo del proyecto}{15}{section.31}
-\contentsline {chapter}{\numberline {2}Planificaci\IeC {\'o}n del proyecto}{17}{chapter.35}
-\contentsline {section}{\numberline {2.1}Equipo}{17}{section.36}
-\contentsline {section}{\numberline {2.2}Desarrollo temporal}{17}{section.37}
-\contentsline {chapter}{\numberline {3}Infraestructura}{19}{chapter.38}
-\contentsline {section}{\numberline {3.1}Repositorio GIT}{19}{section.39}
-\contentsline {section}{\numberline {3.2}Infraestructura para la obtenci\IeC {\'o}n de datos}{19}{section.41}
-\contentsline {section}{\numberline {3.3}Lenguajes de implementaci\IeC {\'o}n}{22}{section.51}
-\contentsline {section}{\numberline {3.4}Almacenamiento y manipulaci\IeC {\'o}n de los datos}{22}{section.53}
-\contentsline {section}{\numberline {3.5}Desarrollo en la nube}{23}{section.56}
-\contentsline {chapter}{\numberline {4}Tratamiento inicial de los datos: an\IeC {\'a}lisis descriptivo}{25}{chapter.57}
-\contentsline {section}{\numberline {4.1}Descripci\'on de los datos}{25}{section.58}
-\contentsline {section}{\numberline {4.2}Obtenci\'on de los datos}{28}{section.61}
-\contentsline {section}{\numberline {4.3}Almacenamiento}{29}{section.63}
-\contentsline {section}{\numberline {4.4}Revisi\IeC {\'o}n inicial de los datos}{29}{section.64}
-\contentsline {subsubsection}{Tuits repetidos}{29}{section*.65}
-\contentsline {subsubsection}{El texto de los tuits}{29}{section*.66}
-\contentsline {subsubsection}{Tuits originales frente a tuits retuiteados}{30}{section*.68}
-\contentsline {subsubsection}{N\IeC {\'u}mero de retuits por tuit}{31}{section*.70}
-\contentsline {subsubsection}{Tuits descargados a lo largo del tiempo}{32}{section*.73}
-\contentsline {subsubsection}{Relaci\IeC {\'o}n entre n\IeC {\'u}mero de tuits descargados y n\IeC {\'u}mero de usuarios distintos}{33}{section*.75}
-\contentsline {subsubsection}{N\IeC {\'u}mero de tuits por usuario}{33}{section*.77}
-\contentsline {subsubsection}{Localizaci\IeC {\'o}n de los tuits}{35}{section*.80}
-\contentsline {subsubsection}{Hashtags: distribuci\IeC {\'o}n}{35}{section*.83}
-\contentsline {subsubsection}{Perfiles de los usuarios}{37}{section*.86}
-\contentsline {subsubsection}{Origen de los tuits}{38}{section*.89}
-\contentsline {chapter}{\numberline {5}Limpieza de datos: extracci\IeC {\'o}n de usuarios relevantes}{41}{chapter.93}
-\contentsline {section}{\numberline {5.1}Detecci\IeC {\'o}n del idioma}{41}{section.94}
-\contentsline {section}{\numberline {5.2}Tipo de usuario}{44}{section.99}
-\contentsline {section}{\numberline {5.3}Naturaleza del tuit}{45}{section.101}
-\contentsline {chapter}{\numberline {6}Modelado de los datos: ordenaci\IeC {\'o}n de los usuarios}{47}{chapter.102}
-\contentsline {section}{\numberline {6.1}Principales hip\'otesis}{47}{section.103}
-\contentsline {section}{\numberline {6.2}Algoritmos}{47}{section.104}
-\contentsline {section}{\numberline {6.3}Almacenamiento}{47}{section.105}
-\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{49}{chapter.106}
-\contentsline {section}{\numberline {7.1}Herramientas}{49}{section.107}
-\contentsline {section}{\numberline {7.2}Acceso web}{49}{section.108}
-\contentsline {chapter}{\numberline {8}\'Areas de mejora}{51}{chapter.109}
-\contentsline {chapter}{Bibliograf\'\i a}{53}{chapter*.110}
+\contentsline {section}{\numberline {1.3}Objetivos y criterio de \IeC {\'e}xito}{14}{section.26}
+\contentsline {section}{\numberline {1.4}Hip\'otesis y limitaciones}{14}{section.27}
+\contentsline {subsection}{\numberline {1.4.1}La Ley Org\IeC {\'a}nica 15/1999, de 13 de diciembre, de Protecci\IeC {\'o}n de Datos de Car\IeC {\'a}cter Personal}{16}{subsection.33}
+\contentsline {section}{\numberline {1.5}Esquema de desarrollo del proyecto}{19}{section.36}
+\contentsline {chapter}{\numberline {2}Planificaci\IeC {\'o}n del proyecto}{21}{chapter.40}
+\contentsline {section}{\numberline {2.1}Equipo}{21}{section.41}
+\contentsline {section}{\numberline {2.2}Desarrollo temporal}{21}{section.42}
+\contentsline {chapter}{\numberline {3}Infraestructura}{23}{chapter.43}
+\contentsline {section}{\numberline {3.1}Repositorio GIT}{23}{section.44}
+\contentsline {section}{\numberline {3.2}Infraestructura para la obtenci\IeC {\'o}n de datos}{23}{section.46}
+\contentsline {section}{\numberline {3.3}Lenguajes de implementaci\IeC {\'o}n}{26}{section.56}
+\contentsline {section}{\numberline {3.4}Almacenamiento y manipulaci\IeC {\'o}n de los datos}{26}{section.58}
+\contentsline {section}{\numberline {3.5}Desarrollo en la nube}{27}{section.61}
+\contentsline {chapter}{\numberline {4}Tratamiento inicial de los datos: an\IeC {\'a}lisis descriptivo}{29}{chapter.62}
+\contentsline {section}{\numberline {4.1}Descripci\'on de los datos}{29}{section.63}
+\contentsline {section}{\numberline {4.2}Obtenci\'on de los datos}{32}{section.66}
+\contentsline {section}{\numberline {4.3}Almacenamiento}{33}{section.68}
+\contentsline {section}{\numberline {4.4}Revisi\IeC {\'o}n inicial de los datos}{33}{section.69}
+\contentsline {subsubsection}{Tuits repetidos}{33}{section*.70}
+\contentsline {subsubsection}{El texto de los tuits}{33}{section*.71}
+\contentsline {subsubsection}{Tuits originales frente a tuits retuiteados}{34}{section*.73}
+\contentsline {subsubsection}{N\IeC {\'u}mero de retuits por tuit}{35}{section*.75}
+\contentsline {subsubsection}{Tuits descargados a lo largo del tiempo}{36}{section*.78}
+\contentsline {subsubsection}{Relaci\IeC {\'o}n entre n\IeC {\'u}mero de tuits descargados y n\IeC {\'u}mero de usuarios distintos}{37}{section*.80}
+\contentsline {subsubsection}{N\IeC {\'u}mero de tuits por usuario}{37}{section*.82}
+\contentsline {subsubsection}{Localizaci\IeC {\'o}n de los tuits}{39}{section*.85}
+\contentsline {subsubsection}{Hashtags: distribuci\IeC {\'o}n}{39}{section*.88}
+\contentsline {subsubsection}{Perfiles de los usuarios}{41}{section*.91}
+\contentsline {subsubsection}{Origen de los tuits}{42}{section*.94}
+\contentsline {chapter}{\numberline {5}Limpieza de datos: extracci\IeC {\'o}n de usuarios relevantes}{45}{chapter.98}
+\contentsline {section}{\numberline {5.1}Detecci\IeC {\'o}n del idioma}{45}{section.99}
+\contentsline {section}{\numberline {5.2}Tipo de usuario}{48}{section.104}
+\contentsline {section}{\numberline {5.3}Naturaleza del tuit}{49}{section.106}
+\contentsline {chapter}{\numberline {6}Modelado de los datos: ordenaci\IeC {\'o}n de los usuarios}{51}{chapter.107}
+\contentsline {section}{\numberline {6.1}Principales hip\'otesis}{51}{section.108}
+\contentsline {section}{\numberline {6.2}Algoritmos}{51}{section.109}
+\contentsline {section}{\numberline {6.3}Almacenamiento}{51}{section.110}
+\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{53}{chapter.111}
+\contentsline {section}{\numberline {7.1}Herramientas}{53}{section.112}
+\contentsline {section}{\numberline {7.2}Acceso web}{53}{section.113}
+\contentsline {chapter}{\numberline {8}\'Areas de mejora}{55}{chapter.114}
+\contentsline {chapter}{Bibliograf\'\i a}{57}{chapter*.115}

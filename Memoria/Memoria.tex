@@ -1,3 +1,7 @@
+% For long urls to break nicely and do not make overfull.
+% Needed this line before documentclass
+\RequirePackage[hyphens]{url}
+
 \documentclass[11pt,a4paper,leqno,titlepage,twoside]{book}
 
 %%%%%% packages %%%%%%%%%%
@@ -9,6 +13,7 @@
 \usepackage{wallpaper}
 \usepackage{sectsty}
 \usepackage[utf8]{inputenc} %para los acentos
+
 
 %%%%%% fuente por defecto %%%%%%%%%%
 \renewcommand{\familydefault}{\sfdefault}
@@ -60,7 +65,6 @@
             anchorcolor = oblue}
 
 %%%%%% path graficos %%%%%%%%%%			
-% \graphicspath{{../pdf/}{C:/DATOS/MBIT/Memoria/graphs/}}
 \graphicspath{{../pdf/}{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Memoria/graphs/}}
 
 
@@ -103,20 +107,28 @@
 %%%%%% title page %%%%%%%%%%
 
 \begin {titlepage}
-% Picture with pgf
+
+% Cover picture
+% \begin{pgfpicture}{0cm}{0cm}{\textwidth}{\textheight}
+% \pgfputat{\pgfxy(-12,-4)}{\pgfbox[center,center]{\begin{picture}(0,0)(0,0)\resizebox{40cm}{30cm}
+% {\includegraphics{portada.jpg}}\end{picture}}}
+% % Title and authors
+% \pgfputat{\pgfxy(0,5)}{\pgfbox[left,center]{\Huge\textbf{AN\'ALISIS DE REDES SOCIALES}}}
+% \pgfputat{\pgfxy(0,4)}{\pgfbox[left,center]{\Huge\textbf{PARA RECURSOS HUMANOS}}}
+% \pgfputat{\pgfxy(0,2)}{\pgfbox[left,center]{\textbf{Fabio Inui\qquad Teresa Mart\'\i nez \qquad Javier Quintana \qquad Silvia Santos }}}
+% % Versiones preliminares
+% \pgfputat{\pgfxy(0,1)}{\pgfbox[left,center]{\textbf{Versión preliminar \today}}}
+% \end{pgfpicture}
+
+% Cover picture
 \begin{pgfpicture}{0cm}{0cm}{\textwidth}{\textheight}
-% Background picture
-\pgfputat{\pgfxy(-12,-4)}{\pgfbox[center,center]{\begin{picture}(0,0)(0,0)\resizebox{40cm}{30cm}
-{\includegraphics{portada.jpg}}\end{picture}}}
-% Title and authors
-\pgfputat{\pgfxy(0,5)}{\pgfbox[left,center]{\Huge\textbf{AN\'ALISIS DE REDES SOCIALES}}}
-\pgfputat{\pgfxy(0,4)}{\pgfbox[left,center]{\Huge\textbf{PARA RECURSOS HUMANOS}}}
-\pgfputat{\pgfxy(0,2)}{\pgfbox[left,center]{\textbf{Fabio Inui\qquad Teresa Mart\'\i nez \qquad Javier Quintana \qquad Silvia Santos }}}
-
+\pgfputat{\pgfxy(-3.15,-3.85)}{\pgfbox[center,center]{\begin{picture}(0,0)(0,0)
+{\includegraphics{PortadaOctopus.pdf}}\end{picture}}}
 % PARA VERSIONES PRELIMINARES
-\pgfputat{\pgfxy(0,1)}{\pgfbox[left,center]{\textbf{Versión preliminar \today}}}
-
+\pgfputat{\pgfxy(7.5,-0.3)}{\pgfbox[center,center]{\textbf{Versión preliminar \today}}}
 \end{pgfpicture}
+
+
 \end {titlepage}
 
 %%%%%% pagina en blanco detras de la portada %%%%%%%%%%
@@ -127,7 +139,8 @@
 \pagestyle {empty}
 \vspace*{4cm}
 \hfill\begin{minipage}[t][0.75cm][c]{0.5\textwidth}\flushright
-Dedicamos esta memoria a nuestras familias, sin cuya paciencia sin l\'imites, no hubiera sido posible su elaboraci\'on.
+Dedicamos esta memoria a nuestras familias, sin cuya paciencia sin l\'imites, 
+no hubiera sido posible su elaboraci\'on.
 Agradecemos a nuestros profesores su dedicaci\'on y ayuda.
 \end{minipage}
 \addtocounter{page}{-2}
@@ -159,26 +172,31 @@ Agradecemos a nuestros profesores su dedicaci\'on y ayuda.
 %%%%%%  añade una pagina en blanco si el numero final de la pagina es impar %%%%%% 
 \cleardoublepage
 
-%%%%%%% las dos paginas finales, tipeset with latex y contraportada %%%%%% 
-\clearpage%
-\thispagestyle{empty}%
+%%%%%%% las dos paginas finales, tipeset with latex en una hoja y contraportada en la siguiente %%%%%% 
+%%%%%%% siempre comenzando en impar el "producido con latex" %%%%%% 
+\pagestyle{empty}
 \vspace*{\fill}
 \begin{center}
     \sf Documento producido con \LaTeX.
 \end{center}
 \vspace*{\fill}
-\addtocounter{page}{-1}%
-\null%
-\clearpage
 
-\pagestyle{empty}
-% Picture with pgf
-\begin{pgfpicture}{0cm}{0cm}{\textwidth}{\textheight}
+\cleardoublepage
 
-% Background picture
-\pgfputat{\pgfxy(-12,-4)}{\pgfbox[center,center]{\begin{picture}(0,0)(0,0)\resizebox{40cm}{30cm}
-{\includegraphics{contraportada.jpg}}\end{picture}}}
-\end{pgfpicture}
+$ $
+\newpage
+
+
+% Background picture 
+
+% \begin{pgfpicture}{0cm}{0cm}{\textwidth}{\textheight}
+% \pgfputat{\pgfxy(-12,-4)}{\pgfbox[center,center]{\begin{picture}(0,0)(0,0)\resizebox{40cm}{30cm}
+% {\includegraphics{contraportada.jpg}}\end{picture}}}
+% \end{pgfpicture}
+
+\includegraphics[trim = 3.135cm 0 0 3cm]{ContraOctopus.pdf}
+
+
 
 \end{document}
 	
