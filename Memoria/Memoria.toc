@@ -38,10 +38,12 @@
 \contentsline {section}{\numberline {5.3}Naturaleza del tuit}{49}{section.106}
 \contentsline {chapter}{\numberline {6}Modelado de los datos: ordenaci\IeC {\'o}n de los usuarios}{51}{chapter.107}
 \contentsline {section}{\numberline {6.1}Principales hip\'otesis}{51}{section.108}
-\contentsline {section}{\numberline {6.2}Algoritmos}{51}{section.109}
-\contentsline {section}{\numberline {6.3}Almacenamiento}{51}{section.110}
-\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{53}{chapter.111}
-\contentsline {section}{\numberline {7.1}Herramientas}{53}{section.112}
-\contentsline {section}{\numberline {7.2}Acceso web}{53}{section.113}
-\contentsline {chapter}{\numberline {8}\'Areas de mejora}{55}{chapter.114}
-\contentsline {chapter}{Bibliograf\'\i a}{57}{chapter*.115}
+\contentsline {section}{\numberline {6.2}Algoritmos}{52}{section.110}
+\contentsline {subsection}{\numberline {6.2.1}\IeC {\'I}ndice h}{52}{subsection.111}
+\contentsline {subsection}{\numberline {6.2.2}Grafo relacional}{53}{subsection.118}
+\contentsline {section}{\numberline {6.3}Almacenamiento}{54}{section.122}
+\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{55}{chapter.123}
+\contentsline {section}{\numberline {7.1}Herramientas}{55}{section.124}
+\contentsline {section}{\numberline {7.2}Acceso web}{55}{section.125}
+\contentsline {chapter}{\numberline {8}\'Areas de mejora}{57}{chapter.126}
+\contentsline {chapter}{Bibliograf\'\i a}{59}{chapter*.127}

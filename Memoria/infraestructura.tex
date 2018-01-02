@@ -51,7 +51,7 @@ que garantiza como respuesta el 100\% de los tuits que cumplan los criterios de 
 Para el desarrollo de este proyecto nos hemos servido del API gratuito, por limitación de costes. 
 
 Entre los API REST y Streaming, hemos decidido utilizar el API Streaming, mediante un script
-en Python usando Tweepy. Este método tiene diversas ventajas y desventajas que pasamos
+en Python usando {\tt Tweepy}. Este método tiene diversas ventajas y desventajas que pasamos
 a revisar:
 \begin{enumerate}
 \item El API Streaming proporciona tuits en tiempo real, y funciona como una especie de \lq\lq grabadora\rq\rq,
@@ -69,7 +69,7 @@ se produzcan en el tiempo que esté el proceso de \lq\lq escucha\rq\rq levantado
 \end{enumerate}
 
 Con respecto al segundo punto, hemos bajado los tuits mediante un script de Python, 
-que usa la librería Tweepy, y 
+que usa la librería {\tt Tweepy}, y 
 en el que a medida que van llegando los tuits a un proceso de escucha, los vamos 
 almacenando en una base de datos MongoDB. 
 
@@ -94,9 +94,9 @@ Para el desarrollo de la mayor parte de la lógica del proyecto hemos elegido Py
 instalación de Anaconda). Esta elección tiene diversas ventajas, en las varias fases del proyecto, ya
 que este lenguaje facilita las siguientes tareas:
 \begin{itemize}
-\item Comunicación con el API Streaming de Twitter a través del paquete Tweepy.
-\item Sencilla interacción con el formato JSON, que es en el que los tuits son descargados desde el API, gracias al paquete json.
-\item  Comunicación con la base de datos documental MongoDB, a través del paquete pymongo.
+\item Comunicación con el API Streaming de Twitter a través del paquete {\tt Tweepy}.
+\item Sencilla interacción con el formato JSON, que es en el que los tuits son descargados desde el API, gracias al paquete {\tt json}.
+\item  Comunicación con la base de datos documental MongoDB, a través del paquete {\tt pymongo}.
 \item Incorporación nativa del encoding UTF-8 (\lq\lq Unicode Transformation Format\rq\rq con números de 8 bits), 
 lo que nos ahorra muchos quebraderos de cabeza al tratar con caracteres especiales del español (tildes, ñ, etc.)
 y la presencia de emojis en los textos de los tuits.\footnote{\url{https://docs.python.org/3/howto/unicode.html. }}
@@ -110,7 +110,7 @@ Para la primera toma de contacto con los datos descargados del API de Twitter, n
 \item También maneja sin problemas documentos con encoding UTF-8\footnote{
 \url{https://docs.mongodb.com/v3.4/reference/bson-types/ }}, lo que nos ayuda a no tener problemas de encoding al
 almacenar los tuits.
-\item Se integra muy bien en programas en Python gracias al paquete pymongo.
+\item Se integra muy bien en programas en Python gracias al paquete {\tt pymongo}.
 \item No necesita una definición de la estructura del documento, lo que es muy conveniente
 para tratar tuits, donde el número de campos que obtenemos del API y el contenido de esos campos no siempre
 sigue el mismo formato. Este punto es en particular relevante si el API de Twitter cambiase, o se introdujeran nuevos 

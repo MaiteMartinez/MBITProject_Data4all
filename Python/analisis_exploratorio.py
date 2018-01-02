@@ -70,7 +70,7 @@ def random_color_func_twitter(word=None, font_size=None, position=None,  orienta
 	return "hsl({}, {}%, {}%)".format(h,s,l)
 
 def random_color_func_bios(word=None, font_size=None, position=None,  orientation=None, font_path=None, random_state=None):
-	rgb = [x*255. for x in oblue] # azul de twitter en rgb
+	rgb = [x*255. for x in oblue] # azul del proyecto en rgb
 	h,s,l = get_h_s_l_from_rgb(rgb)
 	return "hsl({}, {}%, {}%)".format(h,s,l)
 
