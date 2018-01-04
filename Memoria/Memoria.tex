@@ -12,8 +12,9 @@
 \usepackage{enumitem}
 \usepackage{wallpaper}
 \usepackage{sectsty}
+\usepackage{bbding}
+\usepackage{pifont}
 \usepackage[utf8]{inputenc} %para los acentos
-
 
 %%%%%% fuente por defecto %%%%%%%%%%
 \renewcommand{\familydefault}{\sfdefault}
@@ -64,6 +65,11 @@
             citecolor = oblue,
             anchorcolor = oblue}
 
+%%%%%% bullets en itemize personalizados %%%%%%%%%%
+\setlist[itemize,1]{label={\color{oblue}\ding{226}}} %\EllipseShadow
+\setlist[itemize,2]{label={\color{oblue}\ding{227}}} %\EllipseSolid
+\setlist[itemize,3]{label={\color{oblue}\ding{254}}} %\Ellipse
+
 %%%%%% path graficos %%%%%%%%%%			
 \graphicspath{{../pdf/}{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Memoria/graphs/}}
 
@@ -103,6 +109,7 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
+
 
 %%%%%% title page %%%%%%%%%%
 

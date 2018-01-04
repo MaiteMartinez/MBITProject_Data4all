@@ -8,7 +8,7 @@ paso es ordenarlos por orden de relevancia. A continuación describimos brevemen
 los dos criterios que usaremos para ordenarlos (el detalle de los algoritmos y 
 procedimientos llevados a cabo en cada caso se hará en la secciones siguientes):
 \begin{itemize}
-\item Ordenación de tipo índice $h$. El índice h es un sistema propuesto por Jorge Hirsch, de la Universidad de California, para la medición de la calidad profesional de los científicos, en función de la cantidad de citas que han recibido sus artículos científicos\footnote{\url{https://en.wikipedia.org/wiki/H-index }}. Un científico tiene índice $h$ si ha publicado $h$ trabajos con al menos $h$ citas cada uno.  El índice se diseñó para medir eficazmente la calidad del investigador, a diferencia de sistemas de medición más sencillos que cuentan citas o publicaciones, donde se hace una distinción entre aquellos investigadores que tienen una gran influencia en el mundo científico de aquellos que simplemente publican muchos trabajos. En nuestro campo, lo que queremos es medir 
+\item Ordenación de tipo índice $h$. El índice h es un sistema propuesto por Jorge Hirsch, de la Universidad de California, para la medición de la calidad profesional de los científicos, en función de la cantidad de citas que han recibido sus artículos científicos\footnote{\url{https://en.wikipedia.org/wiki/H-index }}. Un científico tiene índice $h$ si ha publicado $h$ trabajos con al menos $h$ citas cada uno. El índice se diseñó para medir eficazmente la calidad del investigador, a diferencia de sistemas de medición más sencillos que cuentan citas o publicaciones, donde se hace una distinción entre aquellos investigadores que tienen una gran influencia en el mundo científico de aquellos que simplemente publican muchos trabajos. En nuestro campo, lo que queremos es medir 
 la relevancia de los candidatos, así que una métrica de este tipo aplicada a los tuits publicados
 de la temática de interés (Big Data y ciencia de datos en nuestro caso), nos ayudará a determinarla.
 Los detalles, en la sección \ref{subsect:indice_h}.
@@ -97,17 +97,55 @@ caso y permitir que la ejecución continue con el resto de usuarios:
 Nuestro objetivo en esta parte es explorar las relaciones entre los usuarios que 
 hemos identificado como relevantes. De forma natural, como en cualquier red social,
 se pueden definir multitud de estructuras de tipo grafo para describirlas. Nosotros
-vamos a usar un grafo cuyos vértices serán los usuarios, y cuyas aristas serán
+vamos a usar un grafo cuyos vértices serán los usuarios, y cuyas aristas o arcos serán
 las relaciones entre ellos, de tipo dirigido: el usuario A está relacionado con el
 usuario B si A sigue a B (y puede muy bien ocurrir que B no esté relacionado con A,
 según esta definición). 
 
 Para esta parte necesitaremos entonces descargar de Twitter la información
-necesaria para construir el grafo de relaciones: los seguidores (\lq\lq followers\rq\rq)
-y seguidos (\lq\lq friends\rq\rq) de cada uno de los usuarios identificados como
-potenciales candidatos.
+necesaria para construir el grafo de relaciones: los seguidores 
+(\lq\lq followers\rq\rq\footnote{A aquellos usuarios que siguen a un determinado usuario, 
+en Twitter se les denomina \lq\lq followers\rq\rq. Y se llaman \lq\lq friends\rq\rq aquellos
+a los que dicho usuario determinado sigue.})
+de cada uno de los usuarios identificados como potenciales candidatos. 
+En principio, podríamos usar tanto los followers como los friends de cada uno 
+de los usuarios de nuestra lista. Pero en realidad no hace falta, ya que si el usuario
+A es un friend del usuario B, B es un follower del usario A, y lo consideraremos al
+estudiar los followers de A. 
 
-Y luego vamos a necesitar una librería para procesar el grafo y sacar las pertinentes 
+Para explorar los followers de cada usuario seleccionado usaremos la función 
+{\tt followers\_ids} del paquete {\tt Tweepy}. Esta función es una interfaz
+para la función del API de Twitter que permiten acceder a la lista de 
+followers. Esta función del API de Twitter
+tiene una limitación de $15$ llamadas al API por cada ventana de $15$ 
+minutos\footnote{\url{https://developer.twitter.com/en/docs/accounts-and-users/follow-search-get-users/api-reference/get-followers-ids }},
+con lo que la gestión de los límites es especialmente importante en este caso.
+El parámetro {\tt wait\_on\_rate\_limit = True} al crear el acceso al API a 
+través de {\tt Tweepy} también nos va a ser de utilidad.
+
+Por otro lado, la información que puede descargarse con esa función también
+está limitada en cantidad: el número de followers que puede obtenerse en cada llamada 
+al API es a lo sumo $5000$. Igual que antes,
+usando un código con varias llamadas al API, podríamos obtener un número más elevado de 
+seguidores.
+
+Nuestro grafo será por tanto un par ordenado 
+$G=(N,g)$, donde $N$ es un conjunto de vértices o nodos, que serán los usuarios
+identificados como potenciales candidatos para la oferta de trabajo, y $g$
+ es un conjunto de aristas o arcos, descritos como pares de nodos ordenados:
+$$g=\{(a,b): a,b\in N, a \mbox{ sigue a }b\}.$$
+En las representaciones de un grafo dirigido, una relación $(a,b)$ se 
+suele describir con una flecha que sale de $a$ y apunta a $b$.
+Al extraer la información sobre los usuarios hemos de quedarnos con los followers
+de cada uno que están en el conjunto de usuarios, es decir, solo nos quedamos con
+las relaciones entre candidatos:
+
+\myfigure{\includegraphics[width=0.8\textwidth]{followers_code}%
+\figcaption{Followers y relación entre usuarios.}
+\label{fig:followers_code} }
+
+Una vez obtenidas estas relaciones, vamos a necesitar una librería 
+para procesar el grafo y sacar las pertinentes 
 conclusiones. A este respecto, tenemos varias opciones que considerar:
 \begin{itemize}
 \item {\tt Graph-tool}: los algoritmos están implementadas en una librería C++, 
@@ -116,8 +154,8 @@ buena procesando grafos grandes. La instalación en entornos Windows no
 está soportada\footnote{\url{https://git.skewed.de/count0/graph-tool/wikis/installation-instructions 
 }}.
 \item {\tt NetworkX} es fácil de usar, para conjuntos de datos pequeños. Está bien
-documentado.  Es compatible con Python 2.7, 3.4, 3.5 y 3.6.
-\item {\tt  SNAP} (Stanford Network Analysis Platform): es un sistema para el análisis
+documentado. Es compatible con Python 2.7, 3.4, 3.5 y 3.6.
+\item {\tt SNAP} (Stanford Network Analysis Platform): es un sistema para el análisis
 y la manipulación de grandes redes. Está implementada en C++, con una interfaz en Python. 
 Disponible para Python 2.7\footnote{\url{https://snap.stanford.edu/snappy/index.html }}.
 \item {\tt igraph}: es una colección de herramientas para análisis de grafos,
@@ -127,5 +165,50 @@ para procesar grafos, disponible en principio para Python 2.7\footnote{\url{http
 \end{itemize}
 
 Vistas las opciones, nos hemos decidido por usar {\tt NetworkX}.
+Esta herramienta nos va a permitir calcular varias medidas
+de interés para estudiar la red de usuarios (\cite{notas_fernando}):
+\begin{itemize}
+\item Para entender la proximidad de unos nodos con otros:
+\begin{itemize}
+\item Diámetro: la mayor distancia geodésica dentro del grafo (o componente si no es conexo)
+\item Camino mínimo: camino más corto entre 2 nodos
+\item Longitud del camino medio: media de todos los caminos mínimos entre los 
+nodos del grafo (menos sensible a valores extremos).
+\end{itemize}
+\end{itemize}
+Y también usaremos el grafo para estudiar el papel de cada usuario dentro de la red
+y medir su relevancia, calculando las siguientes métricas:
+\begin{itemize}
+\item Centralidad por grado: el grado (degree) de un nodo $n$ es el número de aristas 
+incidentes en $n$. En los grafos dirigidos podemos distinguir entre in-degree (número
+de aristas que apuntan a $n$, en nuestro caso el número de followers) y
+out-degree (número de aristas que parten de $n$, en nuestro caso, el número de
+usuarios a los que sigue $n$). El in-degree representaría la capacidad de 
+\lq\lq liderazgo\rq\rq
+del usuario (a más followers, en principio más liderazgo), y el out-degree 
+representaría el interés del usuario en seguir a otros usuarios, que podríamos
+interpretar como su interés por el clima general del sector.
+\item Centralidad por autovector (eigenvector centrality): es una extensión del 
+concepto de centralidad por grado que captura la intuición de que la importancia 
+de un nodo en la red incrementa por el hecho de estar conectado a otros nodos 
+a su vez relevantes. En un grafo dirigido como el nuestro, parece natural pensar que
+lo que debemos medir es la importancia de los usuarios que siguen a uno dado,
+y que por tanto deberíamos usar los enlaces que apuntan al usuario en cuestion (las 
+aristas que cuentan para el in-degree).
+\item Centralidad de Bonacich: la centralidad por autovector tiene un problema cuando
+alguno de los nodos no tiene enlaces que lo apunten (es decir, si alguno de los usuarios
+no tuviera ningún seguidor entre los demás usuarios, aunque él sí que siguiera a otros),
+ya que en ese caso la centralidad por autovector de todos los nodos sería cero. Para
+paliar este problema podemos usar la centralidad de Bonacich, que  parte de la siguiente
+idea: los nodos a los que no apunta ninguna arista tienen centralidad $1$. El resto
+de los nodos, si $N(n)$ son los nodos que apuntan a $n$, y para cada $\eta\in N(n)$
+su centralidad de Bonacich es $C_\eta$, entonces, la centralidad de Bonacich de $n$
+será:
+$$C_n = 1 + \sum_{\eta\in N(n)}\alpha C_\eta,$$
+donde $\alpha\in[0,1]$. Esto es, la centralidad de los nodos que apuntan a un nodo
+dado se amortigua a través del parámetro $\alpha$ (si $\alpha=0$, no hay transmisión
+de centralidad).
+\end{itemize}
+
 
 \section{Almacenamiento}

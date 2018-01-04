@@ -7,8 +7,10 @@ from TweeterAPIConnection import TweeterAPIConnection
 import datetime
 import pandas as pd
 from db_to_table import save_df
+import networkx as nx
+import matplotlib.pyplot as plt# Tweets to retrieve in the timeline query
 
-# Tweets to retrieve in the timeline query
+
 n_tuits = 200
 
 
@@ -27,28 +29,27 @@ def get_h_index (n_retweets):
 
 # https://codereview.stackexchange.com/questions/101905/get-all-followers-and-friends-of-a-twitter-user
 
-def get_followers_ids(user_id, api):
+def get_followers_ids(user_id, user_ids_set, api):
 	ids = []
 	page_count = 0
 	for page in tweepy.Cursor(api.followers_ids, id=user_id, count=5000).pages():
 		page_count += 1
-		print ("Getting page " +str(page_count)+" for followers ids " + str(user_id))
-		ids.extend(page)
-
+		# print ("Getting page " +str(page_count)+" for followers ids " + str(user_id))
+		ids.extend(set(map(str, page)) & user_ids_set)
 	return ids
 
-def get_friends_ids(user_id, api):
+def get_friends_ids(user_id, user_ids_set, api):
 	ids = []
 	page_count = 0
 	for page in tweepy.Cursor(api.friends_ids, id=user_id, count=5000).pages():
 		page_count += 1
-		print ("Getting page " +str(page_count)+" for friends ids " + str(user_id))
-		ids.extend(page)
+		# print ("Getting page " +str(page_count)+" for friends ids " + str(user_id))
+		ids.extend(set(map(str, page)) & user_ids_set)
 	return ids
 
 def get_h_index_data(df2, api):
-	# people_data = df2[["user_id", "user_name", "user_screenname"]]
-	people_data = pd.DataFrame()
+	people_data = df2[["user_id", "user_name", "user_screenname"]]
+	# people_data = pd.DataFrame()
 	# n_users = 20
 	# people_data["user_id"] = df2["user_id"][:n_users]
 	# people_data["user_name"] = df2["user_name"][:n_users]
@@ -130,30 +131,38 @@ def get_h_index_data(df2, api):
 	return people_data
 
 def get_relation_graph(df2, api):
-	# people_data = df2[["user_id", "user_name", "user_screenname"]]
 	users_ids = df2["user_id"]
-	n_users = 20
+	user_ids_set = set(users_ids)
+	n_users = 2
+	errors=[""]*len(users_ids)
+	relations = []
 	for i in range(len(users_ids)):		
 		user_id = users_ids[i]		
-		print("Getting relations for user number "+str(i)+" of " + str(len(people_data["user_id"]))+" user_id = "+str(user_id))
-		
-		# followers/followed extraction: caring for errors 
+		print("Getting relations for user number "+str(i)+" of " + str(len(users_ids))+" user_id = "+str(user_id))
+		followers_ids = []
+		# followers extraction: caring for errors 
 		try:
-			people_data[str(user_id)]["follower_ids"] = get_followers_ids(user_id, api)
-			people_data[str(user_id)]["followed_ids"] = get_friends_ids(user_id, api)
-			errors.append("")
+			followers_ids = get_followers_ids(user_id, user_ids_set, api)
 		except tweepy.TweepError as e:
-			print ("Failed to get followers/followed user " + str(user_id) + " timeline")
+			print ("Failed to get followers/followed for user " + str(user_id) + " timeline")
 			print (" Exception: " + str(e))
 			print ("Skipping... ")
-			errors.append(e)
-
+			errors[i] = e
+		 # A está relacionado con el usuario B si A sigue a B
+		this_user_rels = [(x, user_id) for x in followers_ids]
+		relations.extend(this_user_rels)
 		if i > n_users:break
 
-	errors_df = pd.DataFrame("user_id": user_id, "errors": errors)
+	errors_df = pd.DataFrame({"user_id": user_id, "errors": errors})
 	file_name = "C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/graph_errors.xlsx"
 	save_df(errors_df, file_name)
-	return errors_df
+
+	# directed graph creation
+	DG = nx.DiGraph()
+	DG.add_nodes_from(users_ids)
+	DG.add_edges_from(set(relations))
+	
+	return errors_df, DG
 
 def main():
 	#This handles Twitter authentification and the connection to Twitter Streaming API
@@ -169,9 +178,10 @@ def main():
 	na_value =  "None"
 	df2 = df.fillna(value = na_value)
 	
-	h_index_df = get_h_index_data(df2, api)
+	# h_index_df = get_h_index_data(df2, api)
 
-	graph_errors_df = get_relation_graph(df2, api)
+	graph_errors_df, directed_graph = get_relation_graph(df2, api)
+	nx.write_gml(directed_graph, "relations_graph.gml")
 	
 
 if __name__ == '__main__':
