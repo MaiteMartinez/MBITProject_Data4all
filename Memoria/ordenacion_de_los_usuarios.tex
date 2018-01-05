@@ -146,7 +146,8 @@ las relaciones entre candidatos:
 
 Una vez obtenidas estas relaciones, vamos a necesitar una librería 
 para procesar el grafo y sacar las pertinentes 
-conclusiones. A este respecto, tenemos varias opciones que considerar:
+conclusiones. A este respecto, tenemos varias opciones que 
+considerar. Entre otras:
 \begin{itemize}
 \item {\tt Graph-tool}: los algoritmos están implementadas en una librería C++, 
 lo que aporta mucha rapidez en la ejecución. Es 
@@ -189,25 +190,56 @@ del usuario (a más followers, en principio más liderazgo), y el out-degree
 representaría el interés del usuario en seguir a otros usuarios, que podríamos
 interpretar como su interés por el clima general del sector.
 \item Centralidad por autovector (eigenvector centrality): es una extensión del 
-concepto de centralidad por grado que captura la intuición de que la importancia 
+concepto de cen\-tra\-li\-dad por grado que captura la intuición de que la importancia 
 de un nodo en la red incrementa por el hecho de estar conectado a otros nodos 
 a su vez relevantes. En un grafo dirigido como el nuestro, parece natural pensar que
 lo que debemos medir es la importancia de los usuarios que siguen a uno dado,
 y que por tanto deberíamos usar los enlaces que apuntan al usuario en cuestion (las 
-aristas que cuentan para el in-degree).
+aristas que cuentan para el in-degree).  Sea $c$ el vector columna
+de las centralidades por autovector de los $n$ nodos del grafo y sea $A$ la matriz
+de adyacencia del grafo, en la que $a_{ij}$ representa la contribución
+del nodo $n_i$ al \lq\lq prestigio\rq\rq del nodo $n_j$ (en nuestro caso, $a_{ij} = 1$ si
+$n_i$ sigue a $n_j$ y cero en caso contrario). La idea detrás de esta centralidad
+(\cite{bonacich2}) es que la centralidad de un nodo será la suma de las centralidades
+de los nodos que le apuntan, ponderadas por el peso de la unión, esto es:
+$$c_i = \sum_j a_{ji} c_j$$
+que en notación matricial es 
+$$c = A^Tc.$$
+Para que esta ecuación tenga solución debemos considerar una formulación más general,
+en la que la centralidad no es exactamente la suma de las centralidades de los nodos que 
+contribuyen, sino solo un múltiplo de dicha suma:
+$$\lambda c = A^Tc,$$
+de tal forma que $c$, el vector de las centralidades del grafo es un 
+autovector de la matriz $A^T$. Si $A$ es una matriz $n\times n$ hay en general $n$ soluciones
+a dicha ecuación, correspondientes a los $n$ autovalores de $A^T$. Suele considerarse
+como solución favorita el autovector correspondiente al máximo autovalor.
+ 
 \item Centralidad de Bonacich: la centralidad por autovector tiene un problema cuando
 alguno de los nodos no tiene enlaces que lo apunten (es decir, si alguno de los usuarios
 no tuviera ningún seguidor entre los demás usuarios, aunque él sí que siguiera a otros),
-ya que en ese caso la centralidad por autovector de todos los nodos sería cero. Para
+ya que en ese caso ese nodo siempre contribuirá cero, y por tanto, en algunos casos
+la centralidad por autovector de todos los nodos sería cero (ejemplos I y II de la página
+192 de \cite{bonacich}). Para
 paliar este problema podemos usar la centralidad de Bonacich, que  parte de la siguiente
-idea: los nodos a los que no apunta ninguna arista tienen centralidad $1$. El resto
-de los nodos, si $N(n)$ son los nodos que apuntan a $n$, y para cada $\eta\in N(n)$
-su centralidad de Bonacich es $C_\eta$, entonces, la centralidad de Bonacich de $n$
-será:
-$$C_n = 1 + \sum_{\eta\in N(n)}\alpha C_\eta,$$
-donde $\alpha\in[0,1]$. Esto es, la centralidad de los nodos que apuntan a un nodo
-dado se amortigua a través del parámetro $\alpha$ (si $\alpha=0$, no hay transmisión
-de centralidad).
+idea: todos los nodos tienen centralidad mínima. Con la misma notación que en el apartado
+anterior, la centralidad de Bonacich puede definirse 
+(ecuación $(5)$ en \cite{bonacich}) como:
+$$c_i = e_i + \alpha\sum_j a_{ji} c_j, \mbox{ o, en notación matricial, } c = e + \alpha A^Tc$$
+donde $\alpha\in[0,1]$ y $e$ es un vector constante. Esto es, la centralidad de cada nodo es la suma
+de una centralidad mínima (o exógena, como la denominan en \cite{bonacich}) 
+y de las contribuciones a la centralidad de las centralidades de los nodos que apuntan 
+a dicho nodo. Esa contribución se amortigua a través del parámetro $\alpha$, 
+ya que para nodos a distancia $k$ de un nodo dado, su contribución es múltiplo de
+$\alpha^k$. Si $\alpha=0$, no hay transmisión de centralidad.
+\item PageRank: las centralidades basadas en autovectores distribuyen de forma indiscriminada 
+su centralidad a todos sus vecinos,  por lo que un nodo importante que apunta a 
+muchos vecinos hace importantes a todos ellos. La idea de PageRank consiste en 
+repartir la centralidad aportada por un nodo entre todos sus vecinos. De esta forma, si un nodo muy importante apunta a muchos 
+nodos, finalmente la centralidad que recibe cada uno de ellos quede diluida.
+La centralidad que un nodo recibe de cada vecino de su red, es 
+centralidad vecino / outdegree
+PageRank es un proceso iterativo, hasta que se completa un ciclo y los valores no 
+cambian, la solución converge. (o hasta que se completa un máximo de ciclos)
 \end{itemize}
 
 
