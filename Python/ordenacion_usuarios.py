@@ -182,9 +182,10 @@ def print_basic_graph_properties(G, file_path = "graph_properties.txt"):
 	if  type(G) != nx.classes.digraph.DiGraph:
 		raise Exception ("NetworkX directed graph expected")
 	output_string += " Type of object " + str(type(G)) + "\n"
-	
+	output_string += " It has  " + str(len(G.nodes())) + " nodes and " +\
+		str(len(G.edges()))+ " edges \n"
 
-	pathlengths=[]
+	pathlengths = []
 	output_string += "source vertex {target:length, } for some nodes \ n "
 	count = 0
 	for v in G.nodes():
@@ -200,7 +201,7 @@ def print_basic_graph_properties(G, file_path = "graph_properties.txt"):
 	histogram_graph(pathlengths, "Distribución de la menor longitud de los caminos", oyellow, "images/pathlengths_distribution.png")
 
 	output_string += "    \n"
-	output_string += " ******  average shortest path length %s" % (sum(pathlengths)/len(pathlengths))
+	output_string += " ******  average shortest path length %s" % (sum(pathlengths)/len(pathlengths))+" \n"
 
 	# Strongly connected component 
 	is_wk_connected = nx.is_weakly_connected(G)
@@ -210,7 +211,7 @@ def print_basic_graph_properties(G, file_path = "graph_properties.txt"):
 	# time consuming
 	largest = max(nx.strongly_connected_component_subgraphs(G), key=len)
 	output_string += "the largest strongly connected component has  "+str(len(largest))+" nodes, which are a " + str(len(largest)/len(G)*100)+"% of total nodes  \n"
-	output_string += "for the largest component, the descriptive measures are: " 
+	output_string += "for the largest component, the descriptive measures are: \n" 
 	output_string += basic_measures(largest) 
 
 	# Weakly connected component 
@@ -248,22 +249,22 @@ def main():
 	#This handles Twitter authentification and the connection to Twitter Streaming API
 	# wait_on_rate_limit=True to wait until rate limits reset, instead of failing
 	# rate limit when getting followed/followers is easily reached
-	api = TweeterAPIConnection(keys_file_name = "set_up.py").getTwitterApi(wait_on_rate_limit = True)
+	# api = TweeterAPIConnection(keys_file_name = "set_up.py").getTwitterApi(wait_on_rate_limit = True)
 
-	# users info
-	file_name = "C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/unique_users_lang_class.xlsx"
-	df_columns = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0).columns
-	converter = {col: str for col in df_columns} 
-	df = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0, converters = converter)
-	na_value =  "None"
-	df2 = df.fillna(value = na_value)
+	# # users info
+	# file_name = "C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/unique_users_lang_class.xlsx"
+	# df_columns = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0).columns
+	# converter = {col: str for col in df_columns} 
+	# df = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0, converters = converter)
+	# na_value =  "None"
+	# df2 = df.fillna(value = na_value)
 	
-	h_index_df = get_h_index_data(df2, api)
+	# h_index_df = get_h_index_data(df2, api)
 
-	graph_errors_df, directed_graph = get_relation_graph(df2, api)
-	nx.write_gml(directed_graph, "relations_graph.gml")
+	# graph_errors_df, directed_graph = get_relation_graph(df2, api)
+	# nx.write_gml(directed_graph, "relations_graph.gml")
 	
-	# directed_graph = nx.read_gml("relations_graph.gml")
+	directed_graph = nx.read_gml("relations_graph.gml")
 	
 	print_basic_graph_properties(directed_graph, file_path = "graph_properties.txt")
 

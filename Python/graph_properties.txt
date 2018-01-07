@@ -1,4 +1,5 @@
  Type of object <class 'networkx.classes.digraph.DiGraph'>
+ It has  7210 nodes and 28 edges 
 source vertex {target:length, } for some nodes \ n 100021261 {'100021261': 0}
 100057600 {'100057600': 0}
 1001021064 {'1001021064': 0}

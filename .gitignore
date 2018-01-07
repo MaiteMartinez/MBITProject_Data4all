@@ -3,3 +3,4 @@ Python/__pycache__/OpenMongoDB.cpython-36.pyc
 Python/__pycache__/TweeterAPIConnection.cpython-36.pyc
 Python/set_up.py
 Python/Proyecto_twitter_analise.ipynb
+*.log
