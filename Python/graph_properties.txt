@@ -1,0 +1,31 @@
+ Type of object <class 'networkx.classes.digraph.DiGraph'>
+source vertex {target:length, } for some nodes \ n 100021261 {'100021261': 0}
+100057600 {'100057600': 0}
+1001021064 {'1001021064': 0}
+100214747 {'100214747': 0}
+100236692 {'100236692': 0}
+100280069 {'100280069': 0}
+100280852 {'100280852': 0}
+100355673 {'100355673': 0}
+100443311 {'100443311': 0}
+1004876384 {'1004876384': 0}
+100562129 {'100562129': 0}
+1005977888 {'1005977888': 0}
+1006359619 {'1006359619': 0}
+100640404 {'100640404': 0}
+1007704038 {'1007704038': 0}
+1008943958 {'1008943958': 0}
+1009674331 {'1009674331': 0}
+1009767523 {'1009767523': 0}
+101022652 {'101022652': 0}
+    
+ ******  average shortest path length 0.0038684719535783366 Is the graph strongly connected? -> False   
+It has 7210 strongly connected components  
+the largest strongly connected component has  1 nodes, which are a 0.013869625520110956% of total nodes  
+for the largest component, the descriptive measures are: radius: 0
+diameter: 0
+average_shortest_path_length: 0
+ Is the graph weakly connected? -> False     
+It has 7182 weakly connected components  
+the largest weakly connected component has  21 nodes, which are a 0.2912621359223301% of total nodes  
+El coeficiente de transitividad del grafo es 0

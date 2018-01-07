@@ -4,11 +4,12 @@ from OpenMongoDB import MongoDBConnection
 import pymongo
 import json
 from TweeterAPIConnection import TweeterAPIConnection
-import datetime
+import time
 import pandas as pd
 from db_to_table import save_df
 import networkx as nx
 import matplotlib.pyplot as plt# Tweets to retrieve in the timeline query
+from utilities import *
 
 
 n_tuits = 200
@@ -164,6 +165,85 @@ def get_relation_graph(df2, api):
 	
 	return errors_df, DG
 
+def basic_measures(G):
+	output_string = ""
+	output_string += ("radius: %d" % nx.radius(G)) + "\n"
+	output_string += ("diameter: %d" % nx.diameter(G)) + "\n"
+	output_string += ("average_shortest_path_length: %d" % nx.average_shortest_path_length(G)) + "\n"
+	# output_string += ("eccentricity: %s" % nx.eccentricity(largest)) + "\n"  %this is a dictionary
+	# output_string += ("center: %s" % nx.center(largest)) + "\n"
+	# output_string += ("periphery: %s" % periphery(largest)) + "\n"
+	# output_string += ("density: %s" % nx.density(largest)) + "\n"
+	return output_string
+
+def print_basic_graph_properties(G, file_path = "graph_properties.txt"): 
+	
+	output_string = ""
+	if  type(G) != nx.classes.digraph.DiGraph:
+		raise Exception ("NetworkX directed graph expected")
+	output_string += " Type of object " + str(type(G)) + "\n"
+	
+
+	pathlengths=[]
+	output_string += "source vertex {target:length, } for some nodes \ n "
+	count = 0
+	for v in G.nodes():
+		# Compute the shortest path lengths from source to all reachable nodes
+		spl = nx.single_source_shortest_path_length(G,v)
+		count += 1
+		if count < 20:
+			output_string += '%s %s' % (v,spl) 
+			output_string += "\n"
+		for p in spl.values():
+			pathlengths.append(p)
+	# histogram of lengths of paths
+	histogram_graph(pathlengths, "Distribución de la menor longitud de los caminos", oyellow, "images/pathlengths_distribution.png")
+
+	output_string += "    \n"
+	output_string += " ******  average shortest path length %s" % (sum(pathlengths)/len(pathlengths))
+
+	# Strongly connected component 
+	is_wk_connected = nx.is_weakly_connected(G)
+	output_string += " Is the graph strongly connected? -> " + str(nx.is_strongly_connected(G))+"   \n"
+	n = nx.number_strongly_connected_components(G)
+	output_string += "It has "+str(n)+" strongly connected components  \n"
+	# time consuming
+	largest = max(nx.strongly_connected_component_subgraphs(G), key=len)
+	output_string += "the largest strongly connected component has  "+str(len(largest))+" nodes, which are a " + str(len(largest)/len(G)*100)+"% of total nodes  \n"
+	output_string += "for the largest component, the descriptive measures are: " 
+	output_string += basic_measures(largest) 
+
+	# Weakly connected component 
+	output_string += " Is the graph weakly connected? -> " + str(nx.is_weakly_connected(G))+"     \n"
+	n = nx.number_weakly_connected_components(G)
+	output_string += "It has "+str(n)+" weakly connected components  \n"
+	# time consuming
+	largest = max(nx.weakly_connected_component_subgraphs(G), key=len)
+	output_string += "the largest weakly connected component has  "+str(len(largest))+" nodes, which are a " + str(len(largest)/len(G)*100)+"% of total nodes  \n"
+	
+	degree_sequence =[d for n, d in G.degree()]
+	histogram_graph(degree_sequence, "Distribucion del grado", oyellow, "images/degree_distribution.png")
+	degree_sequence = [d for n, d in G.in_degree()]
+	histogram_graph(degree_sequence, "Distribución del in-degree", oyellow, "images/indegree_distribution.png")
+	degree_sequence = [d for n, d in G.out_degree()]
+	histogram_graph(degree_sequence, "Distribución del out-degree", oyellow, "images/outdegree_distribution.png")
+		
+	output_string += "El coeficiente de transitividad del grafo es "+ str(nx.transitivity(G))
+
+	print (output_string)
+	f = open(file_path,'w')
+	f.write(output_string)
+	f.close()
+	return
+
+
+def get_users_centralities(df2, DG):
+	centrality = degree_centrality(G)
+	df2["degree"] = [centrality.get(x,0) for x in df2["users_id"]]
+	return df2
+
+
+
 def main():
 	#This handles Twitter authentification and the connection to Twitter Streaming API
 	# wait_on_rate_limit=True to wait until rate limits reset, instead of failing
@@ -178,16 +258,23 @@ def main():
 	na_value =  "None"
 	df2 = df.fillna(value = na_value)
 	
-	# h_index_df = get_h_index_data(df2, api)
+	h_index_df = get_h_index_data(df2, api)
 
 	graph_errors_df, directed_graph = get_relation_graph(df2, api)
 	nx.write_gml(directed_graph, "relations_graph.gml")
 	
+	# directed_graph = nx.read_gml("relations_graph.gml")
+	
+	print_basic_graph_properties(directed_graph, file_path = "graph_properties.txt")
+
+	# df = get_users_centralities(df2, directed_graph)
 
 if __name__ == '__main__':
 	try:
-		print("%%%%%%%%%%%%%%%   Starting task at "+str(datetime.datetime.now()))
+		start = time.time()
+		print("%%%%%%%%%%%%%%%   Starting task at "+str(start))
 		main()
+		print("%%%%%%%%%%%%%%%   time ellapsed "+str((time.time()-start)/60) + " minutes")
 	except KeyboardInterrupt:
 		print ('\nGoodbye! ')  
 
