@@ -236,11 +236,56 @@ def print_basic_graph_properties(G, file_path = "graph_properties.txt"):
 	f.write(output_string)
 	f.close()
 	return
+def normalize_vector(v):
+	mx = max(v)
+	if mx > 0: 
+		v = [x/mx for x in v]
+	return v
 
+def get_users_centralities(df2, G):
+	# The degree centralities values are normalized by dividing by the maximum possible 
+	# degree in a simple graph n-1 where n is the number of nodes in G.
+	df2["degree"] = [nx.degree_centrality(G).get(x,0) for x in df2["user_id"]]
+	df2["in_degree"] = [nx.in_degree_centrality(G).get(x,0) for x in df2["user_id"]]
+	df2["out_degree"] = [nx.out_degree_centrality(G).get(x,0) for x in df2["user_id"]]
+	# For directed graphs this is “left” eigenvector centrality which corresponds to the in-edges 
+	# in the graph. For out-edges eigenvector centrality first reverse the graph with G.reverse().
+	try:
+		df2["eigenvector"] = [nx.eigenvector_centrality_numpy(G).get(x,0) for x in df2["user_id"]]
+	except Exception as e:
+		print("Eigenvector numpy failed " + e)
+		df2["eigenvector"] = [nx.eigenvector_centrality(G).get(x,0) for x in df2["user_id"]]
+	# normalize values
+	df2["eigenvector"] = normalize_vector(df2["eigenvector"])
+	# katz_centrality(G, alpha=0.1, beta=1.0,...) default values
+	# The parameter alpha should be strictly less than the inverse of largest eigenvalue 
+	# of the adjacency matrix for the algorithm to converge. You can use 
+	# max(nx.adjacency_spectrum(G)) to get λmaxλmax 
+	l_max = max(nx.adjacency_spectrum(G))
+	a = 0.8/l_max
+	try:
+		df2["katz_bonacich"] = [nx.katz_centrality_numpy(G, alpha = a, beta = 1.0, normalized=True).get(x,0) for x in df2["user_id"]]
+	except Exception as e:
+		print ("Katz-Bonacich numpy failed " + e)
+		df2["katz_bonacich"] = [nx.katz_centrality(G, alpha = a, beta = 1.0, normalized=True).get(x,0) for x in df2["user_id"]]
 
-def get_users_centralities(df2, DG):
-	centrality = degree_centrality(G)
-	df2["degree"] = [centrality.get(x,0) for x in df2["users_id"]]
+	try:
+		df2["pagerank"] = [nx.pagerank_numpy(G, alpha = 0.85).get(x,0) for x in df2["user_id"]]
+	except Exception as e:
+		print ("pagerank numpy failed " + e)
+		try:
+			df2["pagerank"] = [nx.pagerank_scipy(G, alpha = 0.85).get(x,0) for x in df2["user_id"]]
+		except Exception as e:
+			print ("pagerank scipy failed " + e)
+			df2["pagerank"] = [nx.pagerank(G, alpha = 0.85).get(x,0) for x in df2["user_id"]]
+	# normalize values
+	df2["pagerank"] = normalize_vector(df2["pagerank"])
+	# The closeness centrality is normalized to (n-1)/(|G|-1) where n is the number of nodes 
+	# in the connected part of graph containing the node. If the graph is not completely 
+	# connected, this algorithm computes the closeness centrality for each connected part 
+	# separately scaled by that parts size.
+	df2["closeness"] = [nx.closeness_centrality(G).get(x,0) for x in df2["user_id"]]
+	df2["betweenness"] = [nx.betweenness_centrality(G, normalized=True).get(x,0) for x in df2["user_id"]]
 	return df2
 
 
@@ -252,23 +297,26 @@ def main():
 	# api = TweeterAPIConnection(keys_file_name = "set_up.py").getTwitterApi(wait_on_rate_limit = True)
 
 	# # users info
-	# file_name = "C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/unique_users_lang_class.xlsx"
-	# df_columns = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0).columns
-	# converter = {col: str for col in df_columns} 
-	# df = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0, converters = converter)
-	# na_value =  "None"
-	# df2 = df.fillna(value = na_value)
-	
-	# h_index_df = get_h_index_data(df2, api)
+	file_name = "C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/unique_users_lang_class.xlsx"
+	df_columns = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0).columns
+	converter = {col: str for col in df_columns} 
+	df = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0, converters = converter)
+	na_value =  "None"
+	df2 = df.fillna(value = na_value)
+
+	# people_data = get_h_index_data(df2, api)
 
 	# graph_errors_df, directed_graph = get_relation_graph(df2, api)
 	# nx.write_gml(directed_graph, "relations_graph.gml")
 	
 	directed_graph = nx.read_gml("relations_graph.gml")
 	
-	print_basic_graph_properties(directed_graph, file_path = "graph_properties.txt")
+	# print_basic_graph_properties(directed_graph, file_path = "graph_properties.txt")
 
-	# df = get_users_centralities(df2, directed_graph)
+	people_data = get_users_centralities(people_data, directed_graph)
+
+	file_name = "C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/people_data.xlsx"
+	save_df(people_data, file_path = file_name)
 
 if __name__ == '__main__':
 	try:
