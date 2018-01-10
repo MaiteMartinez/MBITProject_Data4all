@@ -6,31 +6,18 @@ from collections import Counter
 from pandas.tools.plotting import table
 
 import langid
-from nltk.corpus import stopwords   # stopwords to detect languagecvbgf
+from nltk.corpus import stopwords   # stopwords to detect language
 from db_to_table import save_df
 from nltk.tokenize import wordpunct_tokenize
 from languages_names import to_two_letters, from_two_letters
 from stop_words import my_stop_words
 import matplotlib.pyplot as plt
-from utilities import frequency_bar_graph, highlighted_pie_graph
-
-# *********************************************
-# RGB project colors
-# *********************************************
-
-oyellow = [1,0.835294117647059,0.133333333333333]
-oblue   = [0.0352941176470588,0.450980392156863,0.541176470588235]
-ogreen1 = [0.0196078431372549,0.650980392156863,0.576470588235294]
-ogreen2 = [0.0588235294117647,0.737254901960784,0.568627450980392]
-ored    = [0.929411764705882,0.258823529411765,0.215686274509804]
+from utilities import *
 
 
 # *********************************************
 # Deteccion idioma con stop words
 # *********************************************
-
-
-
  
 def get_language_likelihood(input_text):
 	"""Return a dictionary of languages and their likelihood of being the 
@@ -124,12 +111,10 @@ def classify_by_language(df, col_name):
 	
 	return df
 
-
-
 # *********************************************
 # MAIN
 # *********************************************
-	
+
 def main():
 	# ********************************************
 	# read the data stored form MongoDB database
@@ -144,7 +129,7 @@ def main():
 	# ********************************************
 	# classify tuit languages, and draw some graphs
 	# ********************************************
-	all_tuits_lang_class = classify_by_language ( all_tweets, "text")
+	all_tuits_lang_class = classify_by_language( all_tweets, "text")
 	
 	file_name = "C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/all_tweets_lang_class.xlsx"
 	save_df(all_tuits_lang_class, file_path = file_name)

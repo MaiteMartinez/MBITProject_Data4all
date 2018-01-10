@@ -25,17 +25,7 @@ from pylab import rcParams
 import time
 import matplotlib.dates as mdates
 from copy import deepcopy
-from utilities import frequency_bar_graph, highlighted_pie_graph
-
-# *********************************************
-# RGB project colors
-# *********************************************
-
-oyellow = [1,0.835294117647059,0.133333333333333]
-oblue   = [0.0352941176470588,0.450980392156863,0.541176470588235]
-ogreen1 = [0.0196078431372549,0.650980392156863,0.576470588235294]
-ogreen2 = [0.0588235294117647,0.737254901960784,0.568627450980392]
-ored    = [0.929411764705882,0.258823529411765,0.215686274509804]
+from utilities import *
 
 # *********************************************
 # duplicated tuits?
