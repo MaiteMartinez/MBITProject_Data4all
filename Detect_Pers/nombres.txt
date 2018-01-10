@@ -6381,8 +6381,7 @@ artman
 artmann
 artola
 arton
-artrip
-arts
+artri
 artura
 arturi
 arturo
@@ -13424,9 +13423,7 @@ bieze
 bifano
 biffar
 biffle
-bifulco
-big
-biga
+bifulcbiga
 bigalk
 bigalke
 bigalow
@@ -32019,8 +32016,7 @@ dastous
 dastrup
 daswani
 daszkiewicz
-dat
-data
+da
 datar
 datcher
 date
@@ -42068,9 +42064,6 @@ espada
 espadas
 espaillat
 espalin
-espana
-espanol
-espanola
 espanosa
 espanoza
 esparcia
@@ -97299,6 +97292,7 @@ nachazel
 nachbar
 nachi
 nachman
+nacho
 nachreiner
 nacht
 nachtigal
@@ -102628,6 +102622,7 @@ osullivan
 osumi
 osuna
 osusky
+osvaldo
 osvold
 oswald
 oswalt
