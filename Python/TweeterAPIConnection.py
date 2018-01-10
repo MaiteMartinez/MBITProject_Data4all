@@ -19,7 +19,7 @@ class TweeterAPIConnection:
 		self.access_token= keys_dict["Twitter_keys"]["access_token"]
 		self.access_token_secret= keys_dict["Twitter_keys"]["access_token_secret"]
 
-	def getTwitterApi(self):
+	def getTwitterApi(self, wait_on_rate_limit=False):
 		# == OAuth Authentication ==
 		#
 		# This mode of authentication is the new preferred way
@@ -28,7 +28,7 @@ class TweeterAPIConnection:
 		try:
 			auth = tweepy.OAuthHandler(self.consumer_key, self.consumer_secret)
 			auth.set_access_token(self.access_token, self.access_token_secret)
-			api = tweepy.API(auth)		
+			api = tweepy.API(auth, wait_on_rate_limit=wait_on_rate_limit)		
 			print('********** api connection creada  for user '+api.me().screen_name+' ******************')
 		except:
 			print("Error conexión con el API de Twitter")

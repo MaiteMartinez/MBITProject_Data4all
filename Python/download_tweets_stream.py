@@ -55,7 +55,7 @@ class StreamListener_to_db(StreamListener):
 
 
 def main():
-	#This handles Twitter authetification and the connection to Twitter Streaming API
+	#This handles Twitter authentification and the connection to Twitter Streaming API
 	keys_file  = open("set_up.py", "r") 
 	keys_dict = eval(keys_file.read())
 	consumer_key= keys_dict["Twitter_keys"]["consumer_key"]

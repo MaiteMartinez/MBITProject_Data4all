@@ -25,6 +25,7 @@ from pylab import rcParams
 import time
 import matplotlib.dates as mdates
 from copy import deepcopy
+from utilities import frequency_bar_graph, highlighted_pie_graph
 
 # *********************************************
 # RGB project colors
@@ -65,6 +66,24 @@ def process(text, tokenizer = TweetTokenizer(), stopwords=[]):
 
 def random_color_func_twitter(word=None, font_size=None, position=None,  orientation=None, font_path=None, random_state=None):
 	rgb = [85.0, 172.0, 238.0] # azul de twitter en rgb
+	h,s,l = get_h_s_l_from_rgb(rgb)
+	return "hsl({}, {}%, {}%)".format(h,s,l)
+
+def random_color_func_bios(word=None, font_size=None, position=None,  orientation=None, font_path=None, random_state=None):
+	rgb = [x*255. for x in oblue] # azul del proyecto en rgb
+	h,s,l = get_h_s_l_from_rgb(rgb)
+	return "hsl({}, {}%, {}%)".format(h,s,l)
+
+
+def random_color_func_project_colors(word=None, font_size=None, position=None,  orientation=None, font_path=None, random_state=None):
+	project_colors =[oyellow, oblue, ogreen1, ogreen2, ored]
+	rgb_vector = [[x*255. for x in c] for c in project_colors] 
+	hsl_vector = [get_h_s_l_from_rgb(rgb) for rgb in rgb_vector]
+	h,s,l = hsl_vector[np.random.random_integers(0, high=len(hsl_vector)-1)]
+	return "hsl({}, {}%, {}%)".format(h,s,l)
+
+
+def get_h_s_l_from_rgb(rgb):
 	rgb = [x/255. for x in rgb]
 	mn = min(rgb)
 	mx = max(rgb)
@@ -86,36 +105,45 @@ def random_color_func_twitter(word=None, font_size=None, position=None,  orienta
 	h = int(60*h)
 	s = int(100*s) 
 	l = int(100*l*uniform(60,95)/100.)
+	return h, s, l
 	
-	return "hsl({}, {}%, {}%)".format(h,s,l)
+
 
 
 def show_words_cloud(text,
 					font_path="fonts/CabinSketch-Regular.ttf",
 					original_figure_path = "images/originals/twitter_image.png",
-					figure_path = "images/twitter_worldcloud.png"):
+					figure_path = "images/twitter_worldcloud.png",
+					color_function = None):
 	plt.clf()
-	twitter_mask = imread(original_figure_path)
+	if original_figure_path is not None:
+		twitter_mask = imread(original_figure_path)
+		max_words = 3000
+	else:
+		twitter_mask = None
+		max_words = 8000
 	wcloud = WordCloud(font_path = font_path,
-						background_color = "white", 
-						max_words = 3000,
+						background_color = None, 
 						mask = twitter_mask, 
+						mode = "RGBA",
+						max_words = max_words,
+						color_func=color_function,
+						stopwords=STOPWORDS.add("RT"),
 						max_font_size = 60,
-						width=1800000,
-						height=1400000,
-						color_func=random_color_func_twitter,
-						stopwords=STOPWORDS.add("RT"))
+						relative_scaling=1)
 	wcloud.generate(text)
 	plt.figure()
 	plt.imshow(wcloud)
+	plt.tight_layout()
 	plt.axis("off")
-	# plt.show()
-	plt.savefig(figure_path)
+	plt.savefig(figure_path, bbox_inches='tight')
 
 def create_word_cloud(tweet_cursor,
+					fields = ["text"],
 					font_path="fonts/CabinSketch-Regular.ttf",
 					original_figure_path = "images/originals/twitter_image.png",
-					figure_path = "images/twitter_worldcloud.png"):
+					figure_path = "images/twitter_worldcloud.png",
+					color_function = None):
 		
 	tweet_tokenizer = TweetTokenizer()
 	punct = list(string.punctuation)
@@ -127,11 +155,17 @@ def create_word_cloud(tweet_cursor,
 
 	t_count = 0
 	for docto in tweet_cursor:		
-		tokens = process(text=docto["text"],
-						 tokenizer = tweet_tokenizer,
-						 stopwords=stopword_list)
-		tf.update(tokens)
-		t_count +=1		
+		obj = docto
+		for f in fields: obj = obj[f]
+		try:
+			tokens = process(text = obj,
+							 tokenizer = tweet_tokenizer,
+							 stopwords=stopword_list)
+			tf.update(tokens)	
+			t_count +=1	
+		except:
+			pass
+			
 		# if(t_count > 100): break
 	print("La word cloud ha procesado el texto de "+str(t_count)+" tuits")
 	word_lista = ' '
@@ -141,7 +175,7 @@ def create_word_cloud(tweet_cursor,
 		# except:
 			# pass
 		word_lista = word_lista+','+tag
-	show_words_cloud(word_lista,font_path, original_figure_path, figure_path)
+	show_words_cloud(word_lista,font_path, original_figure_path, figure_path, color_function)
 
 # *********************************************
 # retwitted proportion. original tuits,
@@ -174,18 +208,9 @@ def create_retweeted_proportion_graph(twitter_cursor, figure_path = "retweeted_p
 	sizes = [original, retweets, weird_retweets]
 	labels = 'Original', 'Retweets', 'Weird retweets' 
 	explode = (0.1, 0, 0)  # only "explode" the 2nd slice (i.e. 'Original')
+	colors = [oyellow, oblue, ogreen1]
 
-	fig1, ax1 = plt.subplots()
-	ax1.pie(sizes, 
-			explode=explode, 
-			labels=labels, 
-			autopct='%1.1f%%',
-			shadow=True, 
-			startangle=90,
-			colors = [oyellow, oblue, ogreen1])
-	ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-	# plt.show()
-	plt.savefig(figure_path)
+	highlighted_pie_graph(sizes, labels, explode, colors, figure_path)
 
 # *********************************************
 # number of twits per day
@@ -340,8 +365,7 @@ def create_tuits_by_user_graph(twitter_cursor, figure_path = "images/tuits_by_us
 		print ("El usuario numero "+str(i+1)+" por numero de tuits ha publicado" + str(list1[i]) + " tuits")
 		print ("El id de este usuario es " + str(list2[i]))
 
-	# hashtag_bar_graph(hashtags_vector, toprint, titulo, figure_path)
-	hashtag_bar_graph(user_names, 20, "", figure_path.replace(".png", "_bargraph.png"))
+	frequency_bar_graph(user_names, 20, "", oyellow, figure_path.replace(".png", "_bargraph.png"))
 	
 
 # *********************************************
@@ -357,18 +381,9 @@ def create_geolocalized_graph(twitter_cursor, figure_path = "images/geolocalized
 	sizes = [len(localized), ct-len(localized)]
 	labels = 'Con localización', 'Sin localización' 
 	explode = (0.1, 0)  # only "explode" the 1st slice (i.e. 'con')
+	colors = [oyellow, oblue]
 
-	fig1, ax1 = plt.subplots()
-	ax1.pie(sizes, 
-			explode=explode, 
-			labels=labels, 
-			autopct='%1.1f%%',
-			shadow=True, 
-			startangle=90,
-			colors = [oyellow, oblue])
-	ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-	# plt.show()
-	plt.savefig(figure_path)
+	highlighted_pie_graph(sizes, labels, explode, colors, figure_path)
 
 # *********************************************
 # hashtags info
@@ -380,40 +395,19 @@ def hashtags_cloud(hashtags_vector, figure_path):
 	for i in range(1,len(h)):
 		text += " "+h[i]
 	img_mask = imread("images/originals/hash2.png")
-	wcloud = WordCloud(background_color = "black", 
+	wcloud = WordCloud(background_color = None, 
 						max_words = 3000,
 						max_font_size = 60,
 						mask = img_mask,
-						width=18000,
-						height=14000)
+						mode = "RGBA",
+						relative_scaling=1,
+						color_func = random_color_func_project_colors)
 	wcloud.generate(text)
 	plt.figure()
 	plt.imshow(wcloud)
-	plt.axis("off")
-	# plt.show()
-	plt.savefig(figure_path)
-
-def hashtag_bar_graph(hashtags_vector, toprint, titulo, figure_path):
-	h = deepcopy(hashtags_vector)
-	occ = [1]*len(h)
-	new_df = pd.DataFrame({'h':h,'occ':occ })	
-	# para cada hashtag, nos quedamos con el número de veces que ha aparecido
-	new_df2 = new_df.groupby(new_df['h'], as_index = False).count()
-	hashtags = [x for x in new_df2["h"]]
-	occurrences = [x for x in new_df2["occ"]]
-	list1, list2  = zip(*sorted(zip(occurrences, hashtags), reverse=True))
-	# for i in range(toprint):
-		# print ("El hashtag "+str(list2[i])+" ha aparecido " + str(list1[i]) + " veces")
-	idx = [x for x in range(toprint)]
-	plt.clf()
-	fig,ax = plt.subplots()
-	ax.bar(idx, list1[:toprint], width=0.8, color=oyellow, )
-	ax.set_xticks(idx)
-	ax.set_xticklabels(list2[:toprint], rotation=90)
-	plt.xlabel("")
 	plt.tight_layout()
-	plt.title(titulo)
-	plt.savefig(figure_path)
+	plt.axis("off")
+	plt.savefig(figure_path, bbox_inches='tight')
 
 
 def create_hashtags_info(twitter_cursor, figure_path = "images/hashtags.png"):
@@ -452,9 +446,66 @@ def create_hashtags_info(twitter_cursor, figure_path = "images/hashtags.png"):
 	hashtags_cloud(hashtags_total, figure_path.replace(".png", "_total_wordcloud.png"))
 	hashtags_cloud(hashtags_host, figure_path.replace(".png", "_host_wordcloud.png"))
 	toprint = 20
-	hashtag_bar_graph(hashtags_total, toprint, "Totales", figure_path.replace(".png", "_total_occurs.png"))
-	hashtag_bar_graph(hashtags_host, toprint, "Tuits principales", figure_path.replace(".png", "_host_occurs.png"))
+	frequency_bar_graph(hashtags_total, toprint, "Totales", oyellow, figure_path.replace(".png", "_total_occurs.png"))
+	frequency_bar_graph(hashtags_host, toprint, "Tuits principales", oyellow, figure_path.replace(".png", "_host_occurs.png"))
 
+# *********************************************
+# source info
+# *********************************************
+def clean_source(source):
+	value = re.findall(pattern="<[^>]+>([^<]+)</a>", string=source)
+	if len(value) > 0:
+		return value[0]
+	else:
+		return ""
+	return source
+
+def create_source_info(twitter_cursor, figure_path = "images/source.png"):
+	source_host = []
+	source_total = []
+	for t in twitter_cursor:		
+		source_host.append(clean_source(t['source']))
+		source_total.append(clean_source(t['source']))
+		
+		# source of quoted tuit, if any
+		quoted_source = None
+		try:
+			quoted_source = t['quoted_status']["source"]
+		except:
+			pass
+		if quoted_source is not None:
+			source_total.append(clean_source(quoted_source))
+
+		# source of retweeted tuit, if any
+		retweeted_source = None
+		try:
+			retweeted_source = t['retweeted_status']["source"]
+		except:
+			pass
+		if retweeted_source is not None:
+			source_total.append(clean_source(retweeted_source))
+
+	toprint = 20
+	print (len(source_total))
+	print (len(source_host))
+	frequency_bar_graph(source_total, toprint, "Totales", oyellow, figure_path.replace(".png", "_total.png"))
+	frequency_bar_graph(source_host, toprint, "Tuits principales", oyellow, figure_path.replace(".png", "_host.png"))
+
+	
+	person_sources = ["twitter web client", "twitter for android", "twitter for iphone", "twitter for ipad", "twitter lite", "tweet old post", "voicestorm"]
+	count = Counter(source_host)
+	p = sum(count[k] if k.lower() in person_sources else 0 for k in count.keys())/len(source_host)
+	sizes = [p, 1.-p]
+	labels = ["possible person", "others"]
+	explode = (0.1, 0) 
+	colors = [oblue, oyellow]
+	highlighted_pie_graph(sizes, labels, explode, colors, figure_path.replace(".png", "_people_percentage_host.png"))
+	count = Counter(source_total)
+	p = sum(count[k] if k.lower() in person_sources else 0 for k in count.keys())/len(source_total)
+	sizes = [p, 1.-p]
+	highlighted_pie_graph(sizes, labels, explode, colors, figure_path.replace(".png", "_people_percentage_total.png"))
+
+	
 
 # *********************************************
 # MAIN
@@ -470,10 +521,12 @@ def main():
 
 	total_tuits, unique_tuits = are_there_duplicated_tuits(collection.find())
 
+	# # tuits text word cloud
 	create_word_cloud(collection.find(),
 					font_path="fonts/CabinSketch-Regular.ttf",
 					original_figure_path = "images/originals/twitter_image.png",
-					figure_path = "images/twitter_worldcloud.png")
+					figure_path = "images/twitter_worldcloud.png",
+					color_function = random_color_func_twitter)
 	create_retweeted_proportion_graph(collection.find(), figure_path = "images/retweeted_proportions.png")
 	create_time_graph(collection.find(), figure_path = "images/time_histogram.png")
 
@@ -485,8 +538,23 @@ def main():
 	create_tuits_by_user_graph(collection.find(), figure_path = "images/tuits_by_user_graph.png")
 	create_geolocalized_graph(collection.find(), figure_path = "images/geolocalized_proportions.png")
 	create_hashtags_info(collection.find(), figure_path = "images/hashtags.png")
-	
 
+	# # wordcloud for users descriptions with a figure shape
+	create_word_cloud(collection.find(),
+					fields = ["user", "description"],
+					font_path="fonts/CabinSketch-Regular.ttf",
+					original_figure_path = "images/originals/two_people.jpg",
+					figure_path = "images/bios_worldcloud.png",
+					color_function = random_color_func_project_colors)
+	# square wordcloud for users descriptions
+	create_word_cloud(collection.find(),
+					fields = ["user", "description"],
+					font_path="fonts/MiriamLibre-Regular.ttf",
+					original_figure_path = None,
+					figure_path = "images/bios_worldcloud2.png",
+					color_function = random_color_func_project_colors)
+	
+	create_source_info(collection.find(), figure_path = "images/sources.png")
 
 if __name__ == '__main__':
 	try:

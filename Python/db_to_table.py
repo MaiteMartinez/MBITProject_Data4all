@@ -1,7 +1,4 @@
-import nltk
-# nltk.download()
  
-import numpy as np
 import pandas as pd
 import tweepy
 import json
@@ -27,93 +24,15 @@ import matplotlib.dates as mdates
 from copy import deepcopy
 
 # *********************************************
-# RGB project colors
+# relevant text/users fields from db
 # *********************************************
 
-oyellow = [1,0.835294117647059,0.133333333333333]
-oblue   = [0.0352941176470588,0.450980392156863,0.541176470588235]
-ogreen1 = [0.0196078431372549,0.650980392156863,0.576470588235294]
-ogreen2 = [0.0588235294117647,0.737254901960784,0.568627450980392]
-ored    = [0.929411764705882,0.258823529411765,0.215686274509804]
-
-
-# *********************************************
-# relevant fields
-# *********************************************
-
-def get_relevant_fields(tweet_cursor, file_path = 'tweets_table.xlsx'):
-	tweet_id = []
-	text = []
-	user = []
-	user_id = []
-	user_bio = []
-	is_retweet = []
-	created_at = []
-	times_retweeted = []
-	location = []
-	hashtags = []
-	
-	
-	for t in tweet_cursor:		
-		tweet_id.append(t["id_str"])
-		# treatment of extended tweets
-		txt = t["text"]
-		try:
-			txt = t["extended_tweet"]["full_text"]
-		except:
-			pass
-		if txt.startswith("RT"):
-			try:
-				try:
-					txt = "RT " + t["retweeted_status"]["extended_tweet"]["full_text"]
-				except:
-					txt = "RT " + t["quoted_status"]["extended_tweet"]["full_text"]
-				# print("retweet de tweet extendido")
-			except:
-				pass
-		else:
-			try: 
-				txt = t["extended_tweet"]["full_text"]
-				# print("tweet extendido")
-			except:
-				pass
-		text.append(txt)
-		user.append(t["user"]["name"])
-		user_id.append(t["user"]["id_str"])
-		user_bio.append(t["user"]["description"])
-		is_retweet.append(1 if t["text"].startswith("RT") else 0)
-		created_at.append(t["created_at"])
-		times_retweeted.append(t["retweet_count"])
-		location.append(t["place"])
-		hashtags.append([d["text"] for d in t["entities"]["hashtags"]])
-	df = pd.DataFrame({'tweet_id': tweet_id,
-						'text':text,
-						'user':user,
-						'user_id':user_id,
-						'user_bio':user_bio,
-						'is_retweet':is_retweet,
-						'created_at':created_at,
-						'times_retweeted':times_retweeted,
-						'location':location,
-						'hashtags':hashtags})
-	# Create a Pandas Excel writer using XlsxWriter as the engine.
-	writer = pd.ExcelWriter(file_path, engine='xlsxwriter')
-
-	# Convert the dataframe to an XlsxWriter Excel object.
-	df.to_excel(writer, sheet_name='Sheet1')
-
-	# Close the Pandas Excel writer and output the Excel file.
-	writer.save()
-	return df
-
-# *********************************************
-# relevant text/users fields
-# *********************************************
-
-def get_relevant_text_users_fields(tweet_cursor, file_path = 'user_tweets_table.xlsx'):
+def get_relevant_tuit_fields(tweet_cursor, na_value):
 	# host tuit fields
 	tweet_id = []
 	host_text = []
+	host_source = []
+	host_user_id = []
 	host_user_name = []
 	host_user_screenname = []
 	host_user_bio = []
@@ -121,6 +40,8 @@ def get_relevant_text_users_fields(tweet_cursor, file_path = 'user_tweets_table.
 	# retweeted tuit fields, if any
 	retweeted_id = []
 	retweeted_text = []
+	retweeted_source = []
+	retweeted_user_id = []
 	retweeted_user_name = []
 	retweeted_user_screenname = []
 	retweeted_user_bio = []
@@ -128,6 +49,8 @@ def get_relevant_text_users_fields(tweet_cursor, file_path = 'user_tweets_table.
 	# quoted tuit fields, if any
 	quoted_id = []
 	quoted_text = []
+	quoted_source = []
+	quoted_user_id = []
 	quoted_user_name = []
 	quoted_user_screenname = []
 	quoted_user_bio = []
@@ -141,6 +64,8 @@ def get_relevant_text_users_fields(tweet_cursor, file_path = 'user_tweets_table.
 			host_text.append(t["extended_tweet"]["full_text"])			
 		except:
 			host_text.append(t["text"])
+		host_source.append(t["source"])
+		host_user_id.append(t["user"]["id_str"])
 		host_user_name.append(t["user"]["name"])
 		host_user_screenname.append(t["user"]["screen_name"])
 		host_user_bio.append(t["user"]["description"])
@@ -153,16 +78,20 @@ def get_relevant_text_users_fields(tweet_cursor, file_path = 'user_tweets_table.
 				retweeted_text.append(obj["extended_tweet"]["full_text"])			
 			except:
 				retweeted_text.append(obj["text"])
+			retweeted_source.append(obj["source"])
+			retweeted_user_id.append(obj["user"]["id_str"])
 			retweeted_user_name.append(obj["user"]["name"])
 			retweeted_user_screenname.append(obj["user"]["screen_name"])
 			retweeted_user_bio.append(obj["user"]["description"])
 			retweeted_hashtags.append([d["text"] for d in obj["entities"]["hashtags"]])
 		except:
-			retweeted_id.append("")
-			retweeted_text.append("")			
-			retweeted_user_name.append("")
-			retweeted_user_screenname.append("")
-			retweeted_user_bio.append("")
+			retweeted_id.append(na_value)
+			retweeted_text.append(na_value)			
+			retweeted_source.append(na_value)			
+			retweeted_user_id.append(na_value)
+			retweeted_user_name.append(na_value)
+			retweeted_user_screenname.append(na_value)
+			retweeted_user_bio.append(na_value)
 			retweeted_hashtags.append([])
 
 		try:
@@ -172,22 +101,28 @@ def get_relevant_text_users_fields(tweet_cursor, file_path = 'user_tweets_table.
 				quoted_text.append(obj["extended_tweet"]["full_text"])			
 			except:
 				quoted_text.append(obj["text"])
+			quoted_source.append(obj["source"])
+			quoted_user_id.append(obj["user"]["id_str"])
 			quoted_user_name.append(obj["user"]["name"])
 			quoted_user_screenname.append(obj["user"]["screen_name"])
 			quoted_user_bio.append(obj["user"]["description"])
 			quoted_hashtags.append([d["text"] for d in obj["entities"]["hashtags"]])
 		except:
-			quoted_id.append("")
-			quoted_text.append("")			
-			quoted_user_name.append("")
-			quoted_user_screenname.append("")
-			quoted_user_bio.append("")
+			quoted_id.append(na_value)
+			quoted_text.append(na_value)			
+			quoted_source.append(na_value)
+			quoted_user_id.append(na_value)
+			quoted_user_name.append(na_value)
+			quoted_user_screenname.append(na_value)
+			quoted_user_bio.append(na_value)
 			quoted_hashtags.append([])	
 
 
 		
 	df = pd.DataFrame({"tweet_id" : tweet_id,
 						"host_text" : host_text,
+						"host_source" : host_source,
+						"host_user_id" : host_user_id,
 						"host_user_name" : host_user_name,
 						"host_user_screenname" : host_user_screenname,
 						"host_user_bio" : host_user_bio,
@@ -195,6 +130,8 @@ def get_relevant_text_users_fields(tweet_cursor, file_path = 'user_tweets_table.
 
 						"retweeted_id" : retweeted_id,
 						"retweeted_text" : retweeted_text,
+						"retweeted_source" : retweeted_source,
+						"retweeted_user_id" : retweeted_user_id,
 						"retweeted_user_name" : retweeted_user_name,
 						"retweeted_user_screenname" : retweeted_user_screenname,
 						"retweeted_user_bio" : retweeted_user_bio,
@@ -202,18 +139,82 @@ def get_relevant_text_users_fields(tweet_cursor, file_path = 'user_tweets_table.
 
 						"quoted_id" : quoted_id,
 						"quoted_text" : quoted_text,
+						"quoted_source" : quoted_source,
+						"quoted_user_id" : quoted_user_id,
 						"quoted_user_name" : quoted_user_name,
 						"quoted_user_screenname" : quoted_user_screenname,
 						"quoted_user_bio" : quoted_user_bio,
 						"quoted_hashtags" : quoted_hashtags})
+	return df	
 
+# *********************************************
+# relevant text/users fields from all info (host, retweeted and quoted tweets)
+# *********************************************
+
+def get_all_users_info(df, na_value = "None"):
+	# host tuit fields
+	tweet_id = [x for x in df["tweet_id"]]
+	text = [x for x in df["host_text"]]
+	source = [x for x in df["host_source"]]
+	user_id = [x for x in df["host_user_id"]]
+	user_name = [x for x in df["host_user_name"]]
+	user_screenname =[x for x in df["host_user_screenname"]]
+	user_bio = [x for x in df["host_user_bio"]]
+	hashtags = [x for x in  df["host_hashtags"]]
+	type = ["host"] * len(hashtags)
+	print ( "host tweets", len(tweet_id) )
+
+	# retweeted tuit fields, if any
+	for i in range(len(df["retweeted_id"])):
+		if df["retweeted_id"][i] != na_value:
+			tweet_id.append(df["retweeted_id"][i])
+			text.append(df["retweeted_text"][i])
+			source.append(df["retweeted_source"][i])
+			user_id.append(df["retweeted_user_id"][i])
+			user_name.append(df["retweeted_user_name"][i])
+			user_screenname.append(df["retweeted_user_screenname"][i])
+			user_bio.append(df["retweeted_user_bio"][i])
+			hashtags.append(df["retweeted_hashtags"][i])
+			type.append("retweeted") 
+	
+	print ( "host+retweeted tweets", len(tweet_id) )
+
+	# quoted tuit fields, if any
+	for i in range(len(df["quoted_id"])):
+		if df["quoted_id"][i] != na_value:
+			tweet_id.append(df["quoted_id"][i])
+			text.append(df["quoted_text"][i])
+			source.append(df["quoted_source"][i])
+			user_id.append(df["quoted_user_id"][i])
+			user_name.append(df["quoted_user_name"][i])
+			user_screenname.append(df["quoted_user_screenname"][i])
+			user_bio.append(df["quoted_user_bio"][i])
+			hashtags.append(df["quoted_hashtags"][i])
+			type.append("quoted") 
+			
+	print ( "host+retweeted+quoted tweets", len(tweet_id) )
+	
+	df = pd.DataFrame({"tweet_id" : tweet_id,
+						"text" : text,
+						"source" : source,
+						"user_id" : user_id,
+						"user_name" : user_name,
+						"user_screenname" : user_screenname,
+						"user_bio" : user_bio,
+						"hashtags" : hashtags,
+						"type" : type})
+						
+	return df	
+	
+def save_df(df, file_path = 'default_name.xlsx'):
 	# Create a Pandas Excel writer using XlsxWriter as the engine.
 	writer = pd.ExcelWriter(file_path, engine='xlsxwriter')
 	# Convert the dataframe to an XlsxWriter Excel object.
 	df.to_excel(writer, sheet_name='Sheet1')
 	# Close the Pandas Excel writer and output the Excel file.
 	writer.save()
-	return df
+	return
+
 
 
 
@@ -231,11 +232,33 @@ def main():
 	collection = db[collection_name]
 
 	# build tables with relevant fields
-	# df = get_relevant_fields(collection.find(), file_path = 'tweets_table.xlsx')
-	df2 = get_relevant_text_users_fields(collection.find(), file_path = 'user_tweets_table.xlsx')
+	na_value =  "None"
+	df2 = get_relevant_tuit_fields(collection.find(), na_value)	
+	save_df(df2, file_path = 'host_tweets_table.xlsx')
 	
+	# file_name = "host_tweets_table.xlsx"
+	# df_columns = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0).columns
+	# converter = {col: str for col in df_columns} 
+	# df = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0, converters = converter)	
+	
+	df3 = df2.fillna(value = na_value)
+	df4 = get_all_users_info(df3, na_value = na_value)
+	save_df(df4, file_path = 'all_tweets.xlsx')
+	
+	return
 
 if __name__ == '__main__':
+	# file_name = "C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/user_tweets_table.xlsx"
+	# df_columns = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0).columns
+	# converter = {col: str for col in df_columns} 
+	# df = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0, converters = converter)
+	# na_value =  "None"
+	# df2 = df.fillna(value = na_value)
+	# df3 = get_all_users_info(df2, na_value = na_value)
+	
+	# save_df(df3, file_path = 'C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/all_tweets.xlsx')
+
+
 	try:
 		print("%%%%%%%%%%%%%%%   Starting task at "+str(datetime.datetime.now()))
 		main()
