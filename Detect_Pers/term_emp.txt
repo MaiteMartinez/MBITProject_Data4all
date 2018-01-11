@@ -11,6 +11,7 @@ association
 ayudamos
 ayuntamiento
 branch 
+bot
 center
 central
 central
