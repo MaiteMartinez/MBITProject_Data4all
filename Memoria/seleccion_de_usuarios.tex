@@ -16,6 +16,20 @@ en este caso la ciencia de datos.
 Los desarrollos descritos en este capítulo están en el fichero {\bf user_selection.py}, 
 que puede encontrarse en el repositorio de GitHub.
 
+Esquemáticamente, el desarrollo de esta sección es el siguiente:
+[12:20, 13/1/2018] +34 605 01 34 79: 1.tenemos todos los tuits que hemos descargado, los originales y los datos de los que han sido retuiteados en los originales
+[12:21, 13/1/2018] +34 605 01 34 79: 2. vemos cuales hablan de data science con el modelo de fabio
+[12:21, 13/1/2018] +34 605 01 34 79: 3. de esos, miramos los usuarios y nos quedamos con aquellos que han tuiteado algo de data science
+[12:22, 13/1/2018] +34 605 01 34 79: 4. quitamos los repetidos, teniendo cuidado de que la url, user name, user description y user id sean iguales
+[12:22, 13/1/2018] +34 605 01 34 79: es decir, podríamos tener dos usuarios con el mismo user id (en realidad es el mismo usuario) pero dos descripciones distintas porque la hubiera cambiado entre medias
+[12:22, 13/1/2018] +34 605 01 34 79: 5. vemos cuales son personas con el modelo de silvia
+[12:23, 13/1/2018] +34 605 01 34 79: 6. nos quedamos con las user id que han sido identificadas como personas (aquí podría ser que un user id fuera persona con una descripción pero no lo fuera con otra)
+[12:23, 13/1/2018] +34 605 01 34 79: y de esas user id solo nos quedamos con las que no están repetidas
+[12:24, 13/1/2018] +34 605 01 34 79: 7,8,9.... bajamos timeline, followers y ranqueamos
+
+
+
+
 \section{Detección del idioma} 
 
 El primer paso para poder analizar el contenido de un tuit y determinar si dicho tuit 
@@ -172,6 +186,10 @@ los perfiles de los usuarios han quedado clasificados en $44$ idiomas diferentes
 \figcaption{Clasificación por lenguaje del texto de las bios.}
 \label{fig:user_bios_assigned_languages} }
 
+
+A lo largo del proceso la referencia para seguir a los usuarios es el user id porque
+es el identificador único del usuario, ya que la url, user name, user screeenname, user description
+pueden cambiar con el tiempo.
 
 \section{Naturaleza del tuit}
 texto del tuit:  IT, cientifico, analista o nodatascience (diccionarios de palabras)

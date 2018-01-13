@@ -70,8 +70,8 @@ def histogram_graph(vector, titulo, color, figure_path, percentage = True):
 	plt.bar(deg, cnt, width=0.80, color=color)
 
 	plt.title(titulo)
-	plt.ylabel("Count")
-	plt.xlabel("Degree")
+	# plt.ylabel("Count")
+	# plt.xlabel("Degree")
 	ax.set_xticks([d + 0.4 for d in deg])
 	ax.set_xticklabels(deg)
 	plt.savefig(figure_path)

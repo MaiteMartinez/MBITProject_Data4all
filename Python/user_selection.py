@@ -116,7 +116,10 @@ def word_count(text, nombres):
 		else:
 			word_count
 	return word_count
-	
+def to_str(s):
+    if s is None:
+        return ''
+    return str(s)	
 # *********************************************
 # User selection
 # *********************************************
@@ -178,13 +181,34 @@ def get_if_person(df):
 							(~df['user_bio'].str.contains(patron_3))|
 							(~df['user_name'].str.contains(patron_3))).astype(int)
 
+	# *****************************************************
+	# Third criteria: url is a blog or a profile in linkedin
+	# *****************************************************
+	df['url'] = df['url'].apply(to_str)
+	patron_4 = ('|'.join(['linked', 'blog']))
+	df["check_url"] = df['url'].str.contains(patron_4).astype(int)
 
-	# Final distinction: to be identified as a person, we need a 1 in
-	# the second criteria, and more than a 30% of words in user name that are names
-	df['is_person'] = ((df["check_descrip_1"] == 1) & (df["check_user_name"] >= 30)).astype(int)
+	# *****************************************************
+	# Final distinction
+	# *****************************************************
+	# To be identified as a person, we need
+	#  a 1 in the second criteria and more than a 30% of words in user name that are names
+	# or that the url is a blog or a profile in linkedin
+	df['is_person'] = ( ((df["check_descrip_1"] == 1) & (df["check_user_name"] >= 30))
+						|(df['check_url'] == 1) ).astype(int)
 
 	return df
 
+def smart_remove_duplicated_users(tweets_data, relevant_fields):
+	control_field = []
+	for i in range(len(tweets_data[tweets_data.columns[1]])):
+		cstr=""
+		for f in relevant_fields:
+			cstr += tweets_data[f][i]
+		control_field.append(cstr)
+	tweets_data["control_field"] = control_field
+	clean_tweets_data = tweets_data.groupby("control_field", as_index = False).first()
+	return clean_tweets_data.drop('control_field', 1)
 
 # *********************************************
 # MAIN
@@ -214,7 +238,7 @@ def select_users(all_tweets_data):
 	# main_l = ["spanish", "english"]
 	# sizes = [count[l]/len(langs) for l in main_l] +[sum(count[k] if k not in main_l else 0 for k in count.keys())/len(langs)]
 	# labels = main_l + ["others"]
-	# explode = (0.1, 0, 0)  # only "explode" the 2nd slice (i.e. 'Original')
+	# explode = (0.1, 0, 0)  # only "explode" the first slice (i.e. 'Original')
 	# colors = [oblue, oyellow, ogreen1]
 	# file_path = "images/assigned_languages_proportions.png"
 	# highlighted_pie_graph(sizes, labels, explode, colors, file_path)
@@ -265,19 +289,60 @@ def select_users(all_tweets_data):
 	relevant_twets_data = all_tweets_data[all_tweets_data["is_relevant_text"]==1]
 	file_name = "tables/2_4_relevant_twets_data.xlsx"
 	save_df(relevant_twets_data, file_path = file_name)
-	
+
+	# draw some graphs for the memoir and retrieve some numbers
+	number_of_tweets = len(all_tweets_data["user_id"])
+	number_of_relevant_tweets = len(relevant_twets_data["user_id"])
+	p = number_of_relevant_tweets/number_of_tweets
+	sizes = [p, 1.-p]
+	labels = ["relevant", "not relevant"]
+	explode = (0.1, 0)
+	colors = [oblue, oyellow]
+	file_path = "images/relevant_tweets_proportion.png"
+	highlighted_pie_graph(sizes, labels, explode, colors, file_path)
+	print("From "+str(number_of_tweets)+" tweets analized, we've found "+str(number_of_tweets)+
+			" relevant ones, that represent a "+str(round(p*100.,2))+"% of total")
+
 	# ********************************************
 	# select only those that are persons
 	# ********************************************
-	relevant_twets_data = get_if_person(relevant_twets_data)	
-	file_name = "tables/2_5_relevant_twets_data_is_person.xlsx"
-	save_df(relevant_twets_data, file_path = file_name)
-	# only users identified as people remain
-	selected_users = relevant_twets_data[relevant_twets_data["is_person"] == 1]
-	# remove duplicated users
-	selected_users = selected_users.groupby("user_id", as_index = False).first()
+	# first we remove duplicate users, taking care that the url, user name and user description are
+	# the same (had not changed throughout the downloaded timeline)
+	relevant_fields = ["user_id", "url", "user_name", "user_bio"]
+	unique_users = smart_remove_duplicated_users(relevant_twets_data, relevant_fields)
+	print("We had " + str(len(relevant_twets_data["user_id"]))+ " relevant tweets, and from those we extract " 
+			+str(len(relevant_fields["user_id"]))+" relevant users whose data "+str(relevant_fields)+
+			" is not duplicated ")
 
-	return selected_users[["user_id","user_name", "user_screenname"]]
+	# now check if person
+	relevant_users_data = get_if_person(unique_users)	
+	file_name = "tables/2_5_relevant_twets_data_is_person.xlsx"
+	save_df(relevant_users_data, file_path = file_name)
+
+	# only users identified as people remain
+	selected_users = relevant_users_data[relevant_users_data["is_person"] == 1]
+	# remove duplicated users
+	unique_selected_users = selected_users.groupby("user_id", as_index = False).first()
+
+	# draw some graphs for the memoir and retrieve some numbers
+	number_of_users = len(unique_users["user_id"])
+	number_of_relevant_users = len(selected_users["user_id"])
+	p = number_of_relevant_users/number_of_users
+	sizes = [p, 1.-p]
+	labels = ["relevant", "not relevant"]
+	explode = (0.1, 0)
+	colors = [oblue, oyellow]
+	file_path = "images/relevant_users_proportion.png"
+	highlighted_pie_graph(sizes, labels, explode, colors, file_path)
+	print("From "+str(number_of_users)+" users analized, we've found "+str(number_of_relevant_users)+
+			" classified as persons, that represent a "+str(round(p,2))+"% of total")
+	print("From "+str(number_of_relevant_users)+" relevant users, non duplicated ones are "
+			+str(len(unique_selected_users["user_id"]))+ " that is, there were "
+			+str(number_of_relevant_users-len(unique_selected_users["user_id"]))+
+			" with duplicated data")
+	
+
+	return unique_selected_users[["user_id","user_name", "user_screenname"]]
 
 if __name__ == '__main__':
 	try:
