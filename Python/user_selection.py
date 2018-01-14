@@ -1,4 +1,3 @@
- 
 import pandas as pd
 from pandas.tools.plotting import table
 from pandas.io.json import json_normalize
@@ -15,7 +14,6 @@ from utilities.languages_names import to_two_letters, from_two_letters
 from utilities.stop_words import my_stop_words
 import matplotlib.pyplot as plt
 from utilities.functions import *
-# import pprint
 
 
 # *********************************************
@@ -304,45 +302,57 @@ def select_users(all_tweets_data):
 			" relevant ones, that represent a "+str(round(p*100.,2))+"% of total")
 
 	# ********************************************
-	# select only those that are persons
+	# remove users with the same user id, url, user name and user bio
 	# ********************************************
 	# first we remove duplicate users, taking care that the url, user name and user description are
 	# the same (had not changed throughout the downloaded timeline)
-	relevant_fields = ["user_id", "url", "user_name", "user_bio"]
-	unique_users = smart_remove_duplicated_users(relevant_twets_data, relevant_fields)
+	equal_fields = ["user_id", "url", "user_name", "user_bio"]	
+
+	# this two codes do the same. but with drop_duplicates some warning created by misleading
+	# assignments in subsequent code arise.Thus we need a deepcopy.
+	# unique_users = smart_remove_duplicated_users(relevant_twets_data, equal_fields)
+	from copy import deepcopy
+	unique_users = deepcopy(relevant_twets_data.drop_duplicates(subset = equal_fields))
 	print("We had " + str(len(relevant_twets_data["user_id"]))+ " relevant tweets, and from those we extract " 
-			+str(len(relevant_fields["user_id"]))+" relevant users whose data "+str(relevant_fields)+
+			+str(len(unique_users["user_id"]))+" relevant users whose data "+str(equal_fields)+
 			" is not duplicated ")
 
-	# now check if person
+	# ********************************************
+	# check which ones are persons
+	# ********************************************
 	relevant_users_data = get_if_person(unique_users)	
 	file_name = "tables/2_5_relevant_twets_data_is_person.xlsx"
 	save_df(relevant_users_data, file_path = file_name)
 
+	# ********************************************
 	# only users identified as people remain
-	selected_users = relevant_users_data[relevant_users_data["is_person"] == 1]
-	# remove duplicated users
-	unique_selected_users = selected_users.groupby("user_id", as_index = False).first()
-
+	# ********************************************
+	person_users = relevant_users_data[relevant_users_data["is_person"] == 1]
+	
 	# draw some graphs for the memoir and retrieve some numbers
-	number_of_users = len(unique_users["user_id"])
-	number_of_relevant_users = len(selected_users["user_id"])
-	p = number_of_relevant_users/number_of_users
+	number_of_users = len(relevant_users_data["user_id"])
+	number_of_person_users = len(person_users["user_id"])
+	p = number_of_person_users/number_of_users
 	sizes = [p, 1.-p]
-	labels = ["relevant", "not relevant"]
+	labels = ["persons", "not persons"]
 	explode = (0.1, 0)
 	colors = [oblue, oyellow]
 	file_path = "images/relevant_users_proportion.png"
 	highlighted_pie_graph(sizes, labels, explode, colors, file_path)
-	print("From "+str(number_of_users)+" users analized, we've found "+str(number_of_relevant_users)+
-			" classified as persons, that represent a "+str(round(p,2))+"% of total")
-	print("From "+str(number_of_relevant_users)+" relevant users, non duplicated ones are "
-			+str(len(unique_selected_users["user_id"]))+ " that is, there were "
-			+str(number_of_relevant_users-len(unique_selected_users["user_id"]))+
-			" with duplicated data")
-	
+	print("From "+str(number_of_users)+" users analized, we've found "+str(number_of_person_users)+
+			" classified as persons, that represent a "+str(round(p*100.,2))+"% of total")
 
-	return unique_selected_users[["user_id","user_name", "user_screenname"]]
+	# ********************************************
+	# remove duplicated persons
+	# ********************************************
+	unique_person_users = person_users.groupby("user_id", as_index = False).first()
+	number_of_unique_id = len(unique_person_users["user_id"])
+	print("From "+str(number_of_person_users)+" classified as persons, there are "
+			+str(number_of_unique_id)+ " unique user_id, that is, there were "
+			+str(number_of_person_users - number_of_unique_id)+
+			"users with different user name, url or description in the downloaded data")
+	
+	return unique_person_users[["user_id","user_name", "user_screenname"]]
 
 if __name__ == '__main__':
 	try:

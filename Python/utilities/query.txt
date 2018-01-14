@@ -1,0 +1,13 @@
+#machine learning
+#machine_learning
+#machinelearning
+#data mining
+#data_mining
+#datamining
+#Python
+#SQL
+#hadoop
+#bigdata
+#tableau
+#pentaho
+#rstats
