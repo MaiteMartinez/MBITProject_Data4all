@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "library(shiny)\n\n\nserver <- function(input, output) {\n  \n  # choose columns to display\n  dfr = df1[sample(nrow(df1), 1000), ]\n  \n  output$mytable1 <- DT::renderDataTable({\n    DT::datatable(dfr[, input$show_vars,drop = FALSE],\n                  filter=\"top\", selection=\"multiple\", escape=FALSE,\n                  options = list (lenghtMenu = c(5,10,20,50), pageLenght = 10, searching = FALSE)\n                      )\n  })\n  \n  \n  output$mytable2 <- DT::renderDataTable({\n    DT::datatable(df2, options = list (lenghtMenu = c(5,30,50), pageLenght = 5))\n  })\n  \n  \n}\n\n",
+    "created" : 1516134034443.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3320275109",
+    "id" : "BD0F9316",
+    "lastKnownWriteTime" : 1516112581,
+    "last_content_update" : 1516112581,
+    "path" : "C:/Users/Silvia/Desktop/Proyecto/Detect_Pers/Rank/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
