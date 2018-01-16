@@ -9,7 +9,7 @@ import pdb
 
 if __name__ == '__main__':
 	# API connection
-	api = TweeterAPIConnection(keys_file_name = "set_up.py").getTwitterApi()
+	api = TweeterAPIConnection(keys_file_name = "keys/set_up.py").getTwitterApi()
 	# here we go: search tweets for this query
 	query1 = ((("#machine" and "#learning") or ("#data" and "#mining")) and 
 			("#python" or 
@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
 	data_base_name = "query1_spanish"
 	collection_name = "col_" + data_base_name
-	db = MongoDBConnection("set_up.py").client[data_base_name]
+	db = MongoDBConnection("keys/set_up.py").client[data_base_name]
 	collection = db[collection_name]
 	# ojo, esto borra todo lo que hubiera almacenado
 	# collection.delete_many({})

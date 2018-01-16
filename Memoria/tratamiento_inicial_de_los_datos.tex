@@ -218,18 +218,21 @@ se ha realizado a través de palabras clave, asociadas a la actividad de data sc
 
 Esta petición se define como un vector en Python, donde la coma significa \lq\lq OR\rq\rq y el espacio
 dentro de las comillas significa \lq\lq AND\rq\rq, y se incluyeron dichos términos con y sin almohadilla 
-(\#).
+(\#). Las palabras clave de la búsqueda se almacenan en un fichero de texto {\bf query.txt},
+de tal forma que la extensión del proyecto a búsquedas relacionadas con otras ofertas de trabajo
+pueda realizarse de una forma sencilla y directa, sin cambiar el código.
 
 También hemos incluido en la búsqueda un filtro por idioma, incluyendo el parámetro 
 \lq\lq languages = ["es"]\rq\rq en la llamada al API, con el objetivo de bajar solo tuits
 en un idioma. En principio\footnote{\url{https://developer.twitter.com/en/docs/tweets/filter-realtime/guides/basic-stream-parameters }}
 esta búsqueda debería devolver tuits que la aplicación Twitter ha detectado como escritos en
 idioma español. Sin embargo, también bajamos tuits en otros idiomas (inglés, sobre todo), lo que
-nos obligará a incluir esta variable en el proceso de selección de usuarios, como veremos en la sección \ref{sect:limpieza_de_los_datos}.
+nos obligará a incluir esta variable en el proceso de selección de usuarios, como veremos en la sección 
+\ref{sect:deteccion_idioma}.
 
 El script en el que se realiza la llamada al API de Twitter y el primer almacenamiento de los tuits
 es el script llamado {\bf download\_tweets\_stream.py}. Este script importa otros
-denuestro proyecto, como {\bf OpenMongoDB.py}, que gestiona la conexión a la base de datos MongoDB
+de nuestro proyecto, como {\bf OpenMongoDB.py}, que gestiona la conexión a la base de datos MongoDB
 en el que se almacenarán los tuits. El lanzamiento programado de la tarea se hizo con una entrada en el gestor
 de Tareas Programadas del portátil, a través del archivo {\bf streaming\_upload.bat}. Todos estos
 archivos se encuentran en el repositorio de GitHub descrito en la sección \ref{sect:repositorio}.
@@ -241,7 +244,7 @@ en una base de datos de MongoDB, en local.
 
 
 \section{Revisión inicial de los datos}
-Una vez almacenados los tuits, realizamos un análisis exploratorio para estudiar con qué material contábamos para el desarrollo del proyecto. Este estudio se lleva a cabo en el archivo {\bf analisis\_exploratotio.py} del repositorio de
+Una vez almacenados los tuits, realizamos un análisis exploratorio para estudiar con qué material contábamos para el desarrollo del proyecto. Este estudio se lleva a cabo en el archivo {\bf descriptives.py} del repositorio de
 GitHub.
 
 \subsubsection{Tuits repetidos}
@@ -252,9 +255,10 @@ de Streaming corriendo en paralelo sobre la misma base de datos momentáneamente
 
 \subsubsection{El texto de los tuits}
 Nuestra primera duda es si los tuits que hemos bajado corresponden realmente a contenido relacionado
-con la ciencia de datos. Esto será objeto de una sección propia a la hora de limpiar los datos.
-De momento, una forma gráfica de ver si los textos de los tuits se corresponden con el tema
-que nos interesa es construir una nube de palabras con dichos textos. Aparentemente no hay grandes desviaciones del tema a tratar, ciencia de datos y big data:
+con la ciencia de datos. Esto será objeto de una sección propia a la hora de limpiar los datos,
+pero de momento, una forma gráfica de ver si los textos de los tuits se corresponden con el tema
+que nos interesa es construir una nube de palabras con ellos. 
+Aparentemente no hay grandes desviaciones del tema a tratar, ciencia de datos y big data:
 
 \myfigure{\includegraphics[scale = 1.15]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/twitter_worldcloud.png}%
 \figcaption{Texto de los tuits}
@@ -269,8 +273,8 @@ del API Streaming, Twitter marca con un \lq\lq RT\rq\rq
 al comienzo del texto del tuit aquellos que son retuiteados, a la vez que incluye en el cuerpo del
 tuit la información completa sobre el tuit que ha sido retuiteado.Hemos observado
 que hay tuits que parece que son retuits de otros (que comienzan por  \lq\lq RT\rq\rq), pero luego
-no tienen los campos \lq\lq retweeted\_status\rq\rq o \lq\lq quoted\_status\rq\rq. Estos podrían ser mensajes procedentes
-de bots, que los envían de forma automática. De los $14.736$ tuits,  hay 
+no tienen los campos \lq\lq retweeted\_status\rq\rq o \lq\lq quoted\_status\rq\rq. Estos podrían ser 
+mensajes procedentes de bots, que los envían de forma automática. De los $14.736$ tuits,  hay 
 $6.421$ originales, $8.048$ retweets estándar y $267$ aparentes retuits que no tienen información
 de lo retuiteado.
 
@@ -306,7 +310,9 @@ veces (entre 1 y 5), y que solo unos pocos han sido retuiteados muchas veces. Lo
 \figcaption{Retuits: los dos tuits más retuiteados.}
 \label{fig:tuit_mas_tuiteado} }
 
-Viendo los tuits, parece que podemos encontrar usuarios relevantes para nuestro proyecto no solo en los usuarios que han publicado los tuits que hemos descargado, sino también en los usuarios que han publicado los tuits que los primeros han retuiteado.
+Algo importante es que a partir de este análisis, parece que podemos encontrar usuarios relevantes 
+para nuestro proyecto no solo en los usuarios que han publicado los tuits que hemos descargado, 
+sino también en los usuarios que han publicado los tuits que los primeros han retuiteado.
 
 \subsubsection{Tuits descargados a lo largo del tiempo}
 Hemos descargado tuits durante dos semanas a finales de Noviembre de 2017. La distribución
@@ -416,7 +422,7 @@ filtrar aquellos que sean efectivamente personas, y desechar aquellos que sean e
 oficiales de organismos públicos, etc.
 
 Este análisis lo llevaremos a cabo usando la información contenida en el campo \lq\lq user\rq\rq
-de los tuits, y será necesario para ello examinar el texto de la bio que incorpora, campo que
+de los tuits, y será necesario para ello examinar el texto de la descripción que incorpora, campo que
 registra la información que los propios usuarios facilitan sobre ellos mismos. 
 Para hacernos una idea del tipo de texto y contenidos a los que nos enfrentamos, hemos dibujado también
 una nube de palabras que represente esta información.
@@ -435,7 +441,8 @@ una nube de palabras que represente esta información.
 Aparentemente, las descripciones de los usuarios coinciden con los perfiles que nos interesan.
 
 \subsubsection{Origen de los tuits}
-Otro elemento que nos va a proporcionar información relevante para nuestro objetivo
+\label{subsubsect:origen_tuits}
+Otro elemento que podría proporcionarnos información relevante para nuestro objetivo
 es la aplicación de origen del tuit. Un tuit emitido desde un dispositivo móvil es muy
 probable que haya sido emitido por una persona y no por un bot o una empresa. 
 Entre los campos del tuit, hay uno que refleja esta información: \lq\lq source\rq\rq\footnote{
@@ -456,7 +463,7 @@ descargados, y los de aquellos citados o retuiteados en ellos:
 \figcaption{Orígenes más frecuentes en los tuits descargados (izq.) y en los tuits descargados y citados y retuiteados en ellos.}
 \label{fig:sources} }
 
-Estos orígenes quieren decir:
+Estos orígenes tienen las siguientes características:
 \begin{itemize}
 \item Twitter web client: son tuits producidos desde la página web de Twitter
 \item Twitter for Android, Twitter for iPhone, Twitter for iPad: tuits enviados desde las aplicaciones
@@ -493,7 +500,8 @@ Twitter for Android, Twitter for iPhone, Twitter for iPad, Twitter Lite, Tweet O
 y VoiceStorm, es bastante probable que el usuario sea una persona (y por tanto un posible
 usuario relevante para el objetivo del proyecto). A continuación mostramos
 los tuits clasificados como \lq\lq posibles personas\rq\rq y \lq\lq posibles otros\rq\rq
-atendiendo a este criterio:
+atendiendo a lo expuesto anteriormente (en la sección \ref{sect:tipo_de_usuario} volveremos
+a esta cuestión):
 
 \myfigure{
 \begin{tabular}{cc}

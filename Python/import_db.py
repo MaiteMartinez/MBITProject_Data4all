@@ -6,7 +6,7 @@ import json
 from pprint import pprint
 from OpenMongoDB import MongoDBConnection
 import pymongo
-from analisis_exploratorio import get_relevant_fields
+from descriptives import get_relevant_fields
 
 
 
@@ -15,7 +15,7 @@ if __name__ == '__main__':
 	data_base_name = "query1_spanish_stream"
 	collection_name = "col_" + data_base_name
 	# connection to mongodb
-	db = MongoDBConnection("set_up.py").client[data_base_name]
+	db = MongoDBConnection("keys/set_up.py").client[data_base_name]
 	collection = db[collection_name]
 	# para ver la lista de las bases de datos que tiene el mongo instaladas
 	# print(client.database_names())

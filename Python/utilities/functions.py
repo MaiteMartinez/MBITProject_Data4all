@@ -70,9 +70,34 @@ def histogram_graph(vector, titulo, color, figure_path, percentage = True):
 	plt.bar(deg, cnt, width=0.80, color=color)
 
 	plt.title(titulo)
-	plt.ylabel("Count")
-	plt.xlabel("Degree")
+	# plt.ylabel("Count")
+	# plt.xlabel("Degree")
 	ax.set_xticks([d + 0.4 for d in deg])
 	ax.set_xticklabels(deg)
 	plt.savefig(figure_path)
 	return
+	
+# *********************************************
+# Saving Tables
+# *********************************************	
+def save_df(df, file_path = 'default_name.xlsx'):
+	# Create a Pandas Excel writer using XlsxWriter as the engine.
+	writer = pd.ExcelWriter(file_path, engine='xlsxwriter')
+	# Convert the dataframe to an XlsxWriter Excel object.
+	df.to_excel(writer, sheet_name='Sheet1')
+	# Close the Pandas Excel writer and output the Excel file.
+	writer.save()
+	return
+
+# *********************************************
+# Reading Tables
+# *********************************************	
+def read_df(file_name, na_value = "None", convert_columns_to_string = True ):
+	df = pd.DataFrame()
+	if convert_columns_to_string: 
+		df_columns = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0).columns
+		converter = {col: str for col in df_columns} 
+		df = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0, converters = converter)
+	else:
+		df = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0)
+	return df.fillna(value = na_value)

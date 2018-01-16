@@ -25,7 +25,7 @@ from pylab import rcParams
 import time
 import matplotlib.dates as mdates
 from copy import deepcopy
-from utilities import *
+from utilities.functions import *
 
 # *********************************************
 # duplicated tuits?
@@ -505,7 +505,7 @@ def main():
 	#MongoDB connection
 	data_base_name = "query1_spanish_stream"
 	collection_name = "col_" + data_base_name
-	mongo_conn = MongoDBConnection("set_up.py")
+	mongo_conn = MongoDBConnection("keys/set_up.py")
 	db = mongo_conn.client[data_base_name]
 	collection = db[collection_name]
 

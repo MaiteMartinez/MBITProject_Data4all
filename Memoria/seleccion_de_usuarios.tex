@@ -8,15 +8,33 @@ nuestro objetivo final. Se trata de extraer, a partir de los tuits almacenados,
 una lista de usuarios que pudieran constituirse en candidatos adecuados a 
 una oferta de trabajo (como, por ejemplo, las de la figura \ref{fig:ofertas_descripcion}). 
 Para ello, de todos aquellos usuarios de los que tenemos constancia en 
-los tuits recogidos hemos de seleccionar aquellos que sean personas (eliminando bots, 
+los tuits recogidos, hemos de seleccionar aquellos que sean personas (eliminando bots, 
 empresas, etc.) y que hayan publicado contenido relacionado con la materia de referencia, 
 en este caso la ciencia de datos.
 
+Esquemáticamente, el proceso descrito en este capítulo es el siguiente:
+\begin{enumerate}
+\item Consideramos todos los tuits que hemos descargado, tanto los originales como los datos de los tuits que han sido retuiteados o citados en los originales.
+\item Estudiamos los idiomas en que han sido escritos, y seleccionamos aquellos que usaremos en el 
+análisis (sección \ref{sect:deteccion_idioma}).
+\item Discriminamos los tuits cuyo contenido está relacionado con la ciencia de datos o el Big Data (los \lq\lq relevantes\rq\rq,  sección \ref{sect:tuits_relevantes}).
+\item Consideramos los usuarios que han producido esos tuits de contenido relevante, quitando los repetidos
+de forma consistente con el resto del proceso (ver detalles en la subsección \ref{subsect:duplicados1}). 
+\item De los usuarios relevantes, seleccionamos aquellos que clasificamos como personas (sección 
+\ref{sect:tipo_de_usuario}).
+\item De aquellos usuarios clasificados como personas, de nuevo eliminamos los duplicados,
+según el criterio expuesto en la sección \ref{subsect:duplicados2}.
+\end{enumerate}
 
-Los desarrollos descritos en este capítulo están en el fichero {\bf seleccion\_usuarios.py}, 
+El resultado de este proceso será entonces una tabla de id de usuarios que procederemos más tarde
+a ordenar en función de su relevancia.
+
+Los desarrollos descritos en este capítulo están en el fichero {\bf user\_selection.py}, 
 que puede encontrarse en el repositorio de GitHub.
 
+
 \section{Detección del idioma} 
+\label{sect:deteccion_idioma}
 
 El primer paso para poder analizar el contenido de un tuit y determinar si dicho tuit 
 (y por tanto el usuario que lo ha publicado) está relacionado con la ciencia de datos o el big data,
@@ -150,10 +168,49 @@ como en el siguiente caso clasificado en esperanto, no está muy claro por qué:
 \label{fig:tuit_esperanto1} }
 
 
+{\bf Vistos los resultados del clasificador de lenguaje, usaremos para el análisis del contenido de los tuits
+los idiomas inglés y español.}
+
+\section{Naturaleza del tuit}
+\label{sect:tuits_relevantes}
+texto del tuit:  IT, cientifico, analista o nodatascience (diccionarios de palabras)
+					/Binario, data science o no data science
+
+
+\subsection{Listado de usuarios únicos}
+\label{subsect:duplicados1}
+
+El resultado del proceso que acabamos de describir
+es una lista de tuits clasificados como relevantes o no relevantes
+para nuestro propósito (encontrar candidatos para un puesto de científico de datos).
+Nos quedaremos naturalmente solo con aquellos que hayamos clasificado como relevantes.
+
+En esta lista de tuits relevantes, es razonable esperar que haya algunos 
+publicados por el mismo usuario. Para optimizar la ejecución
+del siguiente tramo del proceso, la selección de aquellos usuarios que son personas, 
+de la lista de usuarios que podemos extraer de aquellos tuits que hemos clasificado como
+relevantes, nos vamos a quedar solo con instancias únicas de los usuarios.
+
+A lo largo de los procesos descritos en este capítulo y en el capítulo \ref{chap:ordenacion_de_usuarios},
+la referencia que vamos a usar para seguir a los usuarios es el número de identificación 
+de usuario de Twitter, al que nos referiremos habitualmente como id.
+Sin embargo, no es conveniente en esta etapa del proceso, quitar simplemente los id 
+repetidos. Como veremos en la sección \ref{sect:tipo_de_usuario}, los campos relevantes
+para la clasificación de un usuario en persona o no persona, son 
+la url, el nombre de usuario y la descripción del usuario. Todos estos campos
+pueden ser modificados por el usuario, y podría darse el caso de haber descargado
+tuits de un mismo usuario, en el que aparecieran diferentes url, nombre de usuario o
+descripción.
+
+Dado que un usuario podría clasificarse de forma distinta con diferentes url, nombre de usuario y 
+descripción, en esta etapa vamos a considerar que un usuario es un usuario repetido si para dos 
+usuarios sus url, nombres de usuario, descripciones y por supuesto sus id, son iguales.
+
 \section{Tipo de usuario}
+\label{sect:tipo_de_usuario}
 Para clasificar al usuario respecto a su entidad, y por ejemplo distinguir entre personas, bots y empresas, 
-nos parece que la parte del tuit que más información contiene, a partir de los datos conseguidos, es
-la bio que los propios usuarios aportan. Antes de cualquier labor de análisis de esos textos,
+una de las partes del tuit que más información contiene, a partir de los datos conseguidos, es
+la descripción que los propios usuarios aportan. Antes de cualquier labor de análisis de esos textos,
 es necesario saber el idioma en el que están, y por ello de nuevo aplicamos a nuestros datos 
 el identificador de lenguaje que usamos en el apartado anterior. 
 
@@ -172,7 +229,107 @@ los perfiles de los usuarios han quedado clasificados en $44$ idiomas diferentes
 \figcaption{Clasificación por lenguaje del texto de las bios.}
 \label{fig:user_bios_assigned_languages} }
 
+{\bf De nuevo, vistos los resultados del clasificador de lenguaje, usaremos para el análisis del tipo 
+de usuario los idiomas inglés y español.}
 
-\section{Naturaleza del tuit}
-texto del tuit:  IT, cientifico, analista o nodatascience (diccionarios de palabras)
-					/Binario, data science o no data science
+Para poder hacer una ordenación de los candidatos necesitamos detectar a usuarios o personas reales 
+y descartar a empresas o tuits automatizados. Hemos investigado en la red algunas técnicas 
+para llevar a cabo esta distinción, y hemos decidido seguir la mostrada en \cite{user_class}.
+En este trabajo de la Universidad de Utah de 2014, proponen basarse en campos como el nombre de usuario, 
+la descripción, la url y el origen de los tweets para clasificar los tuits como publicados por personas 
+y resto. Para ello la idea es la siguiente: se considera que un tuit pertenece a una persona si 
+cumple las siguientes cuatro especificaciones:
+\begin{itemize}
+\item[{\bf E1}] En el campo nombre de usuario aparece un nombre que coincida totalmente con un nombre real 
+de persona. Para ello hemos manejado un archivo con nombres y apellidos de personas en español e inglés, 
+obtenido de estas fuentes:
+\begin{itemize}
+\item\url{ https://www.census.gov/genealogy/www/%20data/1990surnames/names_files.html }
+\item\url{
+http://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736177009&menu=resultados&idp=1254734710990 }
+\item\url{http://www.buscanombres.com/nombres-gallegos.htm }
+\item\url{https://script.byu.edu/Pages/Spanish/es/surnames.aspx }
+\end{itemize}
+Para el caso de los nombres españoles se han incluido también los específicos para regiones como Cataluña, Comunidad Valenciana y Galicia.
+\item[{\bf E2}]El texto en el campo descripción cumple las siguientes dos condiciones:
+\begin{itemize}
+\item aparecen palabras como \lq\lq emprendedor\rq\rq, \lq\lq persona\rq\rq, 
+\lq\lq profesional\rq\rq o \lq\lq consultor\rq\rq. Se evitó poner las palabras \lq\lq I am\rq\rq o 
+\lq\lq soy\rq\rq porque en el caso de algunos bots, en este campo aparecen textos
+similares a \lq\lq I am a bot\rq\rq. 
+\item En el campo descripción y el el campo nombre, no aparecen palabras relativas a empresas como 
+\lq\lq negocio\rq\rq, \lq\lq empresa\rq\rq, \lq\lq compañía\rq\rq,\lq\lq somos\rq\rq, \lq\lq we\rq\rq\dots.
+En este último caso también se creo un fichero con todas estas palabras relacionadas con empresas, 
+en inglés y en español. Se evitaron palabras como \lq\lq business\rq\rq por riesgo a que algunos pudieran 
+publicar comentarios del área de {\em business intelligence}.
+\end{itemize}
+\item[{\bf E3}] Si el campo de url estaba vacío, asignar la categoría de persona y no de empresa (o bot).
+\item[{\bf E4}] Considerar el origen del tweet: las empresas no suelen publicar tweets desde dispositivos de mano. 
+\end{itemize}
+
+Al intentar aplicar esta metodología, observamos lo siguiente:
+\begin{itemize}
+\item Hay más empresas de las que cabría esperar, y fundamentalmente bots, cuyo campo url estaba vacío. No
+nos parece entonces una buena característica para la clasificación. Sin embargo, sí que se atendió al hecho 
+de que a veces en el campo url el usuario incluye en este campo su perfil de LinkedIn (con lo que el
+texto \lq\lq linked\rq\rq aparece) o su blog personal (en cuyo caso podemos identificar el texto 
+\lq\lq blog\rq\rq). Es cierto que en el caso de \lq\lq blog\rq\rq se puede incurrir en ciertos errores,
+dado que también hay bots en cuyo campo url se incluye un blog y es uno de los puntos a mejorar. 
+\item La idea apuntada en la subsección sobre el origen de los tuits en la
+página \pageref{subsubsect:origen_tuits}, que si el tuit era publicado desde un dispositivo de mano 
+probablemente se trataría de una persona,  finalmente resultó que, de nuevo, no era la realidad y esa
+diferenciación no era tan clara. 
+\item En cuanto al campo nombre de usuario, a pesar de la amplia lista de nombres y apellidos,
+en muchos casos solo se identificaba el nombre, en otros solo los apellidos... Con lo que en lugar de validar a las personas con la coincidencia completa de su nombre de usuario, se determinó 
+aceptar que es un nombre válido si se da una coincidencia del $33$\%. En aquellos casos en los que una 
+persona incluye solo nombre y apellidos, sería suficiente con dejar el corte en el $50$\%,
+pero cuando se publican nombre y dos apellidos,  es frecuente que solo detectemos el nombre y no los apellidos. De ahí que se tomara la decisión de fijar el umbral en el $33$\%.
+\item Con los criterios {\bf E1} y {\bf E2} se conseguía una buena clasificación de empresas y de personas. 
+Los fallos fundamentales de usuarios reales provenían de tuits con nombres de usuario extraños y descripciones
+ambigüas, y fundamentalmente bots de diferentes tipos.
+\end{itemize}
+
+En vista de todas estas observaciones, el algoritmo que hemos usado toma la siguiente forma:
+un tuit se considera de una persona cuando en su campo nombre de usuario existe un $33$\% o más 
+de coincidencia con la lista de nombres y apellidos, y además tanto en su campo nombre de usuario 
+o descripción no aparecen términos relacionados con empresa, o bien cuando su url es una 
+url de LinkedIn o de un blog.
+
+Aplicando esta metodología a la lista de usuarios únicos obtenidos tras la aplicación
+de los algoritmos descritos en la sección \ref{sect:tuits_relevantes}, 
+hemos obtenido los siguientes datos: de los tantos:cambiar usuarios únicos, 
+hay tantos:cambiar que han sido clasificados como persona. De éstos, había tantos:cambiar
+cuya id es única (es decir, había tantos:cambiar cuyo nombre de usuario, url o descripción ha cambiado
+en los tuits descargados). Los resultados relativos están consignados en la siguiente gráfica:
+
+\myfigure{
+\includegraphics[width=0.6\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/relevant_users_proportion.png}
+\figcaption{Porcentaje de usuarios clasificados como personas.}
+\label{fig:} }
+
+El código para llevar a cabo esta limpieza estaría preparado para escalar
+el modelo a otros casos de uso. Por ejemplo:
+\begin{itemize}
+\item la lista de nombres y apellidos puede extenderse fácilmente para incluir nombres
+en otros idiomas, si resulta que el texto de las descripciones o de los tuits recolectados
+se clasifica en otros lenguajes además del inglés y el español, o para extender el alcance de
+detección del modelo.
+\item De igual forma, en la lista de términos que sí pueden aparecer en descripción, donde ahora
+incluimos fundamentalmente vocablos relacionados con perfiles técnicos (consultor, matemático, ingeniero, etc.)
+para clasificar los usuarios como personas, se puede modificar fácilmente para incluir aquellos que estén 
+relacionados con el perfil requerido en la oferta laboral y mejorar la clasificación.
+\item Respecto a la lista de términos que no deben aparecer en el campo descripción (porque identifican empresas 
+o bots) se podría utilizar sin ningún cambio. En el caso en el que los tuits sean en otros idiomas diferentes 
+al inglés o al español se podría incluir fácilmente la versión en los idiomas necesarios de las palabras 
+consideradas.
+\end{itemize}
+
+\subsection{Eliminación de duplicados}
+\label{subsect:duplicados2}
+Una vez obtenida la clasificación en persona o no persona de los usuarios llevada a cabo como
+hemos descrito, solamente nos queda producir el listado definitivo de candidatos seleccionados 
+(ya no va a haber ninguna clasificación posterior). Esto implica, en primer lugar, que eliminaremos
+de la lista aquellos usuarios que no han sido clasificados como persona. A continuación, nos interesa
+extraer las personas únicas que hemos detectado: del listado extraído del paso anterior, 
+sección \ref{subsect:duplicados1}, podría ocurrir que un usuario  fuera clasificado como persona con un
+conjunto de url, nombre de usuario y descripción, pero no lo fuera con otro. En esta fase, por tanto, nos limitaremos a eliminar del listado de los clasificados como personas aquellos usuarios con un id repetido.

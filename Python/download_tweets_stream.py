@@ -54,9 +54,9 @@ class StreamListener_to_db(StreamListener):
 
 
 
-def main():
+def collect_data(query):
 	#This handles Twitter authentification and the connection to Twitter Streaming API
-	keys_file  = open("set_up.py", "r") 
+	keys_file  = open("keys/set_up.py", "r") 
 	keys_dict = eval(keys_file.read())
 	consumer_key= keys_dict["Twitter_keys"]["consumer_key"]
 	consumer_secret= keys_dict["Twitter_keys"]["consumer_secret"]
@@ -66,7 +66,7 @@ def main():
 	#MongoDB connection
 	data_base_name = "query1_spanish_stream"
 	collection_name = "col_" + data_base_name
-	mongo_conn = MongoDBConnection("set_up.py")
+	mongo_conn = MongoDBConnection("keys/set_up.py")
 	db = mongo_conn.client[data_base_name]
 	collection = db[collection_name]
 
@@ -76,9 +76,7 @@ def main():
 	auth.set_access_token(access_token, access_token_secret)
 	
 
-	#query to search tweets: ',' is or, ' ' is and
-	query = ["#machine learning", "#machinelearning", "#datamining", "#data mining",\
-			"#Python","#SQL", "#hadoop", "#bigdata", "#tableau", "#pentaho", "#rstats"]
+
 	exit = False
 	while not exit: # Making permanent streaming with exception handling 
 		try:
@@ -95,7 +93,11 @@ def main():
 if __name__ == '__main__':
 	try:
 		print("%%%%%%%%%%%%%%%   Starting task at "+str(datetime.datetime.now()))
-		main()
+		#query to search tweets: ',' is or, ' ' is and
+		# query = ["#machine learning", "#machinelearning", "#datamining", "#data mining",\
+		# "#Python","#SQL", "#hadoop", "#bigdata", "#tableau", "#pentaho", "#rstats"]
+		query = [line.strip() for line in open('utilities/query.txt', 'r')]
+		collect_data(query)
 	except KeyboardInterrupt:
 		print ('\nGoodbye! ')  
 

@@ -1,17 +1,16 @@
 from __future__ import absolute_import, print_function
 import tweepy
-from OpenMongoDB import MongoDBConnection
-import pymongo
 import json
 from TweeterAPIConnection import TweeterAPIConnection
 import time
 import pandas as pd
 from db_to_table import save_df
 import networkx as nx
-import matplotlib.pyplot as plt# Tweets to retrieve in the timeline query
-from utilities import *
+import matplotlib.pyplot as plt
+from utilities.functions import *
+from user_selection import get_assigned_language
 
-
+# Tweets to retrieve in the timeline query
 n_tuits = 200
 
 
@@ -39,14 +38,6 @@ def get_followers_ids(user_id, user_ids_set, api):
 		ids.extend(set(map(str, page)) & user_ids_set)
 	return ids
 
-def get_friends_ids(user_id, user_ids_set, api):
-	ids = []
-	page_count = 0
-	for page in tweepy.Cursor(api.friends_ids, id=user_id, count=5000).pages():
-		page_count += 1
-		# print ("Getting page " +str(page_count)+" for friends ids " + str(user_id))
-		ids.extend(set(map(str, page)) & user_ids_set)
-	return ids
 
 def get_h_index_data(df2, api):
 	people_data = df2[["user_id", "user_name", "user_screenname"]]
@@ -61,6 +52,7 @@ def get_h_index_data(df2, api):
 	h_index = []
 	first_citations = []
 	errors = []
+	languages = []
 	for i in range(len(people_data["user_id"])):		
 		user_id = people_data["user_id"][i]		
 		print("Processing user number "+str(i)+" of " + str(len(people_data["user_id"]))+" user_id = "+str(user_id))
@@ -70,18 +62,19 @@ def get_h_index_data(df2, api):
 			user_cursor = api.user_timeline(user_id = user_id,
 											screen_name = people_data["user_screenname"][i],
 											count = n_tuits)
-			errors.append("")
+			errors.append("0")
 		except tweepy.TweepError as e:
 			print ("Failed to download user " + str(user_id) + " timeline")
 			print (" Exception: " + str(e))
 			print ("Skipping... ")
 			user_cursor = []
-			errors.append(e)
+			errors.append(str(e))
 			
 		is_retweet = 0
 		is_of_interest = 0
 		total = 0
 		how_many_retweets = []
+		langs = []
 		for status in user_cursor:
 			# process status here				
 			tweet_json = json.loads(json.dumps((status._json)))
@@ -91,6 +84,8 @@ def get_h_index_data(df2, api):
 				text = tweet_json["extended_tweet"]["full_text"]			
 			except:
 				pass
+			# retrieve tweet languaje
+			langs.append(get_assigned_language(text))
 			# check if tweet is of interest
 			if (check_if_of_interest(text)):
 				is_of_interest += 1
@@ -112,11 +107,12 @@ def get_h_index_data(df2, api):
 
 		# note data for this user
 		total_tweets.append(total)
-		tweets_of_interest_as_percentage_of_total.append(is_of_interest/total)
-		retweets_as_percentage_of_interest.append(is_retweet/is_of_interest)
+		tweets_of_interest_as_percentage_of_total.append(is_of_interest/total if total !=0 else 0)
+		retweets_as_percentage_of_interest.append(is_retweet/is_of_interest if is_of_interest !=0 else 0)
 		h = get_h_index(how_many_retweets)
 		h_index.append(h)
 		first_citations.append(sorted(how_many_retweets, reverse = True)[ : h+1])			
+		languages.append(set(langs))
 
 		# if i > n_users-2:break
 
@@ -126,13 +122,16 @@ def get_h_index_data(df2, api):
 	people_data["retweets_as_percentage_of_interest"] = retweets_as_percentage_of_interest
 	people_data["h_index"] = h_index
 	people_data["first_citations"] = first_citations
+	people_data["h_index_errors"] = errors
+	people_data["languages"] = languages
 
-	file_name = "C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/people_data.xlsx"
-	save_df(people_data, file_name)
+	file_path = "tables/3_1_h_index_ranked_users.xlsx"
+	save_df(people_data, file_path = file_path)
+	
 	return people_data
 
-def get_relation_graph(df2, api):
-	users_ids = df2["user_id"]
+def get_relation_graph(users_df, api):
+	users_ids = users_df["user_id"]
 	user_ids_set = set(users_ids)
 	n_users = 2
 	errors=[""]*len(users_ids)
@@ -154,16 +153,16 @@ def get_relation_graph(df2, api):
 		relations.extend(this_user_rels)
 		if i > n_users:break
 
-	errors_df = pd.DataFrame({"user_id": user_id, "errors": errors})
-	file_name = "C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/graph_errors.xlsx"
-	save_df(errors_df, file_name)
+	users_df["graph_errors"] = errors 
+	file_name = "tables/3_2_users_graph_errors.xlsx"
+	save_df(users_df, file_name)
 
 	# directed graph creation
 	DG = nx.DiGraph()
 	DG.add_nodes_from(users_ids)
 	DG.add_edges_from(set(relations))
 	
-	return errors_df, DG
+	return users_df, DG
 
 def basic_measures(G):
 	output_string = ""
@@ -176,7 +175,7 @@ def basic_measures(G):
 	# output_string += ("density: %s" % nx.density(largest)) + "\n"
 	return output_string
 
-def print_basic_graph_properties(G, file_path = "graph_properties.txt"): 
+def print_basic_graph_properties(G, file_path = "graph/graph_properties.txt"): 
 	
 	output_string = ""
 	if  type(G) != nx.classes.digraph.DiGraph:
@@ -242,87 +241,114 @@ def normalize_vector(v):
 		v = [x/mx for x in v]
 	return v
 
-def get_users_centralities(df2, G):
+def get_users_centralities(users_df, G):
 	# The degree centralities values are normalized by dividing by the maximum possible 
 	# degree in a simple graph n-1 where n is the number of nodes in G.
-	df2["degree"] = [nx.degree_centrality(G).get(x,0) for x in df2["user_id"]]
-	df2["in_degree"] = [nx.in_degree_centrality(G).get(x,0) for x in df2["user_id"]]
-	df2["out_degree"] = [nx.out_degree_centrality(G).get(x,0) for x in df2["user_id"]]
+	users_df["degree"] = [nx.degree_centrality(G).get(x,0) for x in users_df["user_id"]]
+	users_df["in_degree"] = [nx.in_degree_centrality(G).get(x,0) for x in users_df["user_id"]]
+	users_df["out_degree"] = [nx.out_degree_centrality(G).get(x,0) for x in users_df["user_id"]]
 	# For directed graphs this is “left” eigenvector centrality which corresponds to the in-edges 
 	# in the graph. For out-edges eigenvector centrality first reverse the graph with G.reverse().
 	try:
-		df2["eigenvector"] = [nx.eigenvector_centrality_numpy(G).get(x,0) for x in df2["user_id"]]
+		users_df["eigenvector"] = [nx.eigenvector_centrality_numpy(G).get(x,0) for x in users_df["user_id"]]
 	except Exception as e:
-		print("Eigenvector numpy failed " + e)
-		df2["eigenvector"] = [nx.eigenvector_centrality(G).get(x,0) for x in df2["user_id"]]
+		print("Eigenvector numpy failed " + str(e))
+		users_df["eigenvector"] = [nx.eigenvector_centrality(G).get(x,0) for x in users_df["user_id"]]
 	# normalize values
-	df2["eigenvector"] = normalize_vector(df2["eigenvector"])
+	users_df["eigenvector"] = normalize_vector(users_df["eigenvector"])
 	# katz_centrality(G, alpha=0.1, beta=1.0,...) default values
 	# The parameter alpha should be strictly less than the inverse of largest eigenvalue 
 	# of the adjacency matrix for the algorithm to converge. You can use 
-	# max(nx.adjacency_spectrum(G)) to get λmaxλmax 
-	l_max = max(nx.adjacency_spectrum(G))
-	a = 0.8/l_max
-	try:
-		df2["katz_bonacich"] = [nx.katz_centrality_numpy(G, alpha = a, beta = 1.0, normalized=True).get(x,0) for x in df2["user_id"]]
-	except Exception as e:
-		print ("Katz-Bonacich numpy failed " + e)
-		df2["katz_bonacich"] = [nx.katz_centrality(G, alpha = a, beta = 1.0, normalized=True).get(x,0) for x in df2["user_id"]]
+	# max(nx.adjacency_spectrum(G)) to get λmax
+	l_max = max([abs(x) for x in nx.adjacency_spectrum(G)])
+	a = 0.1
+	if l_max != 0:
+		a = 0.8/l_max
 
 	try:
-		df2["pagerank"] = [nx.pagerank_numpy(G, alpha = 0.85).get(x,0) for x in df2["user_id"]]
+		users_df["katz_bonacich"] = [nx.katz_centrality_numpy(G, alpha = a, beta = 1.0, normalized=True).get(x,0) for x in users_df["user_id"]]
 	except Exception as e:
-		print ("pagerank numpy failed " + e)
+		print ("Katz-Bonacich numpy failed " + str(e))
+		users_df["katz_bonacich"] = [nx.katz_centrality(G, alpha = a, beta = 1.0, normalized=True).get(x,0) for x in users_df["user_id"]]
+
+	try:
+		users_df["pagerank"] = [nx.pagerank_numpy(G, alpha = 0.85).get(x,0) for x in users_df["user_id"]]
+	except Exception as e:
+		print ("pagerank numpy failed " + str(e))
 		try:
-			df2["pagerank"] = [nx.pagerank_scipy(G, alpha = 0.85).get(x,0) for x in df2["user_id"]]
+			users_df["pagerank"] = [nx.pagerank_scipy(G, alpha = 0.85).get(x,0) for x in users_df["user_id"]]
 		except Exception as e:
-			print ("pagerank scipy failed " + e)
-			df2["pagerank"] = [nx.pagerank(G, alpha = 0.85).get(x,0) for x in df2["user_id"]]
+			print ("pagerank scipy failed " + str(e))
+			users_df["pagerank"] = [nx.pagerank(G, alpha = 0.85).get(x,0) for x in users_df["user_id"]]
 	# normalize values
-	df2["pagerank"] = normalize_vector(df2["pagerank"])
+	users_df["pagerank"] = normalize_vector(users_df["pagerank"])
 	# The closeness centrality is normalized to (n-1)/(|G|-1) where n is the number of nodes 
 	# in the connected part of graph containing the node. If the graph is not completely 
 	# connected, this algorithm computes the closeness centrality for each connected part 
 	# separately scaled by that parts size.
-	df2["closeness"] = [nx.closeness_centrality(G).get(x,0) for x in df2["user_id"]]
-	df2["betweenness"] = [nx.betweenness_centrality(G, normalized=True).get(x,0) for x in df2["user_id"]]
-	return df2
+	users_df["closeness"] = [nx.closeness_centrality(G).get(x,0) for x in users_df["user_id"]]
+	users_df["betweenness"] = [nx.betweenness_centrality(G, normalized=True).get(x,0) for x in users_df["user_id"]]
+	return users_df
 
 
 
-def main():
+def get_ranked_users(people_data):
 	#This handles Twitter authentification and the connection to Twitter Streaming API
 	# wait_on_rate_limit=True to wait until rate limits reset, instead of failing
 	# rate limit when getting followed/followers is easily reached
-	# api = TweeterAPIConnection(keys_file_name = "set_up.py").getTwitterApi(wait_on_rate_limit = True)
+	api = TweeterAPIConnection(keys_file_name = "keys/set_up.py").getTwitterApi(wait_on_rate_limit = True)
 
-	# # users info
-	file_name = "C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/unique_users_lang_class.xlsx"
-	df_columns = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0).columns
-	converter = {col: str for col in df_columns} 
-	df = pd.read_excel(open(file_name, "rb"), sheetname = 'Sheet1', header = 0, converters = converter)
-	na_value =  "None"
-	df2 = df.fillna(value = na_value)
+	people_data = get_h_index_data(people_data, api)
 
-	# people_data = get_h_index_data(df2, api)
+	# ********************************************
+	# user errors
+	# ********************************************
+	# we have probably had some users with timeline errors. we make a graph
+	# draw some graphs for the memoir and retrieve some numbers
+	number_of_users = len(people_data["user_id"])
+	different_errors = [x for x in people_data["h_index_errors"] if x !="0"]
+	number_of_errors = len(different_errors)
+	p = number_of_errors/number_of_users
+	sizes = [p, 1.-p]
+	labels = ["errors", "ok"]
+	explode = (0.1, 0)
+	colors = [oyellow, oblue]
+	file_path = "images/errors_in_h_index_proportion.png"
+	highlighted_pie_graph(sizes, labels, explode, colors, file_path)
+	print("From "+str(number_of_users)+" users timelines analized, we've found "+str(number_of_errors)+
+			" errors, that represent a "+str(round(p*100.,2))+"% of total")
 
-	# graph_errors_df, directed_graph = get_relation_graph(df2, api)
-	# nx.write_gml(directed_graph, "relations_graph.gml")
+	frequency_bar_graph(different_errors, 10, "More frequent errors", oblue, "images/error_messages_in_h_index.png")
+
+	# only users without errors remain
+	people_data = people_data[people_data["h_index_errors"]=="0"]
+
+	# ********************************************
+	# graph construction, just with non error users from h_index process
+	# ********************************************
+	people_data, directed_graph = get_relation_graph(people_data, api)
+	nx.write_gml(directed_graph, "graph/relations_graph.gml")
 	
-	directed_graph = nx.read_gml("relations_graph.gml")
+	# directed_graph = nx.read_gml("graph/relations_graph.gml")
 	
-	# print_basic_graph_properties(directed_graph, file_path = "graph_properties.txt")
+	print_basic_graph_properties(directed_graph, file_path = "graph/graph_properties.txt")
 
-	people_data = get_users_centralities(people_data, directed_graph)
+	ranked_users = get_users_centralities(people_data, directed_graph)
 
-	file_name = "C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/people_data.xlsx"
-	save_df(people_data, file_path = file_name)
+	return ranked_users
 
 if __name__ == '__main__':
 	try:
 		start = time.time()
 		print("%%%%%%%%%%%%%%%   Starting task at "+str(start))
-		main()
+		# ********************************************
+		# read the data stored form user_selection process
+		# ********************************************
+		file_path = "tables/3_selected_users.xlsx"
+		selected_users = read_df(file_path)
+		ranked_users = get_ranked_users(selected_users)
+		file_path = "tables/4_ranked_users.xlsx"
+		save_df(ranked_users, file_path = file_path)
 		print("%%%%%%%%%%%%%%%   time ellapsed "+str((time.time()-start)/60) + " minutes")
 	except KeyboardInterrupt:
 		print ('\nGoodbye! ')  
