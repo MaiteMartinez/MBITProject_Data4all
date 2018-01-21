@@ -14,7 +14,7 @@ trabajo, y luego usaremos nuestros algoritmos innovadores para:
 extraer los usuarios activos en ese perfil
 ­ descubrir qué usuarios son personas candidatas a la oferta
 
-##¿Qué candidatos son los mejores?
+## ¿Qué candidatos son los mejores?
 Usaremos dos tipos de algoritmos de ordenación para
 obtener la lista de los mejores candidatos:
 ­ Por contenido publicado: índice h
