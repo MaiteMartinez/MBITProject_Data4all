@@ -1,5 +1,5 @@
 # MBITProject_Data4all
-MBITProject_Data4all
+
 ## El problema
 Encontrar el mejor candidato para una oferta
 de trabajo en un entorno cada vez más digi-
