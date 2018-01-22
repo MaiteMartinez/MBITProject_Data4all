@@ -212,7 +212,7 @@ def get_all_users_info(df, na_value = "None"):
 # MAIN
 # *********************************************
 
-def create_tables():
+def create_tables(data_base_name, set_up_path):
 	#MongoDB connection
 	data_base_name = "query1_spanish_stream"
 	collection_name = "col_" + data_base_name
@@ -235,16 +235,11 @@ def create_tables():
 	return df4
 
 if __name__ == '__main__':
-	# file_path = "C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/tables/1_original_tweets_table.xlsx"
-	# df2 = read_df(file_path) 
-
-	# df3 = get_all_users_info(df2, na_value = na_value)
-	
-	# save_df(df3, file_path = 'C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/all_tweets.xlsx')
-
 
 	try:
 		print("%%%%%%%%%%%%%%%   Starting task at "+str(datetime.datetime.now()))
-		all_tweets_df = create_tables()
+		data_base_name = "query1_spanish_stream"
+		set_up_path = "keys/set_up.py"
+		all_tweets_df = create_tables(data_base_name, set_up_path)
 	except KeyboardInterrupt:
 		print ('\nGoodbye! ')  

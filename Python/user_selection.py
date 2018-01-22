@@ -14,6 +14,7 @@ from utilities.languages_names import to_two_letters, from_two_letters
 from utilities.stop_words import my_stop_words
 import matplotlib.pyplot as plt
 from utilities.functions import *
+from relevance_model.Clasificacion import *
 
 
 # *********************************************
@@ -214,72 +215,76 @@ def smart_remove_duplicated_users(tweets_data, relevant_fields):
 	
 def select_users(all_tweets_data):
 	
-	# # ********************************************
-	# # classify tweet languages, and draw some graphs: select languages for later analysis
-	# # ********************************************
-	# all_tweets_lang_class = classify_by_language ( all_tweets_data, "text")
+	# ********************************************
+	# classify tweet languages, and draw some graphs: select languages for later analysis
+	# ********************************************
+	all_tweets_lang_class = classify_by_language ( all_tweets_data, "text")
 	
-	# file_name = "tables/2_1_all_tweets_text_lang_class.xlsx"
-	# save_df(all_tweets_lang_class, file_path = file_name)
+	file_name = "tables/2_1_all_tweets_text_lang_class.xlsx"
+	save_df(all_tweets_lang_class, file_path = file_name)
 		
-	# toprint = 20
-	# # assigned languages for tweet texts
-	# langs = [from_two_letters[x] if x !="unknown" else x for x in all_tweets_lang_class["text_assigned_lang"]]
-	# frequency_bar_graph(langs, 
-						# toprint, 
-						# "Idiomas de los tweets (totales)", 
-						# oblue,
-						# figure_path="images/assigned_languages.png")
-	# print ( "Se han clasificado los " +str(len(langs))+" textos de los tweets en "
-			# +str(len(set(all_tweets_lang_class["text_assigned_lang"]))) + " idiomas diferentes")
-	# count = Counter(langs)
-	# main_l = ["spanish", "english"]
-	# sizes = [count[l]/len(langs) for l in main_l] +[sum(count[k] if k not in main_l else 0 for k in count.keys())/len(langs)]
-	# labels = main_l + ["others"]
-	# explode = (0.1, 0, 0)  # only "explode" the first slice (i.e. 'Original')
-	# colors = [oblue, oyellow, ogreen1]
-	# file_path = "images/assigned_languages_proportions.png"
-	# highlighted_pie_graph(sizes, labels, explode, colors, file_path)
-	# print ( "En los textos de los tweets, hay un " +str(count["unknown"]/len(langs) * 100.)+" de unknowns del "
-			# +str(sum(count[k] if k not in main_l else 0 for k in count.keys())/len(langs)*100.) + " de others")
+	toprint = 20
+	# assigned languages for tweet texts
+	langs = [from_two_letters[x] if x !="unknown" else x for x in all_tweets_lang_class["text_assigned_lang"]]
+	frequency_bar_graph(langs, 
+						toprint, 
+						"Idiomas de los tweets (totales)", 
+						oblue,
+						figure_path="images/assigned_languages.png")
+	print ( "Se han clasificado los " +str(len(langs))+" textos de los tweets en "
+			+str(len(set(all_tweets_lang_class["text_assigned_lang"]))) + " idiomas diferentes")
+	count = Counter(langs)
+	main_l = ["spanish", "english"]
+	sizes = [count[l]/len(langs) for l in main_l] +[sum(count[k] if k not in main_l else 0 for k in count.keys())/len(langs)]
+	labels = main_l + ["others"]
+	explode = (0.1, 0, 0)  # only "explode" the first slice (i.e. 'Original')
+	colors = [oblue, oyellow, ogreen1]
+	file_path = "images/assigned_languages_proportions.png"
+	highlighted_pie_graph(sizes, labels, explode, colors, file_path)
+	print ( "En los textos de los tweets, hay un " +str(count["unknown"]/len(langs) * 100.)+" de unknowns del "
+			+str(sum(count[k] if k not in main_l else 0 for k in count.keys())/len(langs)*100.) + " de others")
 	
-	# # ********************************************
-	# # classify users bio texts by language and draw some graphs: select languages for later analysis
-	# # ********************************************	
-	# # first remove duplicated users
-	# # here we take the first time that a user appears. If her/his data has changed through time, we
-	# # only retrieve one of the versions... no idea of which one
-	# unique_users = all_tweets_lang_class.groupby("user_id", as_index = False).first()
+	# ********************************************
+	# classify users bio texts by language and draw some graphs: select languages for later analysis
+	# ********************************************	
+	# first remove duplicated users
+	# here we take the first time that a user appears. If her/his data has changed through time, we
+	# only retrieve one of the versions... no idea of which one
+	unique_users = all_tweets_lang_class.groupby("user_id", as_index = False).first()
 		
-	# unique_users_lang_class = classify_by_language (unique_users, "user_bio")
+	unique_users_lang_class = classify_by_language (unique_users, "user_bio")
 	
-	# file_name = "tables/2_2_unique_users_bios_text_lang_class.xlsx"
-	# save_df(unique_users_lang_class, file_path = file_name)
+	file_name = "tables/2_2_unique_users_bios_text_lang_class.xlsx"
+	save_df(unique_users_lang_class, file_path = file_name)
 	
 	
-	# # assigned languages for user bios
-	# langs = [from_two_letters[x] if x !="unknown" else x for x in unique_users_lang_class["user_bio_assigned_lang"]]
-	# frequency_bar_graph(langs, 
-						# toprint, 
-						# "Idiomas de las bios de los usuarios (totales)", 
-						# oblue,
-						# figure_path="images/user_bios_assigned_languages.png")
-	# print ( "Se han clasificado los " +str(len(langs))+" textos de los tweets en "
-			# +str(len(set(unique_users_lang_class["user_bio_assigned_lang"]))) + " idiomas diferentes")
-	# count = Counter(langs)
-	# main_l = ["spanish", "english", "unknown"]
-	# sizes = [count[l]/len(langs) for l in main_l] +[sum(count[k] if k not in main_l else 0 for k in count.keys())/len(langs)]
-	# labels = main_l + ['others']
-	# explode = (0.1, 0, 0, 0)  # only "explode" the 1st slice (i.e. 'Original')
-	# colors = [oblue, oyellow, ogreen1, ored]
-	# file_path = "images/user_bios_assigned_languages_proportions.png"
-	# highlighted_pie_graph(sizes, labels, explode, colors, file_path)	
+	# assigned languages for user bios
+	langs = [from_two_letters[x] if x !="unknown" else x for x in unique_users_lang_class["user_bio_assigned_lang"]]
+	frequency_bar_graph(langs, 
+						toprint, 
+						"Idiomas de las bios de los usuarios (totales)", 
+						oblue,
+						figure_path="images/user_bios_assigned_languages.png")
+	print ( "Se han clasificado los " +str(len(langs))+" textos de los tweets en "
+			+str(len(set(unique_users_lang_class["user_bio_assigned_lang"]))) + " idiomas diferentes")
+	count = Counter(langs)
+	main_l = ["spanish", "english", "unknown"]
+	sizes = [count[l]/len(langs) for l in main_l] +[sum(count[k] if k not in main_l else 0 for k in count.keys())/len(langs)]
+	labels = main_l + ['others']
+	explode = (0.1, 0, 0, 0)  # only "explode" the 1st slice (i.e. 'Original')
+	colors = [oblue, oyellow, ogreen1, ored]
+	file_path = "images/user_bios_assigned_languages_proportions.png"
+	highlighted_pie_graph(sizes, labels, explode, colors, file_path)	
 
 	# ********************************************
 	# classification if tweet texts topics are relevant for the selection process or not
 	# ********************************************
 	
-	all_tweets_data["is_relevant_text"] = get_relevant_topic_tweets(all_tweets_data["text"])
+	# all_tweets_data["is_relevant_text"] = get_relevant_topic_tweets(all_tweets_data["text"])
+	arquivo = "C:\\DATOS\\MBIT\\Proyecto\\MBITProject_Data4all\\Python\\relevance_model\\modelo_nb.sav"
+	all_tweets_clean_texts = pd.DataFrame()
+	all_tweets_clean_texts["text"] = all_tweets_data["text"].apply(remove_stopwords)
+	all_tweets_data["is_relevant_text"] = procesando_modelo(arquivo,all_tweets_clean_texts)
 	file_name = "tables/2_3_relevant_all_twets_data.xlsx"
 	save_df(all_tweets_data, file_path = file_name)
 

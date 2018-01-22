@@ -13,7 +13,8 @@ from nltk.corpus import stopwords
 from collections import Counter
 import datetime
 from OpenMongoDB import MongoDBConnection
-from scipy.misc import imread
+# from scipy.misc.pilutil import imread
+from imageio import imread
 from random import uniform
 from pandas.tools.plotting import table
   
@@ -498,14 +499,13 @@ def create_source_info(twitter_cursor, figure_path = "images/source.png"):
 	
 
 # *********************************************
-# MAIN
+# MAIN ::: run_descriptives
 # *********************************************
 
-def main():
+def run_descriptives(data_base_name, set_up_path):
 	#MongoDB connection
-	data_base_name = "query1_spanish_stream"
 	collection_name = "col_" + data_base_name
-	mongo_conn = MongoDBConnection("keys/set_up.py")
+	mongo_conn = MongoDBConnection(set_up_path)
 	db = mongo_conn.client[data_base_name]
 	collection = db[collection_name]
 
@@ -549,6 +549,8 @@ def main():
 if __name__ == '__main__':
 	try:
 		print("%%%%%%%%%%%%%%%   Starting task at "+str(datetime.datetime.now()))
-		main()
+		data_base_name = "query1_spanish_stream"
+		set_up_path = "keys/set_up.py"
+		run_descriptives(data_base_name, set_up_path)
 	except KeyboardInterrupt:
 		print ('\nGoodbye! ')  

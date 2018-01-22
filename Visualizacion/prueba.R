@@ -4,8 +4,8 @@ library(data.table)
 library(DT)
 library(readxl)
 
-df1=read_excel("C:/Users/Silvia/Desktop/Proyecto/Detect_Pers/Colgado Git Hub/Filtro_pers.xlsx")
-
+# df1=read_excel("C:/Users/Silvia/Desktop/Proyecto/Detect_Pers/Colgado Git Hub/Filtro_pers.xlsx")
+df1=read_excel("C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/tables/3_selected_users.xlsx")
 #UI
 
 ui<- dashboardPage(dashboardHeader(disable = T),
@@ -20,10 +20,10 @@ server <- (function(input, output) {
   vals<-reactiveValues()
   
   vals$Data<-data.table(
-    Texto=df1$text,
-    Id=df1$user.id,
-    nombre_usuario=df1$user.name,
-    url=df1$user.url
+    Texto=df1$user_screenname,
+    Id=df1$user_id,
+    nombre_usuario=df1$user_name,
+    url=df1$user_screenname
   )
   
   
