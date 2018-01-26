@@ -1,6 +1,7 @@
 library(shiny)
 library(readxl)
 library(shinyBS)
+library(DT)
 
 
 df1=read_excel("C:/Users/Silvia/Desktop/Proyecto/Detect_Pers/Colgado Git Hub/Filtro_pers.xlsx")
@@ -14,7 +15,7 @@ ui <- fluidPage(
   actionButton("add", "Pondera el resultado"),
   tags$head(tags$style(HTML('#add{background-color:orange}'))),
   bsModal("modalnew", "Introduce porcentajes para ponderar el resultado", "add", size = "large",
-          tags$head(tags$style(HTML('#modalnew{color:orange}'))),
+          #tags$head(tags$style(HTML('#modalnew{color:orange}'))),
           HTML(paste0("<div style='color:","red","'>",
                       paste0("<b>","La suma de los valores introducidos debe ser 100"),
                       "</div>")),
@@ -26,12 +27,18 @@ ui <- fluidPage(
                       numericInput(inputId = "C3", label="Centralidad_3 ", value = 0, step = 5,width = '75%')
                       ),
           br(),
-          actionButton("butt", "Calcula")
+          HTML(paste0("<div style='color:","grey","'>",
+                      paste0("Pulsa 'Calcular' y cierre la ventana para ver el resultado"),
+                      "</div>")),
+          br(),
+          actionButton("butt", "Calcular"),
+          tags$head(tags$style(HTML('#butt{background-color:LightGray}')))
           
   ),
   mainPanel( h3(textOutput(outputId = "mensaje", container = span)),
               DT::dataTableOutput("mytable1") # muestre la tabla 
   )
+  
 )
 
 
@@ -63,9 +70,21 @@ server<-function(input,output,session) {
   })
   
   
+  
   # Imprima el dataframe
   output$mytable1 <- DT::renderDataTable({
-        DT::datatable(add_to_df1(),options = list(searching = FALSE))
+        DT::datatable(add_to_df1(), 
+                      escape=FALSE,
+                      colnames = c(HTML('<span title ="Introduce texto 1">Introduce Nomb col_1</span>'),
+                                   HTML('<span title ="Introduce texto 2">Introduce Nomb col_2</span>') , 
+                                   HTML('<span title ="Introduce texto 3">Introduce Nomb col_3</span>'),
+                                   HTML('<span title ="Introduce texto 4">Introduce Nomb col_4</span>')),
+                      options = list(searching = FALSE,
+                                     initComplete = JS(
+                                       "function(settings, json) {",
+                                       "$(this.api().table().header()).css({'background-color': '	#575757', 'color': '#fff'});",
+                                       "}")
+                                     ))
         })
   
     New_column<- reactive({ 
