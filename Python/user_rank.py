@@ -9,14 +9,22 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from utilities.functions import *
 from user_selection import get_assigned_language
+from relevance_model.Clasificacion1 import *
+from relevance_model.Clasificacion1 import remove_stopwords as class_model_remove_stopwords
 
 # Tweets to retrieve in the timeline query
 n_tuits = 200
 
 
 
-def check_if_of_interest(text):
-	return True
+def check_if_of_interest(modelo_v1, text):
+	clean_text = class_model_remove_stopwords(text)
+	pred_x = modelo_v1.predict([clean_text])
+	# try:
+		# print ( str(text)+"  ****  "+str(clean_text) + " ***** "+str(pred_x))
+	# except:
+		# pass
+	return pred_x[0]
 
 def get_h_index (n_retweets):
 	# needs a vector with the citations (number of retweets) of each published tweet
@@ -53,6 +61,11 @@ def get_h_index_data(df2, api):
 	first_citations = []
 	errors = []
 	languages = []
+
+	# for relevance of tweets classification
+	arquivo = "C:\\DATOS\\MBIT\\Proyecto\\MBITProject_Data4all\\Python\\relevance_model\\modelo_clf.sav"
+	modelo_v1 = pickle.load(open(arquivo,'rb'))
+
 	for i in range(len(people_data["user_id"])):		
 		user_id = people_data["user_id"][i]		
 		print("Processing user number "+str(i)+" of " + str(len(people_data["user_id"]))+" user_id = "+str(user_id))
@@ -85,9 +98,9 @@ def get_h_index_data(df2, api):
 			except:
 				pass
 			# retrieve tweet languaje
-			langs.append(get_assigned_language(text))
+			langs.append(get_assigned_language(text)[-1])
 			# check if tweet is of interest
-			if (check_if_of_interest(text)):
+			if (check_if_of_interest(modelo_v1, text)):
 				is_of_interest += 1
 				if text.startswith("RT"): 
 					is_retweet += 1
@@ -113,6 +126,8 @@ def get_h_index_data(df2, api):
 		h_index.append(h)
 		first_citations.append(sorted(how_many_retweets, reverse = True)[ : h+1])			
 		languages.append(set(langs))
+		
+		print(" total = %d, of interest = %d, "%(total,is_of_interest))
 
 		# if i > n_users-2:break
 
@@ -125,7 +140,7 @@ def get_h_index_data(df2, api):
 	people_data["h_index_errors"] = errors
 	people_data["languages"] = languages
 
-	file_path = "tables/3_1_h_index_ranked_users.xlsx"
+	file_path = "tables/4_1_h_index_ranked_users.xlsx"
 	save_df(people_data, file_path = file_path)
 	
 	return people_data
@@ -151,7 +166,7 @@ def get_relation_graph(users_df, api):
 		 # A está relacionado con el usuario B si A sigue a B
 		this_user_rels = [(x, user_id) for x in followers_ids]
 		relations.extend(this_user_rels)
-		if i > n_users:break
+		# if i > n_users:break
 
 	users_df["graph_errors"] = errors 
 	file_name = "tables/3_2_users_graph_errors.xlsx"
@@ -298,15 +313,18 @@ def get_ranked_users(people_data):
 	# rate limit when getting followed/followers is easily reached
 	api = TweeterAPIConnection(keys_file_name = "keys/set_up.py").getTwitterApi(wait_on_rate_limit = True)
 
-	people_data = get_h_index_data(people_data, api)
+	# people_data = get_h_index_data(people_data, api)
+
+	file_path = "tables/4_1_h_index_ranked_users.xlsx"
+	people_data = read_df(file_path)
 
 	# ********************************************
 	# user errors
 	# ********************************************
-	# we have probably had some users with timeline errors. we make a graph
+	# we have probably had some users with timeline errors. 
 	# draw some graphs for the memoir and retrieve some numbers
 	number_of_users = len(people_data["user_id"])
-	different_errors = [x for x in people_data["h_index_errors"] if x !="0"]
+	different_errors = [str(x) for x in people_data["h_index_errors"] if x !="0"]
 	number_of_errors = len(different_errors)
 	p = number_of_errors/number_of_users
 	sizes = [p, 1.-p]
@@ -317,8 +335,9 @@ def get_ranked_users(people_data):
 	highlighted_pie_graph(sizes, labels, explode, colors, file_path)
 	print("From "+str(number_of_users)+" users timelines analized, we've found "+str(number_of_errors)+
 			" errors, that represent a "+str(round(p*100.,2))+"% of total")
-
-	frequency_bar_graph(different_errors, 10, "More frequent errors", oblue, "images/error_messages_in_h_index.png")
+	if len(different_errors)>0:
+		print(different_errors)
+		frequency_bar_graph(different_errors, min(10, len(different_errors)), "More frequent errors", oblue, "images/error_messages_in_h_index.png")
 
 	# only users without errors remain
 	people_data = people_data[people_data["h_index_errors"]=="0"]

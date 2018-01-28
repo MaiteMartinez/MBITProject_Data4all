@@ -145,7 +145,8 @@ def crear_modelo(df0):
     return arquivo
 
 # Procesando el modelo a partir del modelo salvo (modelo_nb.sav)
-def procesando_modelo(arquivo,data_set):
+
+def procesando_modelo(arquivo,data_set):	
     # Cargando el modelo para aplicarlo
     modelo_v1 = pickle.load(open(arquivo,'rb'))
 
@@ -166,9 +167,10 @@ def procesando_modelo(arquivo,data_set):
                         
         i = i + 1
     print(c)
-    df_pred = data_set[data_set.status == 1]
-    df_users = df_pred.groupby('user_id').status.count()
-    return df_users
+    # df_pred = data_set[data_set.status == 1]
+    # df_users = df_pred.groupby('user_id').status.count()
+    # return df_users
+    return data_set["status"]
 
 if __name__ == '__main__':
     try:

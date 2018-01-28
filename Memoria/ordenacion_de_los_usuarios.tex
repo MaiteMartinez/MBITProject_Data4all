@@ -21,7 +21,7 @@ con B si A sigue a B).
 Con estos dos métodos pensamos que quedará bastante bien representado el panorama
 de candidatos a partir de la información extraída de Twitter. 
 Todos los cálculos descritos en esta parte del proyecto están en el archivo
-{\bf ordenacion\_usuarios.py} del repositorio de GitHub.
+{\bf user\_rank.py} del repositorio de GitHub.
 
 En las siguientes seccies detallamos los algoritmos que hemos usado para cada sistema de
 clasificación, aportando la justificación de las diversas elecciones que 
@@ -79,6 +79,12 @@ porcentaje de tuits de interés sobre el total de tuits evaluados,
 contaremos tanto las veces que se ha retuiteado el tuit como las que ha sido
 citado.
 \end{itemize}
+
+Como información adicional también obtendremos el idioma en el que los usuarios han 
+publicado los tuits. En esta parte del proyecto reutilizamos por tanto dos herramientas
+mencionadas en la parte de selección de usuarios: el modelo que nos permite detectar si
+un tuit es relevante o no (explicado en la sección \ref{sect:tuits_relevantes})
+y el algoritmo para detectar el idioma de un texto (visto en la sección \ref{sect:deteccion_idioma}).
 
 Al intentar bajar el timeline de algunos usuarios se pueden
 obtener diversos mensajes de error (por ejemplo, porque el usuario tenga

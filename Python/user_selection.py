@@ -14,8 +14,8 @@ from utilities.languages_names import to_two_letters, from_two_letters
 from utilities.stop_words import my_stop_words
 import matplotlib.pyplot as plt
 from utilities.functions import *
-from relevance_model.Clasificacion import *
-
+from relevance_model.Clasificacion1 import *
+from relevance_model.Clasificacion1 import remove_stopwords as class_model_remove_stopwords
 
 # *********************************************
 # Language detection with stop words
@@ -281,10 +281,11 @@ def select_users(all_tweets_data):
 	# ********************************************
 	
 	# all_tweets_data["is_relevant_text"] = get_relevant_topic_tweets(all_tweets_data["text"])
-	arquivo = "C:\\DATOS\\MBIT\\Proyecto\\MBITProject_Data4all\\Python\\relevance_model\\modelo_nb.sav"
-	all_tweets_clean_texts = pd.DataFrame()
-	all_tweets_clean_texts["text"] = all_tweets_data["text"].apply(remove_stopwords)
+	arquivo = "C:\\DATOS\\MBIT\\Proyecto\\MBITProject_Data4all\\Python\\relevance_model\\modelo_clf.sav"
+	all_tweets_clean_texts = pd.DataFrame()	
+	all_tweets_clean_texts["text"] = all_tweets_data["text"].apply(class_model_remove_stopwords)
 	all_tweets_data["is_relevant_text"] = procesando_modelo(arquivo,all_tweets_clean_texts)
+	all_tweets_data["clean_text"] = all_tweets_clean_texts["text"]
 	file_name = "tables/2_3_relevant_all_twets_data.xlsx"
 	save_df(all_tweets_data, file_path = file_name)
 
@@ -303,7 +304,7 @@ def select_users(all_tweets_data):
 	colors = [oblue, oyellow]
 	file_path = "images/relevant_tweets_proportion.png"
 	highlighted_pie_graph(sizes, labels, explode, colors, file_path)
-	print("From "+str(number_of_tweets)+" tweets analized, we've found "+str(number_of_tweets)+
+	print("From "+str(number_of_tweets)+" tweets analized, we've found "+str(number_of_relevant_tweets)+
 			" relevant ones, that represent a "+str(round(p*100.,2))+"% of total")
 
 	# ********************************************
