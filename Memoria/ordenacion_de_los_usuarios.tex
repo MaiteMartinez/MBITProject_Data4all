@@ -88,7 +88,7 @@ y el algoritmo para detectar el idioma de un texto (visto en la sección \ref{se
 
 Al intentar bajar el timeline de algunos usuarios se pueden
 obtener diversos mensajes de error (por ejemplo, porque el usuario tenga
-protegido tu timeline, porque el usuario haya dejado de existir, etc.)
+protegido su timeline, porque el usuario haya dejado de existir, etc.)
 de forma que el proceso puede fallar. El código debe contemplar ese
 caso y permitir que la ejecución continue con el resto de usuarios:
 
@@ -96,7 +96,8 @@ caso y permitir que la ejecución continue con el resto de usuarios:
 \figcaption{Control de errores en la descarga de timelines.}
 \label{fig:error_not_authorized} }
 
-
+% From 161 users timelines analized, we've found 2 errors, that represent a 1.24% of total
+% ['Not authorized.', "[{'code': 34, 'message': 'Sorry, that page does not exist.'}]"]
 \section{Grafo relacional}
 \label{subsect:grafo}
 Nuestro objetivo en esta parte es explorar las relaciones entre los usuarios que 
