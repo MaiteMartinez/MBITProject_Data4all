@@ -25,6 +25,7 @@ company
 company
 compañia
 comunidad
+community
 confederacion
 confederacy
 conjunto
@@ -40,6 +41,7 @@ cooperative
 corporacion
 corporation
 curso
+cursos
 deal
 dedicamos
 delegacion
@@ -82,6 +84,7 @@ municipio
 mutualidad
 mutuality
 negocio
+nos
 office
 office
 ofrecemos
@@ -93,6 +96,7 @@ patronato
 personas
 profesionales
 proveemos
+proveedores
 portal
 sede
 set
@@ -111,4 +115,6 @@ union
 union
 universidad
 university
+us
 we
+web
