@@ -146,35 +146,34 @@ def get_h_index_data(df2, api):
 	return people_data
 
 def get_relation_graph(users_df, api):
-	users_ids = users_df["user_id"]
+	users_ids = users_df["user_id"]	
 	user_ids_set = set(users_ids)
-	n_users = 2
 	errors=[""]*len(users_ids)
 	relations = []
+	final_users = []
 	for i in range(len(users_ids)):		
 		user_id = users_ids[i]		
 		print("Getting relations for user number "+str(i)+" of " + str(len(users_ids))+" user_id = "+str(user_id))
-		followers_ids = []
 		# followers extraction: caring for errors 
 		try:
 			followers_ids = get_followers_ids(user_id, user_ids_set, api)
+			# A está relacionado con el usuario B si A sigue a B
+			this_user_rels = [(x, user_id) for x in followers_ids]
+			relations.extend(this_user_rels)			
+			final_users.append(user_id)
 		except tweepy.TweepError as e:
 			print ("Failed to get followers/followed for user " + str(user_id) + " timeline")
 			print (" Exception: " + str(e))
 			print ("Skipping... ")
-			errors[i] = e
-		 # A está relacionado con el usuario B si A sigue a B
-		this_user_rels = [(x, user_id) for x in followers_ids]
-		relations.extend(this_user_rels)
-		# if i > n_users:break
+			errors[i] = str(e)
 
 	users_df["graph_errors"] = errors 
-	file_name = "tables/3_2_users_graph_errors.xlsx"
+	file_name = "tables/4_2_users_graph_errors.xlsx"
 	save_df(users_df, file_name)
 
 	# directed graph creation
 	DG = nx.DiGraph()
-	DG.add_nodes_from(users_ids)
+	DG.add_nodes_from(final_users)
 	DG.add_edges_from(set(relations))
 	
 	return users_df, DG
@@ -340,7 +339,7 @@ def get_ranked_users(people_data):
 		frequency_bar_graph(different_errors, min(10, len(different_errors)), "More frequent errors", oblue, "images/error_messages_in_h_index.png")
 
 	# only users without errors remain
-	people_data = people_data[people_data["h_index_errors"]=="0"]
+	# people_data = people_data[people_data["h_index_errors"]=="0"]
 
 	# ********************************************
 	# graph construction, just with non error users from h_index process
