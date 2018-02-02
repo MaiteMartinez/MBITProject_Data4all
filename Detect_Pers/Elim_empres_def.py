@@ -1,6 +1,9 @@
 
 # coding: utf-8
 
+# In[1]:
+
+
 import numpy as np
 import pandas as pd
 from pymongo import MongoClient
@@ -16,11 +19,17 @@ from datetime import datetime
 from datetime import date, timedelta as td
 
 
+# In[2]:
+
+
 # Acceder a las colecciones
 MONGO_HOST= 'mongodb://localhost/tweetsdb'
 client = MongoClient(MONGO_HOST)
 db = client.tweetsdb
 col = db.col_query1_spanish_stream
+
+
+# In[3]:
 
 
 # Crear un dataframe con los datos
@@ -29,10 +38,13 @@ dataframe = list(cursor1)
 df = json_normalize(dataframe)
 
 
+# In[4]:
+
+
 list(df.columns.values)
 
 
-
+# In[5]:
 
 
 # Me quedo solo con algunos campos
@@ -40,7 +52,7 @@ df1=df.drop(df.columns.difference(['_id','source','user.description','user.id','
                                    'user.url','text','user.created_at','user.statuses_count']),1)
 
 
-# In[7]:
+# In[6]:
 
 
 # Convierte texto a minúsculas, tokeniza, quita acentos y "ñ"
@@ -55,7 +67,7 @@ def remove_accents(input_str):
     return text
 
 
-# In[8]:
+# In[7]:
 
 
 # Obtener el nombre del orígen de los tweets
@@ -67,68 +79,68 @@ def get_source_name(x):
         return ""
 
 
-# In[9]:
+# In[8]:
 
 
 # Nueva columna con el nombre del orígen
 df1["Source_name"] = df1["source"].apply(get_source_name)
 
 
-# In[10]:
+# In[9]:
 
 
 # Convierto el texto del campo Source_name
 df1.loc[:, 'Source_name'] = df1['Source_name'].apply(remove_accents)
 
 
-# In[11]:
+# In[10]:
 
 
 # Convierto el texto del campo user.name 
 df1.loc[:, 'user.name'] = df1['user.name'].apply(remove_accents)
 
 
-# In[12]:
+# In[11]:
 
 
 # Convierto el texto del campo user.description 
 df1.loc[:, 'user.description'] = df1['user.description'].apply(remove_accents)
 
 
-# In[13]:
+# In[12]:
 
 
 # Elimino duplicados de usuarios (user.id) siempre y cuando tengan los campos seleccionados en subset iguales
 df1 = df1.drop_duplicates(subset=("user.id","user.description","user.name","Source_name"))
 
 
-# In[14]:
+# In[13]:
 
 
 # Lista de herramientas o dispositivos para utomatizar tareas 
 HH_device = ['ifttt','roundteam','botize',"statistics for it", "koica retweeter","tweet old post","powerapps and flow","voicestorm"]
 
 
-# In[15]:
+# In[14]:
 
 
 df1["User_type_source"] = np.where((df1['Source_name'].isin(HH_device)), 1,0)
 
 
-# In[16]:
+# In[15]:
 
 
 # Lista con nombres y apellidos de personas en español e ingles
 nombres = [line.strip() for line in open('nombres.txt', 'r')]
 
 
-# In[17]:
+# In[16]:
 
 
 pat = '|'.join([r'\b{}\b'.format(x) for x in nombres]) # patrón para chequear en el user.name las coincidencias con los nombres de personas
 
 
-# In[18]:
+# In[17]:
 
 
 # Cuenta el total de palabras coincidentes con los nombres incluidos en la lista nombres 
@@ -142,13 +154,19 @@ def word_count(text):
     return word_count
 
 
-# In[19]:
+# In[18]:
 
 
 def to_str(s):
     if s is None:
         return ''
     return str(s)
+
+
+# In[19]:
+
+
+df1['Check_bot'] = (df1['Source_name'].str.contains("bot")|df1['user.name'].str.contains("bot")).astype(int)
 
 
 # In[20]:
@@ -237,52 +255,52 @@ patron_3 = '|'.join([r'\b{}\b'.format(x) for x in no_persona])
 
 
 # Incluir una nueva columna con valor 1 si la columna user.description contiene alguna de las palabras en la lista persona
-df1["Check_descrip_1"] = (df1['user.description'].str.contains(patron_2).astype(int)|(~df1['user.description'].str.contains(patron_3))|(~df1['user.name'].str.contains(patron_3))).astype(int)
+df1["Check_descrip_1"] = (df1['user.description'].str.contains(patron_2)|(~df1['user.description'].str.contains(patron_3))|(~df1['user.name'].str.contains(patron_3))).astype(int)
 
 
-# In[31]:
+# In[32]:
 
 
 # Variable con la condicion para asignar cada tweet a una persona o a una empresa
 
-cond= (((df1["Check_descrip_1"] == 1) & (df1['Check_user name'] >= 30) & (df1['tweets/day'] <= 350 ) & (df1["User_type_source"] != 1))|(df1['Check_url'] == 1))
+cond= (( (df1["Check_descrip_1"] == 1) & (df1['Check_user name'] >= 30) & (df1['tweets/day'] <= 350 ) & (df1["User_type_source"] != 1) & (df1['Check_bot'] != 1 ) )|(df1['Check_url'] == 1))
 
 
-# In[32]:
+# In[33]:
 
 
 # Asignar a la columna es_persona 1 con la condicion anterior
 df1['Es_persona']=cond.astype(int)
 
 
-# In[33]:
+# In[34]:
 
 
 #df1[:20]
 
 
-# In[34]:
-
-
-#df1.applymap(type) # comprobar tipos
-
-
 # In[35]:
 
 
-df1['_id'] = df1['_id'].astype(str) # cambiar el tipo de la columna para poder exportar a excel
+#df1.applymap(type) # comprobar tipos
 
 
 # In[36]:
 
 
-#df1.applymap(type) # comprobar tipos
+df1['_id'] = df1['_id'].astype(str) # cambiar el tipo de la columna para poder exportar a excel
 
 
 # In[37]:
 
 
-writer = pd.ExcelWriter('/Users/Silvia/Filtro_pers_26_01.xlsx', engine='xlsxwriter')
+#df1.applymap(type) # comprobar tipos
+
+
+# In[38]:
+
+
+writer = pd.ExcelWriter('/Users/Silvia/Filtro_pers_30_01.xlsx', engine='xlsxwriter')
 df1.to_excel(writer,'Sheet1')
 writer.save()
 
