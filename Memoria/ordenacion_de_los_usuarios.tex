@@ -536,7 +536,7 @@ los usuarios por sus niveles individuales de cada uno de los índices, sino tamb
 poder construir índices personalizados, asignando pesos distintos a cada uno de los 
 índices, y luego combinándolos. Para ello, el siguiente paso, que se lleva a cabo en
 la última fase, de visualización, es la normalización también de los niveles 
-del índice $h$.
+del índice $h$. 
 
 \subsection{Propiedades del grafo}
 El grafo que hemos obtenido está formado por $154$ nodos (todos los usuarios, menos
@@ -563,4 +563,16 @@ $49$\% del total.
 
 Finalmente, el coeficiente de transitividad del grafo es $0.497$.
 
+A continuación, mostramos los histogramas con las distribuciones
+de los grados de los nodos y las longitudes de los caminos mínimos
+
+\myfigure{
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/degree_distribution.png}
+&\includegraphics[width=0.4\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/indegree_distribution.png}\\
+\includegraphics[width=0.4\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/outdegree_distribution.png}
+&\includegraphics[width=0.4\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/pathlengths_distribution.png}\\
+\end{tabular}
+\figcaption{Distribuciones de varias medidas de los nodos del grafo.}
+\label{fig:distribuciones_medidas_nodos} }
 

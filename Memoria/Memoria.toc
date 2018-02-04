@@ -60,8 +60,8 @@
 \contentsline {section}{\numberline {6.4}Resultados}{76}{section.169}
 \contentsline {subsection}{\numberline {6.4.1}Ordenaci\IeC {\'o}n de los usuarios}{76}{subsection.170}
 \contentsline {subsection}{\numberline {6.4.2}Propiedades del grafo}{77}{subsection.174}
-\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{79}{chapter.175}
-\contentsline {section}{\numberline {7.1}Herramientas}{79}{section.176}
-\contentsline {section}{\numberline {7.2}Acceso web}{79}{section.177}
-\contentsline {chapter}{\numberline {8}\'Areas de mejora}{81}{chapter.178}
-\contentsline {chapter}{Bibliograf\'\i a}{83}{chapter*.179}
+\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{79}{chapter.176}
+\contentsline {section}{\numberline {7.1}Herramientas}{79}{section.177}
+\contentsline {section}{\numberline {7.2}Acceso web}{79}{section.178}
+\contentsline {chapter}{\numberline {8}\'Areas de mejora}{81}{chapter.179}
+\contentsline {chapter}{Bibliograf\'\i a}{83}{chapter*.180}
