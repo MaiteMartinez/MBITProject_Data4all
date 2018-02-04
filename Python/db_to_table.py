@@ -24,6 +24,8 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 	host_user_bio = []
 	host_hashtags = []
 	host_url = []
+	host_user_created_at = []
+	host_user_statuses_count = []
 	# retweeted tuit fields, if any
 	retweeted_id = []
 	retweeted_text = []
@@ -34,6 +36,8 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 	retweeted_user_bio = []
 	retweeted_hashtags = []
 	retweeted_url = []
+	retweeted_user_created_at = []
+	retweeted_user_statuses_count = []
 	# quoted tuit fields, if any
 	quoted_id = []
 	quoted_text = []
@@ -44,6 +48,9 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 	quoted_user_bio = []
 	quoted_hashtags = []
 	quoted_url = []
+	quoted_user_created_at = []
+	quoted_user_statuses_count = []
+
 
 	
 	for t in tweet_cursor:		
@@ -59,7 +66,9 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 		host_user_screenname.append(t["user"]["screen_name"])
 		host_user_bio.append(t["user"]["description"])
 		host_hashtags.append([d["text"] for d in t["entities"]["hashtags"]])
-		host_url.append(t["user"]["url"])
+		host_url.append(t["user"]["url"])		
+		host_user_created_at.append(t["user"]["created_at"])
+		host_user_statuses_count.append(t["user"]["statuses_count"])
 
 		try:
 			obj = t["retweeted_status"]
@@ -75,6 +84,8 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 			retweeted_user_bio.append(obj["user"]["description"])
 			retweeted_hashtags.append([d["text"] for d in obj["entities"]["hashtags"]])
 			retweeted_url.append(obj["user"]["url"])
+			retweeted_user_created_at.append(obj["user"]["created_at"])
+			retweeted_user_statuses_count.append(obj["user"]["statuses_count"])
 		except:
 			retweeted_id.append(na_value)
 			retweeted_text.append(na_value)			
@@ -85,6 +96,8 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 			retweeted_user_bio.append(na_value)
 			retweeted_hashtags.append([])
 			retweeted_url.append(na_value)
+			retweeted_user_created_at.append(na_value)
+			retweeted_user_statuses_count.append(na_value)
 
 		try:
 			obj = t["quoted_status"]
@@ -100,6 +113,8 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 			quoted_user_bio.append(obj["user"]["description"])
 			quoted_hashtags.append([d["text"] for d in obj["entities"]["hashtags"]])
 			quoted_url.append(obj["user"]["url"])
+			quoted_user_created_at.append(obj["user"]["created_at"])
+			quoted_user_statuses_count.append(obj["user"]["statuses_count"])
 		except:
 			quoted_id.append(na_value)
 			quoted_text.append(na_value)			
@@ -109,7 +124,9 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 			quoted_user_screenname.append(na_value)
 			quoted_user_bio.append(na_value)
 			quoted_hashtags.append([])	
-			quoted_url.append(obj["user"]["url"])
+			quoted_url.append(na_value)
+			quoted_user_created_at.append(na_value)
+			quoted_user_statuses_count.append(na_value)
 
 
 		
@@ -122,6 +139,9 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 						"host_user_bio" : host_user_bio,
 						"host_hashtags" : host_hashtags,
 						"host_url" : host_url,
+						"host_user_created_at" : host_user_created_at,
+						"host_user_statuses_count" : host_user_statuses_count,
+						
 
 						"retweeted_id" : retweeted_id,
 						"retweeted_text" : retweeted_text,
@@ -132,6 +152,8 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 						"retweeted_user_bio" : retweeted_user_bio,
 						"retweeted_hashtags" : retweeted_hashtags,
 						"retweeted_url" : retweeted_url,
+						"retweeted_user_created_at" : retweeted_user_created_at,
+						"retweeted_user_statuses_count" : retweeted_user_statuses_count,
 
 						"quoted_id" : quoted_id,
 						"quoted_text" : quoted_text,
@@ -141,7 +163,10 @@ def get_relevant_tuit_fields(tweet_cursor, na_value):
 						"quoted_user_screenname" : quoted_user_screenname,
 						"quoted_user_bio" : quoted_user_bio,
 						"quoted_hashtags" : quoted_hashtags,
-						"quoted_url" : quoted_url})
+						"quoted_url" : quoted_url,
+						"quoted_user_created_at" : quoted_user_created_at,
+						"quoted_user_statuses_count" : quoted_user_statuses_count
+						})
 	return df	
 
 # *********************************************
@@ -159,6 +184,8 @@ def get_all_users_info(df, na_value = "None"):
 	user_bio = [x for x in df["host_user_bio"]]
 	hashtags = [x for x in  df["host_hashtags"]]
 	url = [x for x in  df["host_url"]]
+	user_created_at = [x for x in  df["host_user_created_at"]]
+	user_statuses_count = [x for x in  df["host_user_statuses_count"]]
 	type = ["host"] * len(hashtags)
 	print ( "host tweets", len(tweet_id) )
 
@@ -174,6 +201,8 @@ def get_all_users_info(df, na_value = "None"):
 			user_bio.append(df["retweeted_user_bio"][i])
 			hashtags.append(df["retweeted_hashtags"][i])
 			url.append(df["retweeted_url"][i])
+			user_created_at.append(df["retweeted_user_created_at"][i])
+			user_statuses_count.append(df["retweeted_user_statuses_count"][i])
 			type.append("retweeted") 
 	
 	print ( "host+retweeted tweets", len(tweet_id) )
@@ -190,6 +219,8 @@ def get_all_users_info(df, na_value = "None"):
 			user_bio.append(df["quoted_user_bio"][i])
 			hashtags.append(df["quoted_hashtags"][i])
 			url.append(df["quoted_url"][i])
+			user_created_at.append(df["quoted_user_created_at"][i])
+			user_statuses_count.append(df["quoted_user_statuses_count"][i])
 			type.append("quoted") 
 			
 	print ( "host+retweeted+quoted tweets", len(tweet_id) )
@@ -203,6 +234,8 @@ def get_all_users_info(df, na_value = "None"):
 						"user_bio" : user_bio,
 						"hashtags" : hashtags,
 						"url" : url,
+						"user_created_at" : user_created_at,
+						"user_statuses_count" : user_statuses_count,
 						"type" : type})
 						
 	return df	

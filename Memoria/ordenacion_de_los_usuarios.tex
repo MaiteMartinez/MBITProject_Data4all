@@ -23,7 +23,7 @@ de candidatos a partir de la información extraída de Twitter.
 Todos los cálculos descritos en esta parte del proyecto están en el archivo
 {\bf user\_rank.py} del repositorio de GitHub.
 
-En las siguientes seccies detallamos los algoritmos que hemos usado para cada sistema de
+En las siguientes secciones detallamos los algoritmos que hemos usado para cada sistema de
 clasificación, aportando la justificación de las diversas elecciones que 
 hemos llevado a cabo.
 
@@ -96,8 +96,14 @@ caso y permitir que la ejecución continue con el resto de usuarios:
 \figcaption{Control de errores en la descarga de timelines.}
 \label{fig:error_not_authorized} }
 
-% From 161 users timelines analized, we've found 2 errors, that represent a 1.24% of total
-% ['Not authorized.', "[{'code': 34, 'message': 'Sorry, that page does not exist.'}]"]
+Una vez obtenidos los tuits relevantes del timeline de cada usuario, y
+el número de veces que han sido retuiteados, la función que calcula el índice
+$h$ es la siguiente:
+
+\myfigure{\includegraphics[width=0.6\textwidth]{h_index_function}%
+\figcaption{Función para el cálculo del índice $h$.}
+\label{fig:h_index_function} }
+
 \section{Grafo relacional}
 \label{subsect:grafo}
 Nuestro objetivo en esta parte es explorar las relaciones entre los usuarios que 
@@ -174,7 +180,8 @@ para procesar grafos, disponible en principio para Python 2.7\footnote{\url{http
 Vistas las opciones, nos hemos decidido por usar {\tt NetworkX}.
 Esta herramienta nos va a permitir calcular varias métricas
 que usaremos para estudiar el papel de cada usuario dentro de la red
-y medir su relevancia (\cite{notas_fernando}, \url{https://www.sci.unich.it/~francesc/teaching/network/ }), y también explorar la estructura de la red, como exponemos a continuación.
+y medir su relevancia (\cite{notas_fernando}, 
+\url{https://www.sci.unich.it/~francesc/teaching/network/ }), y también explorar la estructura de la red, como exponemos a continuación.
 
 \subsection{El papel de los usuarios: medidas de centralidad}
 
@@ -185,6 +192,9 @@ de múltiples formas, y en consonancia hay diversas medidas de la misma.
 
 Una vez que hemos determinado la medida de centralidad que nos interese para los nodos,
 podremos usarla para ordenar la lista de los nodos (que es nuestro objetivo principal).
+Todas las medidas de centralidad que vamos a describir
+a continuación se pueden calcular con las funciones que proporciona el
+paquete {\tt NetworkX}.
 
 \subsubsection{Centralidad por grado}
 El grado (degree) de un nodo $n$ es el número de aristas 
@@ -402,6 +412,7 @@ relevante para la ordenación de los usuarios, pero nos permitirá hacernos
 una idea más clara de cómo se organiza. Veamos algunas de dichas características.
 
 \subsubsection{Estructura del grafo}
+\label{sect:estructura_grafo}
 \begin{itemize}
 \item Componentes conexas: una componente conexa de un grafo no dirigido es
 un conjunto de nodos maximal (que no se pueden añadir más) tal que cualquier par de nodos
@@ -471,4 +482,85 @@ Esta parte, sin embargo, requeriría un estudio muy detallado de la estructura
 de la red, que no es el objetivo principal del proyecto.
 
 \section{Almacenamiento}
+La tabla con los usuarios y sus medidas de relevancia se obtiene como un data frame
+desde el código, y para almacenarlo hemos decidido exportarlo como un fichero Excel,
+concretamente el fichero {\bf Python/tables/4\_ranked\_users.xlsx} del 
+repositorio de GitHub, para posteriormente poder importarlo desde R y ofrecer
+una buena visualización de los datos.
+
+Análogamente, hemos guardado en un fichero el grafo una vez construido
+a partir de las relaciones entre los usuarios, {\bf Python/graph/relations\_graph.gml}.
+Este fichero se puede importar también desde R y desde Gephy a efectos de visualización.
+
+\section{Resultados}
+De los $155$ usuarios que teníamos para ordenar, al intentar bajar desde Twitter los 
+datos (timeline y followers) de alguno de los usuarios, se ha producido un error.
+En uno de ellos, el texto del error \lq\lq Not authorized.\rq\rq, indica que
+es un usuario con el timeline y resto de datos protegidos.
+En otro caso, el mensaje de error al acceder a timeline,
+\lq\lq [{'code': 34, 'message': 'Sorry, that page does not exist.'}]\rq\rq,
+solo parece indicar que es un usuario
+que no existe más en Twitter. En cualquier caso, son usuarios que no van a aparecer 
+ordenados en nuestra tabla. Mejor dicho, aparecerán, pero sin un valor de ordenación (todos
+los indicadores a $0$).
+
+\subsection{Ordenación de los usuarios}
+Para ver la tabla ordenada de los usuarios, lo mejor que puede hacerse es
+usar el Shiny que hemos desarrollado y que describimos en el siguiente capítulo.
+Podemos adelatar sin embargo un análisis descriptivo de la tabla de usuarios
+(por ejemplo, importando la tabla en R):
+ 
+\myfigure{\includegraphics[width=0.8\textwidth]{results_descriptives}%
+\figcaption{Análisis descriptivo de los usuarios.}
+\label{fig:results_descriptives} }
+
+Tal vez lo más llamativo sean los valores del índice $h$. Para entenderlos un
+poco mejor, veamos el histograma:
+
+\myfigure{\includegraphics[width=0.5\textwidth]{h_index_hist}%
+\figcaption{Histograma de los valores obtenidos del índice $h$.}
+\label{fig:h_index_hist} }
+
+A la vista de este gráfico, los valores obtenidos del índice $h$ son nulos en
+la mayoría de los casos, y solo unos pocos individuos tienen unos valores 
+del índice $h$ distintos de cero. En particular, uno de ellos tiene un valor muy alto, 11.
+Es el siguiente:
+
+\myfigure{\includegraphics[width=0.3\textwidth]{highest_h_index_person}%
+\figcaption{Usuario con el índice $h$ más alto.}
+\label{fig:highest_h_index_person} }
+
+Con respecto al resto de las medidas, hemos procurado que el código nos
+devuelva valores normalizados de las centralidades. Nuestra idea es no sólo ordenar
+los usuarios por sus niveles individuales de cada uno de los índices, sino también
+poder construir índices personalizados, asignando pesos distintos a cada uno de los 
+índices, y luego combinándolos. Para ello, el siguiente paso, que se lleva a cabo en
+la última fase, de visualización, es la normalización también de los niveles 
+del índice $h$.
+
+\subsection{Propiedades del grafo}
+El grafo que hemos obtenido está formado por $154$ nodos (todos los usuarios, menos
+aquel cuyos datos están protegidos en Twitter) y $271$ arcos.
+
+El grafo no es fuertemente conexo, y tiene $91$ componentes fuertemente conexas.
+La mayor de las componentes tiene $35$ nodos, que son el $22.73$\% del total.
+Se trata de un grafo bastante desconectado. No es ninguna sorpresa, ya que 
+estamos buscando las conexiones entre los usuarios que hemos seleccionado 
+a través de las fases que hemos detallado a lo largo de esta memoria.
+
+Para la componente conexa de mayor tamaño, las medidas 
+relevantes son las siguientes (recordar que en la sección \ref{sect:estructura_grafo} hemos
+revisado su significado):   
+\begin{itemize}
+\item radio: $3$
+\item diámetro: $6$
+\item longitud media del camino más corto: $3$
+\end{itemize}
+Dado que estamos en un grafo dirigido, podemos preguntarnos por la conectividad débil
+del mismo. El grafo que hemos obtenido no es tampoco débilmente conexo, y cuenta
+con $61$ componentes débilmente conexas. La mayor de ellas agrupa a $76$ nodos, algo más del
+$49$\% del total.
+
+Finalmente, el coeficiente de transitividad del grafo es $0.497$.
+
 

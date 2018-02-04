@@ -85,14 +85,15 @@
 \@writefile{toc}{\contentsline {section}{\numberline {3.3}Lenguajes de implementaci\IeC {\'o}n}{30}{section.60}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.4}Almacenamiento y manipulaci\IeC {\'o}n de los datos}{30}{section.62}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.5}Fuentes de informaci\IeC {\'o}n}{31}{section.65}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Tratamiento inicial de los datos: an\IeC {\'a}lisis descriptivo}{33}{chapter.66}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Obtenci\IeC {\'o}n y tratamiento inicial de los datos: an\IeC {\'a}lisis descriptivo}{33}{chapter.66}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:tratamiento_inicial_de_los_datos}{{4}{33}{Tratamiento inicial de los datos: análisis descriptivo}{chapter.66}{}}
+\newlabel{chap:tratamiento_inicial_de_los_datos}{{4}{33}{Obtención y tratamiento inicial de los datos: análisis descriptivo}{chapter.66}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.1}Descripci\'on de los datos}{33}{section.67}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4.1.1}{\ignorespaces Ejemplo de tuit.}}{33}{figure.68}}
 \newlabel{fig:tuit_ejemplo}{{4.1.1}{33}{Ejemplo de tuit}{figure.68}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.2}Obtenci\'on de los datos}{36}{section.70}}
+\newlabel{sect:obtencion_datos}{{4.2}{36}{Obtenci\'on de los datos}{section.70}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.3}Almacenamiento}{37}{section.72}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.4}Revisi\IeC {\'o}n inicial de los datos}{37}{section.73}}
 \@writefile{toc}{\contentsline {subsubsection}{Tuits repetidos}{37}{section*.74}}
@@ -157,58 +158,95 @@
 \newlabel{fig:tuit_esperanto1}{{5.1.3}{53}{Tuit clasificado como esperanto}{figure.113}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5.2}Naturaleza del tuit}{53}{section.114}}
 \newlabel{sect:tuits_relevantes}{{5.2}{53}{Naturaleza del tuit}{section.114}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}Listado de usuarios \IeC {\'u}nicos}{53}{subsection.115}}
-\newlabel{subsect:duplicados1}{{5.2.1}{53}{Listado de usuarios únicos}{subsection.115}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}Construcci\IeC {\'o}n del modelo}{53}{subsection.115}}
+\citation{notas_alvaro}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.2.1}{\ignorespaces Funci\IeC {\'o}n para limpiar los tuits y entrenar el modelo de clasificaci\IeC {\'o}n.}}{54}{figure.116}}
+\newlabel{fig:clean_text_relevance_model}{{5.2.1}{54}{Función para limpiar los tuits y entrenar el modelo de clasificación}{figure.116}{}}
+\citation{notas_antonio}
+\citation{nltk_book}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.2.2}{\ignorespaces C\IeC {\'o}digo para el entrenamiento del modelo de clasificaci\IeC {\'o}n de relevancia.}}{56}{figure.119}}
+\newlabel{fig:model_training}{{5.2.2}{56}{Código para el entrenamiento del modelo de clasificación de relevancia}{figure.119}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.2.3}{\ignorespaces C\IeC {\'o}digo para usar el modelo Na\IeC {\"\i }ve Bayes de clasificaci\IeC {\'o}n de contenidos ya entrenado en {\bf  Python/relevance\_model/Clasificacion1.py}.}}{56}{figure.120}}
+\newlabel{fig:model_use}{{5.2.3}{56}{Código para usar el modelo Naïve Bayes de clasificación de contenidos ya entrenado en {\bf Python/relevance\_model/Clasificacion1.py}}{figure.120}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.2.4}{\ignorespaces C\IeC {\'o}digo para limpiar los textos y posteriormente usar el modelo Na\IeC {\"\i }ve Bayes de clasificaci\IeC {\'o}n de contenidos ya entrenado en {\bf  Python/user\_selection.py}.}}{56}{figure.121}}
+\newlabel{fig:cleaning_before_classification}{{5.2.4}{56}{Código para limpiar los textos y posteriormente usar el modelo Naïve Bayes de clasificación de contenidos ya entrenado en {\bf Python/user\_selection.py}}{figure.121}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}Listado de usuarios \IeC {\'u}nicos}{57}{subsection.122}}
+\newlabel{subsect:duplicados1}{{5.2.2}{57}{Listado de usuarios únicos}{subsection.122}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.3}Resultados de la clasificaci\IeC {\'o}n}{57}{subsection.123}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.2.5}{\ignorespaces Tuits no relevantes.}}{58}{figure.124}}
+\newlabel{fig:tuits_no_relevantes}{{5.2.5}{58}{Tuits no relevantes}{figure.124}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.2.6}{\ignorespaces Tuits relevantes.}}{58}{figure.125}}
+\newlabel{fig:tuits_relevantes}{{5.2.6}{58}{Tuits relevantes}{figure.125}{}}
 \citation{user_class}
-\@writefile{toc}{\contentsline {section}{\numberline {5.3}Tipo de usuario}{54}{section.116}}
-\newlabel{sect:tipo_de_usuario}{{5.3}{54}{Tipo de usuario}{section.116}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.3.1}{\ignorespaces Clasificaci\IeC {\'o}n por lenguaje del texto de las bios.}}{54}{figure.117}}
-\newlabel{fig:user_bios_assigned_languages}{{5.3.1}{54}{Clasificación por lenguaje del texto de las bios}{figure.117}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.3.2}{\ignorespaces Porcentaje de usuarios clasificados como personas.}}{56}{figure.118}}
-\newlabel{fig:relevant_users_proportion}{{5.3.2}{56}{Porcentaje de usuarios clasificados como personas}{figure.118}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.1}Eliminaci\IeC {\'o}n de duplicados}{57}{subsection.119}}
-\newlabel{subsect:duplicados2}{{5.3.1}{57}{Eliminación de duplicados}{subsection.119}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {6}Modelado de los datos: ordenaci\IeC {\'o}n de los usuarios}{59}{chapter.120}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}Tipo de usuario}{59}{section.126}}
+\newlabel{sect:tipo_de_usuario}{{5.3}{59}{Tipo de usuario}{section.126}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.3.1}{\ignorespaces Clasificaci\IeC {\'o}n por lenguaje del texto de las bios.}}{59}{figure.127}}
+\newlabel{fig:user_bios_assigned_languages}{{5.3.1}{59}{Clasificación por lenguaje del texto de las bios}{figure.127}{}}
+\citation{user_class4}
+\@writefile{toc}{\contentsline {subsubsection}{Tratamiento de bots}{61}{section*.128}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.1}Modelo final}{61}{subsection.131}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.2}Eliminaci\IeC {\'o}n de duplicados}{62}{subsection.132}}
+\newlabel{subsect:duplicados2}{{5.3.2}{62}{Eliminación de duplicados}{subsection.132}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.3}Resultados finales}{62}{subsection.133}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.3.2}{\ignorespaces Porcentaje de usuarios clasificados como personas.}}{63}{figure.134}}
+\newlabel{fig:relevant_users_proportion}{{5.3.2}{63}{Porcentaje de usuarios clasificados como personas}{figure.134}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.3.3}{\ignorespaces Usuarios no clasificados como persona.}}{63}{figure.135}}
+\newlabel{fig:users_not_persons}{{5.3.3}{63}{Usuarios no clasificados como persona}{figure.135}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.3.4}{\ignorespaces Usuarios clasificados como persona.}}{64}{figure.136}}
+\newlabel{fig:users_persons}{{5.3.4}{64}{Usuarios clasificados como persona}{figure.136}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}Modelado de los datos: ordenaci\IeC {\'o}n de los usuarios}{65}{chapter.137}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:ordenacion_de_usuarios}{{6}{59}{Modelado de los datos: ordenación de los usuarios}{chapter.120}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.1}\IeC {\'I}ndice h}{60}{section.122}}
-\newlabel{subsect:indice_h}{{6.1}{60}{Índice h}{section.122}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6.1.1}{\ignorespaces Control de errores en la descarga de timelines.}}{61}{figure.128}}
-\newlabel{fig:error_not_authorized}{{6.1.1}{61}{Control de errores en la descarga de timelines}{figure.128}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.2}Grafo relacional}{61}{section.129}}
-\newlabel{subsect:grafo}{{6.2}{61}{Grafo relacional}{section.129}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6.2.1}{\ignorespaces Followers y relaci\IeC {\'o}n entre usuarios.}}{62}{figure.132}}
-\newlabel{fig:followers_code}{{6.2.1}{62}{Followers y relación entre usuarios}{figure.132}{}}
+\newlabel{chap:ordenacion_de_usuarios}{{6}{65}{Modelado de los datos: ordenación de los usuarios}{chapter.137}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.1}\IeC {\'I}ndice h}{66}{section.139}}
+\newlabel{subsect:indice_h}{{6.1}{66}{Índice h}{section.139}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.1.1}{\ignorespaces Control de errores en la descarga de timelines.}}{67}{figure.145}}
+\newlabel{fig:error_not_authorized}{{6.1.1}{67}{Control de errores en la descarga de timelines}{figure.145}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.1.2}{\ignorespaces Funci\IeC {\'o}n para el c\IeC {\'a}lculo del \IeC {\'\i }ndice $h$.}}{67}{figure.146}}
+\newlabel{fig:h_index_function}{{6.1.2}{67}{Función para el cálculo del índice $h$}{figure.146}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.2}Grafo relacional}{67}{section.147}}
+\newlabel{subsect:grafo}{{6.2}{67}{Grafo relacional}{section.147}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.2.1}{\ignorespaces Followers y relaci\IeC {\'o}n entre usuarios.}}{68}{figure.150}}
+\newlabel{fig:followers_code}{{6.2.1}{68}{Followers y relación entre usuarios}{figure.150}{}}
 \citation{notas_fernando}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.1}El papel de los usuarios: medidas de centralidad}{69}{subsection.154}}
+\@writefile{toc}{\contentsline {subsubsection}{Centralidad por grado}{69}{section*.155}}
 \citation{bonacich2}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.1}El papel de los usuarios: medidas de centralidad}{63}{subsection.136}}
-\@writefile{toc}{\contentsline {subsubsection}{Centralidad por grado}{63}{section*.137}}
-\@writefile{toc}{\contentsline {subsubsection}{Centralidad por autovector (eigenvector centrality)}{63}{section*.138}}
 \citation{bonacich}
 \citation{bonacich}
+\@writefile{toc}{\contentsline {subsubsection}{Centralidad por autovector (eigenvector centrality)}{70}{section*.156}}
 \citation{bonacich}
-\@writefile{lof}{\contentsline {figure}{\numberline {6.2.2}{\ignorespaces En los grafos I y II de estos ejemplos (extra\IeC {\'\i }dos de la p\IeC {\'a}gina 192 de \cite  {bonacich}), la centralidad por autovector de todos los nodos es $0$.}}{64}{figure.139}}
-\newlabel{fig:grafos_bonacich}{{6.2.2}{64}{En los grafos I y II de estos ejemplos (extraídos de la página 192 de \cite {bonacich}), la centralidad por autovector de todos los nodos es $0$}{figure.139}{}}
 \citation{bonacich}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.2.2}{\ignorespaces En los grafos I y II de estos ejemplos (extra\IeC {\'\i }dos de la p\IeC {\'a}gina 192 de \cite  {bonacich}), la centralidad por autovector de todos los nodos es $0$.}}{71}{figure.157}}
+\newlabel{fig:grafos_bonacich}{{6.2.2}{71}{En los grafos I y II de estos ejemplos (extraídos de la página 192 de \cite {bonacich}), la centralidad por autovector de todos los nodos es $0$}{figure.157}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Centralidad de Bonacich}{71}{section*.158}}
 \citation{fdez}
-\@writefile{toc}{\contentsline {subsubsection}{Centralidad de Bonacich}{65}{section*.140}}
-\@writefile{toc}{\contentsline {subsubsection}{PageRank}{65}{section*.141}}
-\@writefile{toc}{\contentsline {subsubsection}{Cercan\IeC {\'\i }a (closedness centrality)}{65}{section*.142}}
-\@writefile{toc}{\contentsline {subsubsection}{Intermediaci\IeC {\'o}n (betweenness centrality)}{66}{section*.144}}
-\@writefile{lot}{\contentsline {table}{\numberline {6.1}{\ignorespaces Medidas de centralidad e idea de su significado.}}{67}{table.145}}
-\newlabel{tab:medidas_cent_significado}{{6.1}{67}{Medidas de centralidad e idea de su significado}{table.145}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.2}La estructura de la red}{67}{subsection.146}}
-\@writefile{toc}{\contentsline {subsubsection}{Estructura del grafo}{67}{section*.147}}
+\@writefile{toc}{\contentsline {subsubsection}{PageRank}{72}{section*.159}}
+\@writefile{toc}{\contentsline {subsubsection}{Cercan\IeC {\'\i }a (closedness centrality)}{72}{section*.160}}
+\@writefile{toc}{\contentsline {subsubsection}{Intermediaci\IeC {\'o}n (betweenness centrality)}{73}{section*.162}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.2}La estructura de la red}{73}{subsection.164}}
+\@writefile{lot}{\contentsline {table}{\numberline {6.1}{\ignorespaces Medidas de centralidad e idea de su significado.}}{74}{table.163}}
+\newlabel{tab:medidas_cent_significado}{{6.1}{74}{Medidas de centralidad e idea de su significado}{table.163}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Estructura del grafo}{74}{section*.165}}
+\newlabel{sect:estructura_grafo}{{6.2.2}{74}{Estructura del grafo}{section*.165}{}}
 \citation{notas_fernando}
-\@writefile{toc}{\contentsline {subsubsection}{Grupos de nodos}{68}{section*.149}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.3}Almacenamiento}{69}{section.150}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{71}{chapter.151}}
+\@writefile{toc}{\contentsline {subsubsection}{Grupos de nodos}{75}{section*.167}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.3}Almacenamiento}{75}{section.168}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.4}Resultados}{76}{section.169}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4.1}Ordenaci\IeC {\'o}n de los usuarios}{76}{subsection.170}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.4.1}{\ignorespaces An\IeC {\'a}lisis descriptivo de los usuarios.}}{76}{figure.171}}
+\newlabel{fig:results_descriptives}{{6.4.1}{76}{Análisis descriptivo de los usuarios}{figure.171}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.4.2}{\ignorespaces Histograma de los valores obtenidos del \IeC {\'\i }ndice $h$.}}{77}{figure.172}}
+\newlabel{fig:h_index_hist}{{6.4.2}{77}{Histograma de los valores obtenidos del índice $h$}{figure.172}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.4.3}{\ignorespaces Usuario con el \IeC {\'\i }ndice $h$ m\IeC {\'a}s alto.}}{77}{figure.173}}
+\newlabel{fig:highest_h_index_person}{{6.4.3}{77}{Usuario con el índice $h$ más alto}{figure.173}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4.2}Propiedades del grafo}{77}{subsection.174}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{79}{chapter.175}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {7.1}Herramientas}{71}{section.152}}
-\@writefile{toc}{\contentsline {section}{\numberline {7.2}Acceso web}{71}{section.153}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {8}\'Areas de mejora}{73}{chapter.154}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.1}Herramientas}{79}{section.176}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.2}Acceso web}{79}{section.177}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {8}\'Areas de mejora}{81}{chapter.178}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \bibcite{proceso_seleccion1}{1}
@@ -222,7 +260,7 @@
 \bibcite{zissman-berkling}{9}
 \bibcite{almeida_estevez_piad}{10}
 \bibcite{langid}{11}
-\@writefile{toc}{\contentsline {chapter}{Bibliograf\'\i a}{75}{chapter*.155}}
+\@writefile{toc}{\contentsline {chapter}{Bibliograf\'\i a}{83}{chapter*.179}}
 \bibcite{langid2}{12}
 \bibcite{equilid}{13}
 \bibcite{libro_rrhh}{14}
@@ -238,3 +276,5 @@
 \bibcite{kleinberg}{24}
 \bibcite{user_class}{25}
 \bibcite{fdez}{26}
+\bibcite{notas_alvaro}{27}
+\bibcite{notas_antonio}{28}

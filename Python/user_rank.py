@@ -312,7 +312,7 @@ def get_ranked_users(people_data):
 	# rate limit when getting followed/followers is easily reached
 	api = TweeterAPIConnection(keys_file_name = "keys/set_up.py").getTwitterApi(wait_on_rate_limit = True)
 
-	# people_data = get_h_index_data(people_data, api)
+	people_data = get_h_index_data(people_data, api)
 
 	file_path = "tables/4_1_h_index_ranked_users.xlsx"
 	people_data = read_df(file_path)
@@ -337,9 +337,6 @@ def get_ranked_users(people_data):
 	if len(different_errors)>0:
 		print(different_errors)
 		frequency_bar_graph(different_errors, min(10, len(different_errors)), "More frequent errors", oblue, "images/error_messages_in_h_index.png")
-
-	# only users without errors remain
-	# people_data = people_data[people_data["h_index_errors"]=="0"]
 
 	# ********************************************
 	# graph construction, just with non error users from h_index process

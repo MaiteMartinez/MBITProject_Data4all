@@ -16,7 +16,7 @@
 \contentsline {section}{\numberline {3.3}Lenguajes de implementaci\IeC {\'o}n}{30}{section.60}
 \contentsline {section}{\numberline {3.4}Almacenamiento y manipulaci\IeC {\'o}n de los datos}{30}{section.62}
 \contentsline {section}{\numberline {3.5}Fuentes de informaci\IeC {\'o}n}{31}{section.65}
-\contentsline {chapter}{\numberline {4}Tratamiento inicial de los datos: an\IeC {\'a}lisis descriptivo}{33}{chapter.66}
+\contentsline {chapter}{\numberline {4}Obtenci\IeC {\'o}n y tratamiento inicial de los datos: an\IeC {\'a}lisis descriptivo}{33}{chapter.66}
 \contentsline {section}{\numberline {4.1}Descripci\'on de los datos}{33}{section.67}
 \contentsline {section}{\numberline {4.2}Obtenci\'on de los datos}{36}{section.70}
 \contentsline {section}{\numberline {4.3}Almacenamiento}{37}{section.72}
@@ -35,25 +35,33 @@
 \contentsline {chapter}{\numberline {5}Limpieza de datos: extracci\IeC {\'o}n de usuarios relevantes}{49}{chapter.102}
 \contentsline {section}{\numberline {5.1}Detecci\IeC {\'o}n del idioma}{50}{section.109}
 \contentsline {section}{\numberline {5.2}Naturaleza del tuit}{53}{section.114}
-\contentsline {subsection}{\numberline {5.2.1}Listado de usuarios \IeC {\'u}nicos}{53}{subsection.115}
-\contentsline {section}{\numberline {5.3}Tipo de usuario}{54}{section.116}
-\contentsline {subsection}{\numberline {5.3.1}Eliminaci\IeC {\'o}n de duplicados}{57}{subsection.119}
-\contentsline {chapter}{\numberline {6}Modelado de los datos: ordenaci\IeC {\'o}n de los usuarios}{59}{chapter.120}
-\contentsline {section}{\numberline {6.1}\IeC {\'I}ndice h}{60}{section.122}
-\contentsline {section}{\numberline {6.2}Grafo relacional}{61}{section.129}
-\contentsline {subsection}{\numberline {6.2.1}El papel de los usuarios: medidas de centralidad}{63}{subsection.136}
-\contentsline {subsubsection}{Centralidad por grado}{63}{section*.137}
-\contentsline {subsubsection}{Centralidad por autovector (eigenvector centrality)}{63}{section*.138}
-\contentsline {subsubsection}{Centralidad de Bonacich}{65}{section*.140}
-\contentsline {subsubsection}{PageRank}{65}{section*.141}
-\contentsline {subsubsection}{Cercan\IeC {\'\i }a (closedness centrality)}{65}{section*.142}
-\contentsline {subsubsection}{Intermediaci\IeC {\'o}n (betweenness centrality)}{66}{section*.144}
-\contentsline {subsection}{\numberline {6.2.2}La estructura de la red}{67}{subsection.146}
-\contentsline {subsubsection}{Estructura del grafo}{67}{section*.147}
-\contentsline {subsubsection}{Grupos de nodos}{68}{section*.149}
-\contentsline {section}{\numberline {6.3}Almacenamiento}{69}{section.150}
-\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{71}{chapter.151}
-\contentsline {section}{\numberline {7.1}Herramientas}{71}{section.152}
-\contentsline {section}{\numberline {7.2}Acceso web}{71}{section.153}
-\contentsline {chapter}{\numberline {8}\'Areas de mejora}{73}{chapter.154}
-\contentsline {chapter}{Bibliograf\'\i a}{75}{chapter*.155}
+\contentsline {subsection}{\numberline {5.2.1}Construcci\IeC {\'o}n del modelo}{53}{subsection.115}
+\contentsline {subsection}{\numberline {5.2.2}Listado de usuarios \IeC {\'u}nicos}{57}{subsection.122}
+\contentsline {subsection}{\numberline {5.2.3}Resultados de la clasificaci\IeC {\'o}n}{57}{subsection.123}
+\contentsline {section}{\numberline {5.3}Tipo de usuario}{59}{section.126}
+\contentsline {subsubsection}{Tratamiento de bots}{61}{section*.128}
+\contentsline {subsection}{\numberline {5.3.1}Modelo final}{61}{subsection.131}
+\contentsline {subsection}{\numberline {5.3.2}Eliminaci\IeC {\'o}n de duplicados}{62}{subsection.132}
+\contentsline {subsection}{\numberline {5.3.3}Resultados finales}{62}{subsection.133}
+\contentsline {chapter}{\numberline {6}Modelado de los datos: ordenaci\IeC {\'o}n de los usuarios}{65}{chapter.137}
+\contentsline {section}{\numberline {6.1}\IeC {\'I}ndice h}{66}{section.139}
+\contentsline {section}{\numberline {6.2}Grafo relacional}{67}{section.147}
+\contentsline {subsection}{\numberline {6.2.1}El papel de los usuarios: medidas de centralidad}{69}{subsection.154}
+\contentsline {subsubsection}{Centralidad por grado}{69}{section*.155}
+\contentsline {subsubsection}{Centralidad por autovector (eigenvector centrality)}{70}{section*.156}
+\contentsline {subsubsection}{Centralidad de Bonacich}{71}{section*.158}
+\contentsline {subsubsection}{PageRank}{72}{section*.159}
+\contentsline {subsubsection}{Cercan\IeC {\'\i }a (closedness centrality)}{72}{section*.160}
+\contentsline {subsubsection}{Intermediaci\IeC {\'o}n (betweenness centrality)}{73}{section*.162}
+\contentsline {subsection}{\numberline {6.2.2}La estructura de la red}{73}{subsection.164}
+\contentsline {subsubsection}{Estructura del grafo}{74}{section*.165}
+\contentsline {subsubsection}{Grupos de nodos}{75}{section*.167}
+\contentsline {section}{\numberline {6.3}Almacenamiento}{75}{section.168}
+\contentsline {section}{\numberline {6.4}Resultados}{76}{section.169}
+\contentsline {subsection}{\numberline {6.4.1}Ordenaci\IeC {\'o}n de los usuarios}{76}{subsection.170}
+\contentsline {subsection}{\numberline {6.4.2}Propiedades del grafo}{77}{subsection.174}
+\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{79}{chapter.175}
+\contentsline {section}{\numberline {7.1}Herramientas}{79}{section.176}
+\contentsline {section}{\numberline {7.2}Acceso web}{79}{section.177}
+\contentsline {chapter}{\numberline {8}\'Areas de mejora}{81}{chapter.178}
+\contentsline {chapter}{Bibliograf\'\i a}{83}{chapter*.179}

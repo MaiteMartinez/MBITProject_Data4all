@@ -168,16 +168,163 @@ como en el siguiente caso clasificado en esperanto, no está muy claro por qué:
 \label{fig:tuit_esperanto1} }
 
 
-{\bf Vistos los resultados del clasificador de lenguaje, usaremos para el análisis del contenido de los tuits
-los idiomas inglés y español.}
+{\bf Vistos los resultados del clasificador de lenguaje, usaremos para el análisis del 
+contenido de los tuits los idiomas inglés y español.}
 
 \section{Naturaleza del tuit}
 \label{sect:tuits_relevantes}
-% From 24128 tweets analized, we've found 365 relevant ones, that represent a 1.51% of total
-% We had 365 relevant tweets, and from those we extract 231 relevant users whose data ['user_id', 'url', 'user_name', 'user_bio'] is not duplicated 
-% From 231 users analized, we've found 161 classified as persons, that represent a 69.7% of total
-% From 161 classified as persons, there are 161 unique user_id, that is, there were 0users with different user name, url or description in the downloaded data
 
+En esta fase del proyecto el objetivo es discernir si el contenido del texto de un tuit que hemos
+obtenido de Twitter a través de la búsqueda descrita en la sección \ref{sect:obtencion_datos},
+es efectivamente relevante para seleccionar a su autor como un posible candidato
+a la oferta de trabajo que nos ocupa.
+
+El criterio para que un tuit tenga un contenido relevante será que describa o haga referencia
+a alguna de las habilidades o conocimientos requeridos a los candidatos. Es decir, no 
+basta con que el tuit hable de Big Data o de ciencia de datos en general, o de noticias 
+relacionadas con ellos, sino tiene que mostrar algún signo de dichas habilidades y conocimientos.
+
+Para ello, hemos desarrollado un modelo {\em ad-hoc} que pasamos a describir a continuación.
+
+\subsection{Construcción del modelo}
+En este apartado hemos elegido la opción de un {\bf modelo supervisado}. La clasificación de los
+tuits mediante un modelo no supervisado (tipo \lq\lq bag of words\rq\rq, por ejemplo), 
+es una técnica que ya exploramos en la clasificación del idioma del tuit que hemos 
+tratado en la sección anterior, y en la clasificación del perfil de usuario que trataremos
+a continuación.  
+
+Para ello, obtuvimos una nueva base de datos de Twitter, con una búsqueda distinta
+a la descrita en la sección \ref{sect:obtencion_datos} pero también por palabras clave,
+a través del API Search de Twitter, y procedimos como en el caso
+de la base de datos para la extracción de candidatos, a almacenarla en local en una base de MongoDB.
+Trabajamos sobre esa base de datos para construir un data frame que contuviera los textos de los tuits,
+así como otra información relevante de los tuits (aunque luego no se usa en el modelo), y procedimos
+a etiquetar manualmente $2000$ de esos tuits. Los tuits etiquetados están almacenados en un fichero
+excel {\bf Python/relevance\_model/ds\_sample2.xlsx} de nuestro repositorio de GitHub.
+Como curiosidad, nos gustaría comentar que al bajar los tuits por palabras claves como Python o SAS, 
+obtuvimos tuits que hablaban de serpientes o de los problemas del Sistema Andaluz de Salud. 
+
+Para entrenar el modelo, intentamos eliminar el \lq\lq ruido\rq\rq de los textos 
+sobre los que se va a realizar, sometiéndolos a una limpieza en la que retiramos
+de los mismos urls, números, signos de puntuación, \lq\lq stop words\rq\rq, palabras de menos
+de dos letras y distinción entre mayúsculas y minúsculas.
+La función que lleva a cabo esta limpieza está hecha {\em ad-hoc}, y puede encontrarse en el
+archivo {\bf Python/relevance\_model/Clasification1.py} de nuestro repositorio de GitHub:
+
+\myfigure{
+\includegraphics[width=0.7\textwidth]{clean_text_relevance_model}
+\figcaption{Función para limpiar los tuits y entrenar el modelo de clasificación.}
+\label{fig:clean_text_relevance_model} 
+}
+
+Dividimos esta muestra en un $30$\% de datos de test y los restantes datos de entrenamiento,
+y con esta división procedimos a entrenar el modelo\footnote{Los métodos y algoritmos usados 
+en el entrenamiento y predicción con este modelo son
+los que nos ofrece el paquete {\tt  scikit-learn} de Python.}.
+Antes de entrenar cualquier modelo, los estimadores implementados en {\tt  scikit-learn}
+necesitan transformar las palabras en vectores de características.
+El método {\tt TfidfVectorizer} convierte una colección de textos
+a una matriz de características TF-IDF. Para ello, crea un  \lq\lq vocabulario\rq\rq 
+con las palabras que aparecen en los textos y sus características TF-IDF en forma de diccionario.
+En nuestro contexto, los niveles o características TF-IDF, son números que reflejan la 
+importancia de cada palabra, de forma proporcional a la frecuencia en la que
+aparece en el documento, pero  penalizados por la frecuencia total de ocurrencia 
+de la palabra en todo el corpus. Más concretamente, \cite{notas_alvaro}, 
+para cada palabra $t$ y cada documento $d$:
+
+$$\begin{array}{rcl}
+tf(t,d) &=& \left\{\begin{array}{ll}
+1+\log_2(frec(t,d)) &\mbox{ si }frec(t,d)>0\\
+0&\mbox{ en otro caso.}
+\end{array}\right.\\
+idf(t) &=& \log\frac{|D|}{|D_t|},
+\end{array}
+$$
+donde
+\begin{eqnarray*}
+frec(t,d) &&\mbox{ es el número de veces que aparece $t$ en $d$}\\
+D&& \mbox{ es la colección de todos los documentos }\\
+D_t&& \mbox{ es la colección de los documentos que contienen la palabra }t\\
+|A| && \mbox{ es el cardinal del conjunto }A.
+\end{eqnarray*}
+Finalmente, el TF-IDF de un par palabra-documento es
+$$tfidf(t,d)=tf(t,d)*idf(t).$$
+
+El resultado del método {\tt TfidfVectorizer}aplicado a un corpus, 
+es una matriz en la que cada documento
+del corpus es codificado como un vector cuyas entradas son los índices TF-IDF de cada
+una de las palabras de dicho documento, con respecto a ese mismo documento.
+
+Con esta manera de codificar los textos de los tuits, ya podemos entrenar un modelo 
+de clasificación. Nos hemos decidido por un modelo de tipo Naïve Bayes, que 
+invocaremos a través del modelo {\tt MultinomialNB()} de {\tt  scikit-learn}.
+
+Un modelo de clasificación de tipo Naïve Bayes, \cite{notas_antonio}, se basa en asignar
+a cada observación aquella clase o resultado de la clasificación, a la que es más probable que
+pertenezca, dados los datos que componen la observación. En concreto, nuestras observaciones
+están definidas por una serie de variables $X_1, X_2, X_3,\dots$, y queremos adivinar para cada
+observación el valor de otra variable $Y$ (discreta y finita).
+En un modelo Naïve Bayes, el valor de $Y=y_i$ 
+que asignaremos a una observación $(x_1, x_2,x_3,\dots)$ es aquel que hace máxima
+$$P(Y=y_i|X_1=x_1,X_2=x_2,X_3=x_3,\dots).$$
+Por la fórmula de Bayes,
+\begin{eqnarray*}
+\lefteqn{P(Y=y_i|X_1=x_1,X_2=x_2,X_3=x_3,\dots)}\\
+ &=& \frac{P(X_1=x_1,X_2=x_2,X_3=x_3,\dots|Y=y_i)P(Y=y_i)}
+{P(X_1=x_1,X_2=x_2,X_3=x_3,\dots)}\\
+&=&\frac{P(X_1=x_1,X_2=x_2,X_3=x_3,\dots|Y=y_i)P(Y=y_i)}
+{\sum_jP(X_1=x_1,X_2=x_2,X_3=x_3,\dots|Y=y_j)P(Y=y_j)}
+\end{eqnarray*}
+El cálculo de probabilidades condicionadas en la muestra puede ser muy costoso. El nombre 
+de Naïve en el método viene de la simplificación que el método Naïve Bayes adopta para
+llevar a cabo estos cálculos, y que consiste en suponer que 
+las variables  $X_1=x_1,X_2=x_2,X_3=x_3,\dots$
+son independientes entre sí. En ese caso, 
+$$P(X_1=x_1,X_2=x_2,X_3=x_3,\dots|Y=y_i) = \prod_i P(X_i=x_i|Y=y_i),$$
+y el cálculo se aligera notablemente. Sin embargo, esta hipótesis es generalmente la que más
+problemas nos puede dar con estos modelos, \cite{nltk_book}, debido a que es muy poco habitual
+en los problemas reales que las características sobre las que construimos el modelo sean 
+independientes.
+
+Según la documentación de {\tt  scikit-learn} sobre el modelo {\tt MultinomialNB()}\footnote{\url{http://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.MultinomialNB.html }},
+este modelo en principio debería usarse para la clasificación con características discretas
+(por ejemplo, conteo de palabras en el caso de clasificación de textos), ya que la distribución
+multinomial normalmente requiere valores discretos. Sin embargo, en la práctica, 
+conteos no enteros, como el del TF-IDF, también funcionan.
+
+
+Las siguientes líneas de código son las que hacen el trabajo de entrenamiento del modelo:
+
+\myfigure{
+\includegraphics[width=0.7\textwidth]{model_training}
+\figcaption{Código para el entrenamiento del modelo de clasificación de relevancia.}
+\label{fig:model_training} 
+}
+
+Una vez entrenado el modelo, lo queremos usar en dos fases: en esta de selección de 
+usuarios y en una posterior para la ordenación de los candidatos (ver sección 
+\ref{subsect:indice_h}). Por ello, hemos guardado el modelo para 
+exportarlo al fichero {\bf Python/relevance\_model/modelo\_clf.sav}
+y tener la ocasión posteriormente de importarlo de nuevo. El uso que
+vamos a hacer del modelo para clasificación es por ello  a través de 
+una importación:
+
+\myfigure{
+\includegraphics[width=0.7\textwidth]{model_use}
+\figcaption{Código para usar el modelo Naïve Bayes de clasificación de contenidos ya 
+entrenado en {\bf Python/relevance\_model/Clasificacion1.py}.}
+\label{fig:model_use} 
+}
+
+Previo a predecir con el modelo, los textos han de pasar por el mismo proceso de 
+limpieza que aquellos textos con los que se entrenó el modelo. Por ello, antes de llamar
+a esta función, hay que procesar los textos sobre los que vamos a aplicarlo:
+
+\myfigure{
+\includegraphics[width=0.7\textwidth]{cleaning_before_classification}
+\figcaption{Código para limpiar los textos y posteriormente usar el modelo Naïve Bayes de clasificación de contenidos ya entrenado en {\bf Python/user\_selection.py}.}
+\label{fig:cleaning_before_classification} 
+}
 
 \subsection{Listado de usuarios únicos}
 \label{subsect:duplicados1}
@@ -193,7 +340,8 @@ del siguiente tramo del proceso, la selección de aquellos usuarios que son pers
 de la lista de usuarios que podemos extraer de aquellos tuits que hemos clasificado como
 relevantes, nos vamos a quedar solo con instancias únicas de los usuarios.
 
-A lo largo de los procesos descritos en este capítulo y en el capítulo \ref{chap:ordenacion_de_usuarios},
+A lo largo de los procesos descritos en este capítulo y en el capítulo
+\ref{chap:ordenacion_de_usuarios},
 la referencia que vamos a usar para seguir a los usuarios es el número de identificación 
 de usuario de Twitter, al que nos referiremos habitualmente como id.
 Sin embargo, no es conveniente en esta etapa del proceso, quitar simplemente los id 
@@ -207,6 +355,39 @@ descripción.
 Dado que un usuario podría clasificarse de forma distinta con diferentes url, nombre de usuario y 
 descripción, en esta etapa vamos a considerar que un usuario es un usuario repetido si para dos 
 usuarios sus url, nombres de usuario, descripciones y por supuesto sus id, son iguales.
+
+\subsection{Resultados de la clasificación}
+De los $24128$ tuits analizados, hemos encontrado $365$ cuyo contenido hemos clasificado como
+relevante, lo que representa un $1.51$\% del total. De estos $365$ tuits
+cuyo contenido es relevante, podemos extraer $231$ usuarios cuyos campos
+\lq\lq user\_id\rq\rq, \lq\lq url\rq\rq, \lq\lq user\_name\rq\rq y \lq\lq user\_bio\rq\rq
+no están duplicados.
+
+Los siguientes tuits fueron clasificados como no relevantes:
+
+\myfigure{
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{text_not_relevant1}
+&\includegraphics[width=0.4\textwidth]{text_not_relevant2}\\
+\includegraphics[width=0.4\textwidth]{text_not_relevant3}
+&\includegraphics[width=0.4\textwidth]{text_not_relevant4}\\
+\end{tabular}
+\figcaption{Tuits no relevantes.}
+\label{fig:tuits_no_relevantes} 
+}
+
+Y los siguientes tuits fueron clasificados como relevantes:
+
+\myfigure{
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{relevant_text1}
+&\includegraphics[width=0.4\textwidth]{relevant_text2}\\
+\includegraphics[width=0.4\textwidth]{relevant_text3}
+&\includegraphics[width=0.4\textwidth]{relevant_text4}\\
+\end{tabular}
+\figcaption{Tuits relevantes.}
+\label{fig:tuits_relevantes} 
+}
 
 \section{Tipo de usuario}
 \label{sect:tipo_de_usuario}
@@ -236,15 +417,15 @@ de usuario los idiomas inglés y español.}
 
 Para poder hacer una ordenación de los candidatos necesitamos detectar a usuarios o personas reales 
 y descartar a empresas o tuits automatizados. Hemos investigado en la red algunas técnicas 
-para llevar a cabo esta distinción, y hemos decidido seguir la mostrada en \cite{user_class}.
+para llevar a cabo esta distinción, y hemos decidido adaptar la mostrada en \cite{user_class}.
 En este trabajo de la Universidad de Utah de 2014, proponen basarse en campos como el nombre de usuario, 
 la descripción, la url y el origen de los tweets para clasificar los tuits como publicados por personas 
 y resto. Para ello la idea es la siguiente: se considera que un tuit pertenece a una persona si 
 cumple las siguientes cuatro especificaciones:
 \begin{itemize}
-\item[{\bf E1}] En el campo nombre de usuario aparece un nombre que coincida totalmente con un nombre real 
-de persona. Para ello hemos manejado un archivo con nombres y apellidos de personas en español e inglés, 
-obtenido de estas fuentes:
+\item[{\bf E1}] En el campo nombre de usuario aparece un nombre que coincida totalmente con 
+un nombre real de persona. Para ello hemos manejado un archivo con nombres y apellidos 
+de personas en español e inglés, obtenido de estas fuentes:
 \begin{itemize}
 \item\url{ https://www.census.gov/genealogy/www/%20data/1990surnames/names_files.html }
 \item\url{
@@ -291,23 +472,41 @@ Los fallos fundamentales de usuarios reales provenían de tuits con nombres de u
 ambigüas, y fundamentalmente bots de diferentes tipos.
 \end{itemize}
 
+\subsubsection{Tratamiento de bots}
+En Internet, un \lq\lq bot\rq\rq, \lq\lq web robot\rq\rq, \lq\lq WWW robot\rq\rq o 
+\lq\lq Internet bot\rq\rq, es una aplicación que realiza de forma autómatica diversas 
+tareas en la red\footnote{\url{https://en.wikipedia.org/wiki/Internet_bot}}.
+En Twitter\footnote{\url{https://en.wikipedia.org/wiki/Twitter_bot}},
+un bot se caracteriza por ser una aplicación que controla una cuenta de Twitter a través del
+API de Twitter. Los bots de Twitter pueden realizar tareas automáticas de publicación de tuits,
+retuits, seguimiento a otros usuarios, o enviar mensajes directos a otras cuentas. La automatización
+de cuentas en Twitter se rige por una serie de reglas que distinguen entre una automatización 
+legítima (difusión de información de interés, publicación de contenidos propios, respuestas automáticas
+a usuarios, etc.) e ilegítima (violación de los límites de uso del API de Twitter, de la privacidad 
+de otros usuarios, envío de publicidad no deseada, etc.).
+
+De cara a nuestro proyecto, es importante detectar aquellos usuarios que son bots, porque
+estos usuarios no deberían aparecer en nuestra lista de posibles candidatos a una oferta 
+laboral. El problema de detección de bots en Twitter ha sido un problema muy estudiado
+a lo largo de los últimos años (ver por ejemplo \cite{user_class4}).
+
+
+\subsection{Modelo final}
+
 En vista de todas estas observaciones, el algoritmo que hemos usado toma la siguiente forma:
-un tuit se considera de una persona cuando en su campo nombre de usuario existe un $33$\% o más 
-de coincidencia con la lista de nombres y apellidos, y además tanto en su campo nombre de usuario 
-o descripción no aparecen términos relacionados con empresa, o bien cuando su url es una 
-url de LinkedIn o de un blog.
-
-Aplicando esta metodología a la lista de usuarios únicos obtenidos tras la aplicación
-de los algoritmos descritos en la sección \ref{sect:tuits_relevantes}, 
-hemos obtenido los siguientes datos: de los tantos:cambiar usuarios únicos, 
-hay tantos:cambiar que han sido clasificados como persona. De éstos, había tantos:cambiar
-cuya id es única (es decir, había tantos:cambiar cuyo nombre de usuario, url o descripción ha cambiado
-en los tuits descargados). Los resultados relativos están consignados en la siguiente gráfica:
-
-\myfigure{
-\includegraphics[width=0.6\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/relevant_users_proportion.png}
-\figcaption{Porcentaje de usuarios clasificados como personas.}
-\label{fig:relevant_users_proportion} }
+un tuit se considera de una persona cuando 
+\begin{itemize}
+\item en su campo nombre de usuario existe un $33$\% o más 
+de coincidencia con la lista de nombres y apellidos, 
+\item {\bf y} si en su descripción de usuario aparece algún término que
+identificamos como de persona, o si no aparecen términos 
+relacionados con empresa ni en la descripción del usuario ni en el nombre de usuario.
+\item {\bf y} la frecuencia de publicación de tuits es inferior a $350$
+\item {\bf y} el origen de tuit no es una de las que identificamos como automáticas
+\item {\bf y} la palabra \lq\lq bot\rq\rq no aparece ni en el nombre del usuario ni
+en el nombre del origen del tuit,
+\item {\bf o bien}  cuando su url es una url de LinkedIn o de un blog.
+\end{itemize}
 
 El código para llevar a cabo esta limpieza estaría preparado para escalar
 el modelo a otros casos de uso. Por ejemplo:
@@ -324,6 +523,8 @@ relacionados con el perfil requerido en la oferta laboral y mejorar la clasifica
 o bots) se podría utilizar sin ningún cambio. En el caso en el que los tuits sean en otros idiomas diferentes 
 al inglés o al español se podría incluir fácilmente la versión en los idiomas necesarios de las palabras 
 consideradas.
+\item La lista de aplicaciones identificadas como productoras de tuits automatizados también
+está consignada en un fichero fácilmente modificable.
 \end{itemize}
 
 \subsection{Eliminación de duplicados}
@@ -335,3 +536,53 @@ de la lista aquellos usuarios que no han sido clasificados como persona. A conti
 extraer las personas únicas que hemos detectado: del listado extraído del paso anterior, 
 sección \ref{subsect:duplicados1}, podría ocurrir que un usuario  fuera clasificado como persona con un
 conjunto de url, nombre de usuario y descripción, pero no lo fuera con otro. En esta fase, por tanto, nos limitaremos a eliminar del listado de los clasificados como personas aquellos usuarios con un id repetido.
+
+\subsection{Resultados finales}
+Aplicando esta metodología a la lista de usuarios únicos obtenidos tras la aplicación
+de los algoritmos descritos en la sección \ref{sect:tuits_relevantes}, 
+hemos obtenido los siguientes datos: de $231$ usuarios únicos analizados, 
+hemos encontrado $155$ que clasificamos como 
+personas, lo que representa un $67.1$\%  del total, y de éstos
+no había ninguno cuyo \lq\lq user\_id\rq\rq estuviera duplicado. Los resultados relativos están consignados en la siguiente gráfica:
+
+\myfigure{
+\includegraphics[width=0.6\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/relevant_users_proportion.png}
+\figcaption{Porcentaje de usuarios clasificados como personas.}
+\label{fig:relevant_users_proportion} }
+
+
+Los siguientes usuarios fueron clasificados como no personas:
+
+
+\myfigure{
+\begin{tabular}{ccc}
+\includegraphics[width=0.2\textwidth]{not_person1}
+&\includegraphics[width=0.2\textwidth]{not_person2}
+&\includegraphics[width=0.2\textwidth]{not_person7}\\
+\includegraphics[width=0.2\textwidth]{not_person4}
+&\includegraphics[width=0.2\textwidth]{not_person8}
+&\includegraphics[width=0.2\textwidth]{not_person6}\\
+\includegraphics[width=0.2\textwidth]{not_person3}
+&\includegraphics[width=0.2\textwidth]{not_person5}
+&\includegraphics[width=0.2\textwidth]{not_person9}
+\end{tabular}
+\figcaption{Usuarios no clasificados como persona.}
+\label{fig:users_not_persons} 
+}
+
+
+Y los siguientes son algunos de los que se clasificaron como persona:
+
+
+\myfigure{
+\begin{tabular}{cccc}
+\includegraphics[width=0.2\textwidth]{person1}
+&\includegraphics[width=0.2\textwidth]{person4}
+&\includegraphics[width=0.2\textwidth]{person3}
+&\includegraphics[width=0.2\textwidth]{person2}
+\end{tabular}
+\figcaption{Usuarios clasificados como persona.}
+\label{fig:users_persons} 
+}
+
+En el siguiente capítulo explicamos cómo ordenamos estos $155$ usuarios.

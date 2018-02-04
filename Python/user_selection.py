@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 from utilities.functions import *
 from relevance_model.Clasificacion1 import *
 from relevance_model.Clasificacion1 import remove_stopwords as class_model_remove_stopwords
+from datetime import datetime
 
 # *********************************************
 # Language detection with stop words
@@ -119,6 +120,27 @@ def to_str(s):
     if s is None:
         return ''
     return str(s)	
+
+# Source name of tweets
+def get_source_name(x):
+    value = re.findall(pattern="<[^>]+>([^<]+)</a>", string=x)
+    if len(value) > 0:
+        return value[0]
+    else:
+        return ""
+
+#remove milliseconds
+remove_ms = lambda x:re.sub("\+\d+\s","" , x)
+
+#make string into a dataframe
+mk_df = lambda x:datetime.strptime(remove_ms(x), "%a %b %d %H:%M:%S %Y")
+
+# Format datetime object
+my_form = lambda x:"{:%Y-%m-%d}".format(mk_df(x))
+
+
+
+
 # *********************************************
 # User selection
 # *********************************************
@@ -188,13 +210,45 @@ def get_if_person(df):
 	df["check_url"] = df['url'].str.contains(patron_4).astype(int)
 
 	# *****************************************************
+	# Fourth criteria: to be a bot, the word bot should apear in the user name or in the source name,
+	#                  and the tweet frequency should be high
+	# *****************************************************		
+	# New column with source name
+	df["source_name"] = df["source"].apply(get_source_name)
+	# Clean source name
+	df.loc[:, 'source_name'] = df['source_name'].apply(remove_accents)
+	# Devices producing automatic tweets
+	HH_device = [line.strip() for line in open('utilities/devices.txt', 'r')]
+	# Check if the source of the tweet is in an automatic device or not
+	df["user_type_source"] = np.where((df['source_name'].isin(HH_device)), 1,0)
+	# check if the word bot appears in the name or in the source
+	df['check_bot'] = (df['source_name'].str.contains("bot")|df['user_name'].str.contains("bot")).astype(int)
+	# Obtain the days of life of the account, to get tweet frequency
+	df["user_created_at"] = df["user_created_at"].apply(my_form)
+	df["user_created_at"]= pd.to_datetime(df["user_created_at"])
+	df['user_days'] =  pd.datetime.now().date()-df["user_created_at"] 
+	df['user_days']= df['user_days'].dt.days
+	# Publishing frequency
+	df['tweets_per_day'] = round(df["user_statuses_count"].apply(float)/df['user_days'].apply(float),2)
+
+
+	# *****************************************************
 	# Final distinction
 	# *****************************************************
 	# To be identified as a person, we need
 	#  a 1 in the second criteria and more than a 30% of words in user name that are names
+	# and number of tweets per day smaller than 350
+	# and that the source of the tweet is not one of the automatized ones
+	# and that the word bot does not appear either in the user  name nor in the source of the tweet
 	# or that the url is a blog or a profile in linkedin
-	df['is_person'] = ( ((df["check_descrip_1"] == 1) & (df["check_user_name"] >= 30))
-						|(df['check_url'] == 1) ).astype(int)
+	df['is_person'] = ( (	(df["check_descrip_1"] == 1) 
+							& (df["check_user_name"] >= 30)
+							& (df['tweets_per_day'] <= 350) 
+							& (df["user_type_source"] != 1) 
+							& (df['check_bot'] != 1 )
+						)
+						|(df['check_url'] == 1) 
+					  ).astype(int)
 
 	return df
 
