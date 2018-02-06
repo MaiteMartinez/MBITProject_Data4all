@@ -240,7 +240,7 @@ server<-function(input,output,session) {
                                         la transmision de la informacion y aumentara la desconexion de la red.">Betweenness</span>'),
                                    HTML('<span title ="PonderaciÃ³n de todos los Ã­ndices">Resultado</span>')
                                    ),
-                      options = list(searching = FALSE,
+                      options = list(searching = TRUE,
                                      initComplete = JS(
                                        "function(settings, json) {",
                                        "$(this.api().table().header()).css({'background-color': '	#575757', 'color': '#fff'});",
