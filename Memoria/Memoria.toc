@@ -7,61 +7,64 @@
 \contentsline {section}{\numberline {1.4}Hip\'otesis y limitaciones}{15}{section.28}
 \contentsline {subsection}{\numberline {1.4.1}La Ley Org\IeC {\'a}nica 15/1999, de 13 de diciembre, de Protecci\IeC {\'o}n de Datos de Car\IeC {\'a}cter Personal}{16}{subsection.34}
 \contentsline {section}{\numberline {1.5}Esquema de desarrollo del proyecto}{20}{section.38}
-\contentsline {chapter}{\numberline {2}Planificaci\IeC {\'o}n del proyecto}{23}{chapter.43}
-\contentsline {section}{\numberline {2.1}Equipo}{23}{section.44}
-\contentsline {section}{\numberline {2.2}Desarrollo temporal}{23}{section.45}
-\contentsline {chapter}{\numberline {3}Infraestructura}{27}{chapter.47}
-\contentsline {section}{\numberline {3.1}Repositorio GIT}{27}{section.48}
-\contentsline {section}{\numberline {3.2}Infraestructura para la obtenci\IeC {\'o}n de datos}{27}{section.50}
-\contentsline {section}{\numberline {3.3}Lenguajes de implementaci\IeC {\'o}n}{30}{section.60}
-\contentsline {section}{\numberline {3.4}Almacenamiento y manipulaci\IeC {\'o}n de los datos}{30}{section.62}
-\contentsline {section}{\numberline {3.5}Fuentes de informaci\IeC {\'o}n}{31}{section.65}
-\contentsline {chapter}{\numberline {4}Obtenci\IeC {\'o}n y tratamiento inicial de los datos: an\IeC {\'a}lisis descriptivo}{33}{chapter.66}
-\contentsline {section}{\numberline {4.1}Descripci\'on de los datos}{33}{section.67}
-\contentsline {section}{\numberline {4.2}Obtenci\'on de los datos}{36}{section.70}
-\contentsline {section}{\numberline {4.3}Almacenamiento}{37}{section.72}
-\contentsline {section}{\numberline {4.4}Revisi\IeC {\'o}n inicial de los datos}{37}{section.73}
-\contentsline {subsubsection}{Tuits repetidos}{37}{section*.74}
-\contentsline {subsubsection}{El texto de los tuits}{37}{section*.75}
-\contentsline {subsubsection}{Tuits originales frente a tuits retuiteados}{38}{section*.77}
-\contentsline {subsubsection}{N\IeC {\'u}mero de retuits por tuit}{39}{section*.79}
-\contentsline {subsubsection}{Tuits descargados a lo largo del tiempo}{40}{section*.82}
-\contentsline {subsubsection}{Relaci\IeC {\'o}n entre n\IeC {\'u}mero de tuits descargados y n\IeC {\'u}mero de usuarios distintos}{41}{section*.84}
-\contentsline {subsubsection}{N\IeC {\'u}mero de tuits por usuario}{41}{section*.86}
-\contentsline {subsubsection}{Localizaci\IeC {\'o}n de los tuits}{43}{section*.89}
-\contentsline {subsubsection}{Hashtags: distribuci\IeC {\'o}n}{43}{section*.92}
-\contentsline {subsubsection}{Perfiles de los usuarios}{45}{section*.95}
-\contentsline {subsubsection}{Origen de los tuits}{46}{section*.98}
-\contentsline {chapter}{\numberline {5}Limpieza de datos: extracci\IeC {\'o}n de usuarios relevantes}{49}{chapter.102}
-\contentsline {section}{\numberline {5.1}Detecci\IeC {\'o}n del idioma}{50}{section.109}
-\contentsline {section}{\numberline {5.2}Naturaleza del tuit}{53}{section.114}
-\contentsline {subsection}{\numberline {5.2.1}Construcci\IeC {\'o}n del modelo}{53}{subsection.115}
-\contentsline {subsection}{\numberline {5.2.2}Listado de usuarios \IeC {\'u}nicos}{57}{subsection.122}
-\contentsline {subsection}{\numberline {5.2.3}Resultados de la clasificaci\IeC {\'o}n}{57}{subsection.123}
-\contentsline {section}{\numberline {5.3}Tipo de usuario}{59}{section.126}
-\contentsline {subsubsection}{Tratamiento de bots}{61}{section*.128}
-\contentsline {subsection}{\numberline {5.3.1}Modelo final}{61}{subsection.131}
-\contentsline {subsection}{\numberline {5.3.2}Eliminaci\IeC {\'o}n de duplicados}{62}{subsection.132}
-\contentsline {subsection}{\numberline {5.3.3}Resultados finales}{62}{subsection.133}
-\contentsline {chapter}{\numberline {6}Modelado de los datos: ordenaci\IeC {\'o}n de los usuarios}{65}{chapter.137}
-\contentsline {section}{\numberline {6.1}\IeC {\'I}ndice h}{66}{section.139}
-\contentsline {section}{\numberline {6.2}Grafo relacional}{67}{section.147}
-\contentsline {subsection}{\numberline {6.2.1}El papel de los usuarios: medidas de centralidad}{69}{subsection.154}
-\contentsline {subsubsection}{Centralidad por grado}{69}{section*.155}
-\contentsline {subsubsection}{Centralidad por autovector (eigenvector centrality)}{70}{section*.156}
-\contentsline {subsubsection}{Centralidad de Bonacich}{71}{section*.158}
-\contentsline {subsubsection}{PageRank}{72}{section*.159}
-\contentsline {subsubsection}{Cercan\IeC {\'\i }a (closedness centrality)}{72}{section*.160}
-\contentsline {subsubsection}{Intermediaci\IeC {\'o}n (betweenness centrality)}{73}{section*.162}
-\contentsline {subsection}{\numberline {6.2.2}La estructura de la red}{73}{subsection.164}
-\contentsline {subsubsection}{Estructura del grafo}{74}{section*.165}
-\contentsline {subsubsection}{Grupos de nodos}{75}{section*.167}
-\contentsline {section}{\numberline {6.3}Almacenamiento}{75}{section.168}
-\contentsline {section}{\numberline {6.4}Resultados}{76}{section.169}
-\contentsline {subsection}{\numberline {6.4.1}Ordenaci\IeC {\'o}n de los usuarios}{76}{subsection.170}
-\contentsline {subsection}{\numberline {6.4.2}Propiedades del grafo}{77}{subsection.174}
-\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{79}{chapter.176}
-\contentsline {section}{\numberline {7.1}Herramientas}{79}{section.177}
-\contentsline {section}{\numberline {7.2}Acceso web}{79}{section.178}
-\contentsline {chapter}{\numberline {8}\'Areas de mejora}{81}{chapter.179}
-\contentsline {chapter}{Bibliograf\'\i a}{83}{chapter*.180}
+\contentsline {chapter}{\numberline {2}Planificaci\IeC {\'o}n del proyecto}{23}{chapter.44}
+\contentsline {section}{\numberline {2.1}Equipo}{23}{section.45}
+\contentsline {section}{\numberline {2.2}Desarrollo temporal}{23}{section.46}
+\contentsline {chapter}{\numberline {3}Infraestructura}{27}{chapter.48}
+\contentsline {section}{\numberline {3.1}Repositorio GIT}{27}{section.49}
+\contentsline {section}{\numberline {3.2}Infraestructura para la obtenci\IeC {\'o}n de datos}{27}{section.51}
+\contentsline {section}{\numberline {3.3}Lenguajes de implementaci\IeC {\'o}n}{30}{section.61}
+\contentsline {section}{\numberline {3.4}Almacenamiento y manipulaci\IeC {\'o}n de los datos}{30}{section.63}
+\contentsline {section}{\numberline {3.5}Fuentes de informaci\IeC {\'o}n}{31}{section.66}
+\contentsline {chapter}{\numberline {4}Obtenci\IeC {\'o}n y tratamiento inicial de los datos: an\IeC {\'a}lisis descriptivo}{33}{chapter.67}
+\contentsline {section}{\numberline {4.1}Descripci\'on de los datos}{33}{section.68}
+\contentsline {section}{\numberline {4.2}Obtenci\'on de los datos}{36}{section.71}
+\contentsline {section}{\numberline {4.3}Almacenamiento}{37}{section.73}
+\contentsline {section}{\numberline {4.4}Revisi\IeC {\'o}n inicial de los datos}{37}{section.74}
+\contentsline {subsubsection}{Tuits repetidos}{37}{section*.75}
+\contentsline {subsubsection}{El texto de los tuits}{37}{section*.76}
+\contentsline {subsubsection}{Tuits originales frente a tuits retuiteados}{38}{section*.78}
+\contentsline {subsubsection}{N\IeC {\'u}mero de retuits por tuit}{39}{section*.80}
+\contentsline {subsubsection}{Tuits descargados a lo largo del tiempo}{40}{section*.83}
+\contentsline {subsubsection}{Relaci\IeC {\'o}n entre n\IeC {\'u}mero de tuits descargados y n\IeC {\'u}mero de usuarios distintos}{41}{section*.85}
+\contentsline {subsubsection}{N\IeC {\'u}mero de tuits por usuario}{41}{section*.87}
+\contentsline {subsubsection}{Localizaci\IeC {\'o}n de los tuits}{43}{section*.90}
+\contentsline {subsubsection}{Hashtags: distribuci\IeC {\'o}n}{43}{section*.93}
+\contentsline {subsubsection}{Perfiles de los usuarios}{45}{section*.96}
+\contentsline {subsubsection}{Origen de los tuits}{46}{section*.99}
+\contentsline {chapter}{\numberline {5}Limpieza de datos: extracci\IeC {\'o}n de usuarios relevantes}{49}{chapter.103}
+\contentsline {section}{\numberline {5.1}Detecci\IeC {\'o}n del idioma}{50}{section.110}
+\contentsline {section}{\numberline {5.2}Naturaleza del tuit}{53}{section.115}
+\contentsline {subsection}{\numberline {5.2.1}Construcci\IeC {\'o}n del modelo}{53}{subsection.116}
+\contentsline {subsection}{\numberline {5.2.2}Listado de usuarios \IeC {\'u}nicos}{57}{subsection.123}
+\contentsline {subsection}{\numberline {5.2.3}Resultados de la clasificaci\IeC {\'o}n}{57}{subsection.124}
+\contentsline {section}{\numberline {5.3}Tipo de usuario}{59}{section.127}
+\contentsline {subsection}{\numberline {5.3.1}Revisi\IeC {\'o}n de la literatura}{59}{subsection.129}
+\contentsline {subsubsection}{Clasificaci\IeC {\'o}n entre persona y empresa}{60}{section*.132}
+\contentsline {subsubsection}{Detecci\IeC {\'o}n de bots}{61}{section*.133}
+\contentsline {subsection}{\numberline {5.3.2}An\IeC {\'a}lisis de los datos para la construcci\IeC {\'o}n del modelo}{61}{subsection.135}
+\contentsline {subsection}{\numberline {5.3.3}Modelo final}{65}{subsection.144}
+\contentsline {subsection}{\numberline {5.3.4}Eliminaci\IeC {\'o}n de duplicados}{66}{subsection.145}
+\contentsline {subsection}{\numberline {5.3.5}Resultados de la selecci\IeC {\'o}n}{66}{subsection.146}
+\contentsline {chapter}{\numberline {6}Modelado de los datos: ordenaci\IeC {\'o}n de los usuarios}{69}{chapter.150}
+\contentsline {section}{\numberline {6.1}\IeC {\'I}ndice h}{70}{section.152}
+\contentsline {section}{\numberline {6.2}Grafo relacional}{71}{section.160}
+\contentsline {subsection}{\numberline {6.2.1}El papel de los usuarios: medidas de centralidad}{73}{subsection.167}
+\contentsline {subsubsection}{Centralidad por grado}{73}{section*.168}
+\contentsline {subsubsection}{Centralidad por autovector (eigenvector centrality)}{74}{section*.169}
+\contentsline {subsubsection}{Centralidad de Bonacich}{75}{section*.171}
+\contentsline {subsubsection}{PageRank}{76}{section*.172}
+\contentsline {subsubsection}{Cercan\IeC {\'\i }a (closedness centrality)}{76}{section*.173}
+\contentsline {subsubsection}{Intermediaci\IeC {\'o}n (betweenness centrality)}{77}{section*.175}
+\contentsline {subsection}{\numberline {6.2.2}La estructura de la red}{77}{subsection.177}
+\contentsline {subsubsection}{Estructura del grafo}{78}{section*.178}
+\contentsline {subsubsection}{Grupos de nodos}{79}{section*.180}
+\contentsline {section}{\numberline {6.3}Almacenamiento}{79}{section.181}
+\contentsline {section}{\numberline {6.4}Resultados}{80}{section.182}
+\contentsline {subsection}{\numberline {6.4.1}Ordenaci\IeC {\'o}n de los usuarios}{80}{subsection.183}
+\contentsline {subsection}{\numberline {6.4.2}Propiedades del grafo}{81}{subsection.187}
+\contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{83}{chapter.189}
+\contentsline {section}{\numberline {7.1}Herramientas}{83}{section.190}
+\contentsline {section}{\numberline {7.2}Descripci\IeC {\'o}n de la interfaz}{83}{section.191}
+\contentsline {chapter}{\numberline {8}\'Areas de mejora}{85}{chapter.193}
+\contentsline {chapter}{Bibliograf\'\i a}{87}{chapter*.194}

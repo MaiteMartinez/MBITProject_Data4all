@@ -1,3 +1,66 @@
 \chapter{Visualizaci\'on de los resultados}
+\label{chap:visualizacion}
 \section{Herramientas}
-\section{Acceso web}
+Para visualizar la tabla de los usuarios ordenados a través de su índice $h$ y de sus centralidades
+hemos recurrido al paquete Shiny de R. El código con el desarrollo de esta visualización
+está en la carpeta {\bf Visualizacion/Shiny} de nuestro repositorio de GitHub.
+
+\section{Descripción de la interfaz}
+Hemos considerado que los resultados mostrados al cliente serán los siguientes:
+\begin{itemize}
+\item Por un lado el grafo de los usuarios seleccionados, donde pinchando en cada nodo (usuario) 
+muestra la información del mismo.
+\item Por otro, una tabla donde cada usuario puede ser ordenado por los criterios más relevantes 
+como son el índice $h$ y los diferentes tipos de centralidades. Además de ese orden sencillo 
+hemos incluido una columna \lq\lq resultado\rq\rq donde ponderamos el resultado en función de los 
+distintos índices que el cliente escoja como más relevantes para la selección adecuada del 
+candidato. Para poder calcularlo adecuadamente hemos normalizado los datos ya que las escalas 
+entre el índice $h$ y las centralidades era muy distintos. Hemos incluido también varios 
+avisos para avisar al usuario en el caso de que los datos introducidos no sean correctos. 
+\end{itemize}
+
+
+Las definiciones de los diferentes índices se pueden obtener pasando el ratón por encima 
+de los títulos de la tabla para que el cliente pueda tener a mano su significado sin necesidad 
+de ir a otro sitio.
+
+
+La información relativa a los usuarios siempre se da en relación a su \lq\lq user.id\rq\rq. 
+En ningún caso proporcionamos nombres ni información obtenida personal directamente del análisis. 
+En caso de querer contactar con ese usuario se tendría que hacer a través del propio Twitter y 
+una vez obtenido el consentimiento del usuario a través de cualquier otra vía disponible 
+(LinkedIn, blog, e-mail...)\footnote{Esta decisión la explicamos con detalle en la página 
+\pageref{note:why_only_user_id}}. 
+
+
+Del grafo cabe destacar los siguientes comentarios:
+\begin{itemize}
+\item Pocos nodos ($8$\%) tienen un índice $h$ igual o por encima de $1$. Teniendo en cuenta 
+la definición del índice $h$ (sección \ref{subsect:indice_h}), eso significa que muchos de los 
+usuarios seleccionados no tienen retuits de sus publicaciones.
+
+\item El único usuario con un índice $h$ notable (11) tiene un in-degree de $0.039$ (no demasiado alto). 
+Es decir, que este usuario no es de los que más seguidores tiene entre los usuarios destacados. Sin
+embargo de sus publicaciones sobre el tema de referencia, 11 de ellas han sido retuiteadas al menos
+11 veces. Además, mirando su intermediación (betweenness) tampoco es de las más altas, con lo que 
+no conecta muchos de los otros usuarios entre sí. Este usuario, cuya relevancia es notable en la comunidad
+general (más allá de la incluida en nuestra muestra), se captó a través de otro el cual le citaba en 
+sus tuits. 
+
+
+\item El usuario con mayor in-degree (mayor número de seguidores de entre los seleccionados) coincide 
+con el de mayor out-degree (mayor número de amigos de entre los seleccionados). Se trata de la 
+directora de una empresa del sector. 
+
+\item El usuario con más intermediación (influencia para compartir información entre el resto de usuarios) se trata de un profesional del marketing y BI que dispone de su propio blog.
+
+
+\item Varios de los usuarios con índice $h$= 1 y uno con índice $h$=2 estás \lq\lq desconectados\rq\rq de la red o casi \lq\lq desconectados\rq\rq. Esto puede ser porque el tiempo en el que duró la descarga de datos de twitter no captó al resto de sus contactos.
+
+
+\item Por último mencionar que los valores tanto de \lq\lq pagerank\rq\rq como de
+\lq\lq katz\_bonacich\rq\rq nunca serán igual a cero, aunque el in-degree y el out-degree del nodo 
+sean cero, ya que asignan una centralidad mínima.
+\end{itemize}
+
+Para una aplicación de extensa de usuarios y relaciones, el grafo solo se mostrará para una cantidad de usuarios que aporten mayor relevancia en cualquiera de los índices.

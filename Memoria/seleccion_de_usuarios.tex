@@ -200,7 +200,7 @@ de la base de datos para la extracción de candidatos, a almacenarla en local en
 Trabajamos sobre esa base de datos para construir un data frame que contuviera los textos de los tuits,
 así como otra información relevante de los tuits (aunque luego no se usa en el modelo), y procedimos
 a etiquetar manualmente $2000$ de esos tuits. Los tuits etiquetados están almacenados en un fichero
-excel {\bf Python/relevance\_model/ds\_sample2.xlsx} de nuestro repositorio de GitHub.
+Excel {\bf Python/relevance\_model/ds\_sample2.xlsx} de nuestro repositorio de GitHub.
 Como curiosidad, nos gustaría comentar que al bajar los tuits por palabras claves como Python o SAS, 
 obtuvimos tuits que hablaban de serpientes o de los problemas del Sistema Andaluz de Salud. 
 
@@ -391,6 +391,7 @@ Y los siguientes tuits fueron clasificados como relevantes:
 
 \section{Tipo de usuario}
 \label{sect:tipo_de_usuario}
+
 Para clasificar al usuario respecto a su entidad, y por ejemplo distinguir entre personas, bots y empresas, 
 una de las partes del tuit que más información contiene, a partir de los datos conseguidos, es
 la descripción que los propios usuarios aportan. Antes de cualquier labor de análisis de esos textos,
@@ -415,68 +416,30 @@ los perfiles de los usuarios han quedado clasificados en $44$ idiomas diferentes
 {\bf De nuevo, vistos los resultados del clasificador de lenguaje, usaremos para el análisis del tipo 
 de usuario los idiomas inglés y español.}
 
-Para poder hacer una ordenación de los candidatos necesitamos detectar a usuarios o personas reales 
-y descartar a empresas o tuits automatizados. Hemos investigado en la red algunas técnicas 
-para llevar a cabo esta distinción, y hemos decidido adaptar la mostrada en \cite{user_class}.
-En este trabajo de la Universidad de Utah de 2014, proponen basarse en campos como el nombre de usuario, 
-la descripción, la url y el origen de los tweets para clasificar los tuits como publicados por personas 
-y resto. Para ello la idea es la siguiente: se considera que un tuit pertenece a una persona si 
-cumple las siguientes cuatro especificaciones:
-\begin{itemize}
-\item[{\bf E1}] En el campo nombre de usuario aparece un nombre que coincida totalmente con 
-un nombre real de persona. Para ello hemos manejado un archivo con nombres y apellidos 
-de personas en español e inglés, obtenido de estas fuentes:
-\begin{itemize}
-\item\url{ https://www.census.gov/genealogy/www/%20data/1990surnames/names_files.html }
-\item\url{
-http://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736177009&menu=resultados&idp=1254734710990 }
-\item\url{http://www.buscanombres.com/nombres-gallegos.htm }
-\item\url{https://script.byu.edu/Pages/Spanish/es/surnames.aspx }
-\end{itemize}
-Para el caso de los nombres españoles se han incluido también los específicos para regiones como Cataluña, Comunidad Valenciana y Galicia.
-\item[{\bf E2}]El texto en el campo descripción cumple las siguientes dos condiciones:
-\begin{itemize}
-\item aparecen palabras como \lq\lq emprendedor\rq\rq, \lq\lq persona\rq\rq, 
-\lq\lq profesional\rq\rq o \lq\lq consultor\rq\rq. Se evitó poner las palabras \lq\lq I am\rq\rq o 
-\lq\lq soy\rq\rq porque en el caso de algunos bots, en este campo aparecen textos
-similares a \lq\lq I am a bot\rq\rq. 
-\item En el campo descripción y el el campo nombre, no aparecen palabras relativas a empresas como 
-\lq\lq negocio\rq\rq, \lq\lq empresa\rq\rq, \lq\lq compañía\rq\rq,\lq\lq somos\rq\rq, \lq\lq we\rq\rq\dots.
-En este último caso también se creo un fichero con todas estas palabras relacionadas con empresas, 
-en inglés y en español. Se evitaron palabras como \lq\lq business\rq\rq por riesgo a que algunos pudieran 
-publicar comentarios del área de {\em business intelligence}.
-\end{itemize}
-\item[{\bf E3}] Si el campo de url estaba vacío, asignar la categoría de persona y no de empresa (o bot).
-\item[{\bf E4}] Considerar el origen del tweet: las empresas no suelen publicar tweets desde dispositivos de mano. 
-\end{itemize}
+\subsection{Revisión de la literatura}
 
-Al intentar aplicar esta metodología, observamos lo siguiente:
-\begin{itemize}
-\item Hay más empresas de las que cabría esperar, y fundamentalmente bots, cuyo campo url estaba vacío. No
-nos parece entonces una buena característica para la clasificación. Sin embargo, sí que se atendió al hecho 
-de que a veces en el campo url el usuario incluye en este campo su perfil de LinkedIn (con lo que el
-texto \lq\lq linked\rq\rq aparece) o su blog personal (en cuyo caso podemos identificar el texto 
-\lq\lq blog\rq\rq). Es cierto que en el caso de \lq\lq blog\rq\rq se puede incurrir en ciertos errores,
-dado que también hay bots en cuyo campo url se incluye un blog y es uno de los puntos a mejorar. 
-\item La idea apuntada en la subsección sobre el origen de los tuits en la
-página \pageref{subsubsect:origen_tuits}, que si el tuit era publicado desde un dispositivo de mano 
-probablemente se trataría de una persona,  finalmente resultó que, de nuevo, no era la realidad y esa
-diferenciación no era tan clara. 
-\item En cuanto al campo nombre de usuario, a pesar de la amplia lista de nombres y apellidos,
-en muchos casos solo se identificaba el nombre, en otros solo los apellidos... Con lo que en lugar de validar a las personas con la coincidencia completa de su nombre de usuario, se determinó 
-aceptar que es un nombre válido si se da una coincidencia del $33$\%. En aquellos casos en los que una 
-persona incluye solo nombre y apellidos, sería suficiente con dejar el corte en el $50$\%,
-pero cuando se publican nombre y dos apellidos,  es frecuente que solo detectemos el nombre y no los apellidos. De ahí que se tomara la decisión de fijar el umbral en el $33$\%.
-\item Con los criterios {\bf E1} y {\bf E2} se conseguía una buena clasificación de empresas y de personas. 
-Los fallos fundamentales de usuarios reales provenían de tuits con nombres de usuario extraños y descripciones
-ambigüas, y fundamentalmente bots de diferentes tipos.
-\end{itemize}
+Para poder hacer una ordenación de los candidatos necesitamos seleccionar a los usuarios o personas 
+reales y tratar dos temas. Por un lado separar a personas y empresas y por otro eliminar los bots 
+o perfiles automatizados.
 
-\subsubsection{Tratamiento de bots}
-En Internet, un \lq\lq bot\rq\rq, \lq\lq web robot\rq\rq, \lq\lq WWW robot\rq\rq o 
+Bajo el nombre de \lq\lq empresas\rq\rq, nos referimos a organizaciones o entidades asociadas con algún objetivo social, político o comercial que, a menudo, tienen una cuenta de Twitter por diversas razones, como
+la gestión de las relaciones públicas o el servicio al cliente, entre otras.
+Las organizaciones pueden ser de carácter comercial (por ejemplo, una empresa de marketing) o 
+sin ánimo de lucro (por ejemplo, una ONG) y podrían incluir una empresa, marca, producto o institución benéfica 
+(\cite{user_class7}). 
+
+Las personas comunes son usuarios que probablemente estén en Twitter por diversos motivos, 
+como publicar actualizaciones sobre su vida cotidiana, ampliar oportunidades profesionales, 
+mantener contactos con sus amigos y conocidos o descubrir contenido relevante relacionado con sus intereses
+(\cite{user_class7}).
+
+En Internet, un \lq\lq bot\rq\rq  (aféresis de robot), \lq\lq web robot\rq\rq, \lq\lq WWW robot\rq\rq o 
 \lq\lq Internet bot\rq\rq, es una aplicación que realiza de forma autómatica diversas 
 tareas en la red\footnote{\url{https://en.wikipedia.org/wiki/Internet_bot}}.
-En Twitter\footnote{\url{https://en.wikipedia.org/wiki/Twitter_bot}},
+En las redes sociales en general, los bots se utilizan para simular la interacción humana, 
+hinchando artificialmente el número de visitas o seguidores, o automatizando respuestas 
+para posicionar mensajes o influir en debates.
+En Twitter\footnote{\url{https://en.wikipedia.org/wiki/Twitter_bot}} en particular,
 un bot se caracteriza por ser una aplicación que controla una cuenta de Twitter a través del
 API de Twitter. Los bots de Twitter pueden realizar tareas automáticas de publicación de tuits,
 retuits, seguimiento a otros usuarios, o enviar mensajes directos a otras cuentas. La automatización
@@ -485,11 +448,184 @@ legítima (difusión de información de interés, publicación de contenidos pro
 a usuarios, etc.) e ilegítima (violación de los límites de uso del API de Twitter, de la privacidad 
 de otros usuarios, envío de publicidad no deseada, etc.).
 
-De cara a nuestro proyecto, es importante detectar aquellos usuarios que son bots, porque
-estos usuarios no deberían aparecer en nuestra lista de posibles candidatos a una oferta 
-laboral. El problema de detección de bots en Twitter ha sido un problema muy estudiado
-a lo largo de los últimos años (ver por ejemplo \cite{user_class4}).
+\subsubsection{Clasificación entre persona y empresa}
 
+Hay numerosos ejemplos de literatura que aborda la clasificación del tipo de usuario en Twitter, 
+enfocados a la clasificación en función de la orientación política y étnica (\cite{user_class1},
+\cite{user_class8}),  en función del género (\cite{user_class9}, \cite{user_class10}, 
+\cite{user_class11}), según sus conexiones sociales (\cite{user_class12}), clasificación en
+tipos de usuarios como celebridades, bloggers, media y pertenecientes a organizaciones 
+(\cite{user_class12}), etc.. 
+
+Sin embargo, estos trabajos no se ajustan directamente a nuestro problema de clasificación y  
+requieren muestras previamente etiquetadas. Este enfoque complicaría esta etapa previa a 
+nuestro objetivo fundamental con este trabajo y por tanto las rechazamos. 
+
+Otra de las
+referencias manejadas, \cite{user_class}, un trabajo sobre clasificación de usuarios
+por la Universidad de Utah de 2014, y a su vez basado en \cite{user_class7}, se asemeja
+más a nuestro objetivo y las técnicas a utilizar son sencillas.
+En este trabajo proponen basarse en campos como el nombre de usuario, 
+la descripción, la url y el origen de los tweets para clasificar los tuits como publicados por personas 
+y resto. Para ello la idea es la siguiente: se considera que un tuit pertenece a una persona si 
+cumple las siguientes cuatro especificaciones:
+\begin{itemize}
+\item[{\bf E1}] En el campo nombre de usuario aparece un nombre que coincida totalmente con 
+un nombre real de persona. 
+\item[{\bf E2}]El texto en el campo descripción cumple las siguientes dos condiciones:
+\begin{itemize}
+\item aparecen palabras como \lq\lq emprendedor\rq\rq, \lq\lq consultor\rq\rq, etc.,
+que determinan que el objeto de la descripción es una persona
+\item En el campo descripción y en el campo nombre, no aparecen palabras relativas a empresas como 
+\lq\lq negocio\rq\rq, \lq\lq empresa\rq\rq, etc., que identifican al usuario como una entidad.
+\end{itemize}
+\item[{\bf E3}] Si el campo de url estaba vacío, asignar la categoría de persona y no de empresa (o bot).
+\item[{\bf E4}] Considerar el origen del tweet: las empresas no suelen publicar tweets desde dispositivos de mano. 
+\end{itemize}
+
+\subsubsection{Detección de bots}
+La presencia de bots entre los usuarios de Twitter es un asunto no menor,  ya que
+se estima que entre el $9$\% y el $15$\% de los perfiles en Twitter son
+perfiles falsos
+\footnote{\url{http://www.lavanguardia.com/tecnologia/20180203/44478743253/twitter-cuentas-falsas-usuarios-bots-redes-sociales.html)  }}. 
+El problema de detección de bots en Twitter ha sido un problema muy estudiado
+a lo largo de los últimos años (ver por ejemplo \cite{user_class4}) y existe numerosa 
+bibliografía al respecto.
+Parte de la dificultad de este tema es que cada vez se hace más complicado su identificación,
+debido a que se camuflan mejor entre los usuarios: criterios que eran válidos hace unos años pueden
+no resultar tan efectivos hoy. 
+
+Una de las soluciones más directas y sencillas es la del servicio propuesto por Botometer 
+(\lq\lq Bot or not\rq\rq) que a través de un API proporciona unas probabilidades de que el usuario 
+sea un robot. Esta aplicación funciona tanto para usuarios de lengua inglesa como para usuarios 
+de otros idiomas. Sin embrago, rechazamos esta solución ya que nuestro interés es didáctico. 
+
+En  \cite{bots1} se evalúan estrategias de infiltración en Twitter usando 120 bots.,
+mientras que  \cite{user_class4} distingue e identifica cuentas de Twitter operadas por tres 
+entidades: humanos, cyborgs y bots. Los autores hacen esta clasificación al observar las diferencias 
+entre las tres entidades en términos de comportamiento, contenido de tuit y propiedades de la cuenta.
+Sin embrago volvemos a encontrarnos con una metodología demasiado compleja para esta etapa del nuestro 
+proyecto. En el trabajo \cite{user_class6} se muestra que tanto la frecuencia de tuiteo como el origen 
+del tuit son campos muy determinantes para la clasificación de bots. Cabe destacar que el cociente 
+seguidores/amigos no es un buen indicador para la clasificación, ya que aunque previsiblemente los bots 
+no tienen casi amigos, muchos influencers y personas relevantes tampoco, con lo que podríamos eliminar
+usuarios de interés. Este tipo de metodología para la detección de bots es la que hemos elegido.
+
+\subsection{Análisis de los datos para la construcción del modelo}
+
+En una primera instancia, decidimos entonces aplicar los criterios {\bf E1}-{\bf E4}
+para distinguir entre personas y empresas, y usar los indicadores de frecuencia de
+tuiteo y origen del tuit para distinguir los bots. 
+Al intentar aplicar esta metodologías, observamos lo siguiente:
+\begin{enumerate}
+\item Al inspeccionar el campo \lq\lq user.name\rq\rq encontramos ejemplos como
+los siguientes:
+
+\myfigure{
+\includegraphics[width=0.4\textwidth]{Silvia_user_name_persona_organizacion}
+\figcaption{Ejemplos de valores en el \lq\lq user.name\rq\rq.}
+\label{fig:Silvia_user_name_persona_organizacion} }
+
+Para aplicar el criterio {\bf E1} hemos manejado un archivo con nombres y apellidos 
+de personas en español e inglés, obtenido de estas fuentes:
+\begin{itemize}
+\item\url{ https://www.census.gov/genealogy/www/%20data/1990surnames/names_files.html }
+\item\url{
+http://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736177009&menu=resultados&idp=1254734710990 }
+\item\url{http://www.buscanombres.com/nombres-gallegos.htm }
+\item\url{https://script.byu.edu/Pages/Spanish/es/surnames.aspx }
+\end{itemize}
+Para el caso de los nombres españoles se han incluido también los específicos para regiones como Cataluña, Comunidad Valenciana y Galicia. A pesar de la amplia lista de nombres y apellidos,
+en muchos casos solo se identificaba el nombre, en otros solo los apellidos... Con lo que en lugar de validar a las personas con la coincidencia completa de su nombre de usuario, se determinó 
+aceptar que es un nombre válido si se da una coincidencia del $33$\%. En aquellos casos en los que una 
+persona incluye solo nombre y un apellido, sería suficiente con dejar el corte en el $50$\%,
+pero cuando se publican nombre y dos apellidos,  es frecuente que solo detectemos el nombre y no los apellidos. De ahí que se tomara la decisión de fijar el umbral en el $33$\%.
+
+\item Al inspeccionar el campo \lq\lq user.description\rq\rq encontramos ejemplos como
+los siguientes:
+
+\myfigure{
+\includegraphics[width=0.8\textwidth]{Silvia_user_description_persona_organizacion}
+\figcaption{Ejemplos de valores en el \lq\lq user.description\rq\rq.}
+\label{fig:Silvia_user_description_persona_organizacion} }
+
+Esta inspección, así como la realizada anteriormente a través de las nubes de palabras
+de las figuras \ref{fig:bios_worldcloud2} y \ref{fig:bios_worldcloud},
+nos sugieren que si aparecen palabras como \lq\lq emprendedor\rq\rq, \lq\lq consultor\rq\rq, 
+\lq\lq profesional\rq\rq o \lq\lq persona\rq\rq, el  usuario es una persona. 
+Se evitó poner las palabras \lq\lq I am\rq\rq o \lq\lq soy\rq\rq porque en el caso de 
+algunos bots, en este campo aparecen textos similares a \lq\lq I am a bot\rq\rq. 
+Por otro lado, la aparición de palabras como \lq\lq negocio\rq\rq, \lq\lq empresa\rq\rq, 
+\lq\lq compañía\rq\rq,\lq\lq somos\rq\rq, \lq\lq we\rq\rq\dots en el campo descripción o
+en el campo nombre, indicarían que el usuario es una empresa u organización.
+Se evitaron palabras como \lq\lq business\rq\rq por riesgo a que algunos pudieran 
+publicar comentarios del área de {\em business intelligence}.
+Tanto en el caso de las palabras que determinan personas, como de las que determinan
+empresas, tanto en inglés como en español, se crearon sendos ficheros para su almacenamiento. 
+
+\item Una primera inspección del campo \lq\lq url\rq\rq nos muestra estos ejemplos:
+
+\myfigure{
+\includegraphics[width=0.8\textwidth]{Silvia_user_url_persona_organizacion}
+\figcaption{Ejemplos de valores en el campo \lq\lq url\rq\rq.}
+\label{fig:Silvia_user_url_persona_organizacion} }
+
+En esta inspección descubrimos también que hay más empresas de las que cabría esperar, 
+y fundamentalmente bots, cuyo campo url estaba vacío. No
+nos parece entonces una buena característica para la clasificación. Sin embargo, sí que se atendió al hecho 
+de que a veces en el campo url el usuario incluye en este campo su perfil de LinkedIn (con lo que el
+texto \lq\lq linked\rq\rq aparece) o su blog personal (en cuyo caso podemos identificar el texto 
+\lq\lq blog\rq\rq). Es cierto que en el caso de \lq\lq blog\rq\rq se puede incurrir en ciertos errores,
+dado que también hay bots en cuyo campo url se incluye un blog y es uno de los puntos a mejorar. 
+
+\item La idea apuntada sobre el origen de los tuits en la subsección  de la
+página \pageref{subsubsect:origen_tuits}, que si el tuit era publicado desde un dispositivo de mano 
+probablemente se trataría de una persona,  finalmente resultó que, de nuevo, no era la realidad y esa
+diferenciación no era tan clara: más organizaciones de las que cabría esperar utilizaban dispositivos
+de mano para publicar. Por tanto, el usar este campo como criterio único para la clasificación 
+inmediata de personas tal y como proponen en \cite{user_class}, no nos daba buenos resultados. 
+Ellos fundamentalmente lo utilizan para el caso en el que los usuarios no puedan ser clasificados
+por alguno de los otros criterios debido a que no comparten información sobre su \lq\lq user.name\rq\rq 
+o su \lq\lq user.description\rq\rq. Sin embargo, en nuestro caso, tan solo el $0.09$\% de los 
+usuarios (sin repetición) no tienen nada en su campo descripción y un $0.2$\% en su campo nombre y tan solo 1 que no tiene ni en su campo descripción ni en su campo nombre. Por todo ello, rechazamos el criterio directo sobre el  orígen.
+\end{enumerate}
+
+Con las observaciones anteriores se conseguía una buena clasificación de empresas y de personas. 
+Los fallos en la clasificación de usuarios reales provenían sobre todo de tuits con nombres 
+de usuario extraños o descripciones ambigüas, y fundamentalmente de etiquetar a bots como usuarios,  
+pero no a causa de una mala clasificación entre personas y organizaciones.
+
+
+Con respecto a las técnicas que queremos explorar para identificar aquellos usuarios
+que sean bots, nos vamos a fijar en las siguientes características apuntadas en \cite{user_class6}:
+\begin{itemize}
+\item Frecuencia de tuiteo: dado que los bots suelen tuitear mucho, clasificaremos como
+bots aquellos usuarios cuya frecuencia de publicación sea superior a un cierto umbral. No hay un 
+nivel claro en el que situar dicho umbral. Este sería un punto a estudiar más profundamente y mejorar en un futuro. Nosotros hemos tomado el límite de $350$ tuits por día  desde la creación de la cuenta (lo que 
+supone un tuit cada dos minutos con doce horas de actividad). 
+
+\item Origen de los tuits: de acuerdo a los datos mostrados en la figura \ref{fig:sources}, se observa
+que los principales orígenes de los tuits en nuestra muestra son \lq\lq Twitter Web Client\rq\rq, 
+\lq\lq Twitter for Android\rq\rq y  \lq\lq Twitter for Iphone\rq\rq (Twitter para dispositivos de 
+mano en los dos últimos casos). Vamos a considerar como bots aquellos tuits producidos desde: 
+
+\begin{tabular}{cccc} 
+\lq\lq IFTTT\rq\rq,  &\lq\lq Roundteam\rq\rq,  &\lq\lq Botize\rq\rq, &\lq\lq  Statistics for IT\rq\rq,\\
+ \lq\lq  Koica Retweeter\rq\rq, &\lq\lq Tweet Old Post\rq\rq, &\lq\lq Powerapps and Flow\rq\rq, &\lq\lq Voicestorm\rq\rq. 
+\end{tabular}
+
+Todos ellos están descritos en la página \pageref{page:sources_descriptions}.
+
+\item Por último, hemos visto que lo más directo es eliminar a aquellos bots que se identifican 
+como tales a través de alguno de los campos \lq\lq user.name\rq\rq, \lq\lq user.description\rq\rq o \lq\lq source\rq\rq. De estos tres campos finalmente descartamos el de \lq\lq user.description\rq\rq ya que en el ámbito de la tecnología (al cual pertenecen nuestro perfiles) existen menciones a la palabra "robotica". 
+\end{itemize}
+A continuación mostramos algunos ejemplos de datos en nuestra muestra, en los que se aprecian
+las observaciones anteriores:
+
+\myfigure{
+\includegraphics[width=0.8\textwidth]{Silvia_bots}
+\figcaption{Ejemplos de valores.}
+\label{fig:Silvia_bots} }
 
 \subsection{Modelo final}
 
@@ -499,10 +635,10 @@ un tuit se considera de una persona cuando
 \item en su campo nombre de usuario existe un $33$\% o más 
 de coincidencia con la lista de nombres y apellidos, 
 \item {\bf y} si en su descripción de usuario aparece algún término que
-identificamos como de persona, o si no aparecen términos 
+identificamos como de persona {\bf o} no aparecen términos 
 relacionados con empresa ni en la descripción del usuario ni en el nombre de usuario.
 \item {\bf y} la frecuencia de publicación de tuits es inferior a $350$
-\item {\bf y} el origen de tuit no es una de las que identificamos como automáticas
+\item {\bf y} el origen de tuit no es uno de los que identificamos como automáticos
 \item {\bf y} la palabra \lq\lq bot\rq\rq no aparece ni en el nombre del usuario ni
 en el nombre del origen del tuit,
 \item {\bf o bien}  cuando su url es una url de LinkedIn o de un blog.
@@ -537,7 +673,7 @@ extraer las personas únicas que hemos detectado: del listado extraído del paso
 sección \ref{subsect:duplicados1}, podría ocurrir que un usuario  fuera clasificado como persona con un
 conjunto de url, nombre de usuario y descripción, pero no lo fuera con otro. En esta fase, por tanto, nos limitaremos a eliminar del listado de los clasificados como personas aquellos usuarios con un id repetido.
 
-\subsection{Resultados finales}
+\subsection{Resultados de la selección}
 Aplicando esta metodología a la lista de usuarios únicos obtenidos tras la aplicación
 de los algoritmos descritos en la sección \ref{sect:tuits_relevantes}, 
 hemos obtenido los siguientes datos: de $231$ usuarios únicos analizados, 

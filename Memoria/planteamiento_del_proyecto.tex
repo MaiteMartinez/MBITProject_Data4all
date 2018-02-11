@@ -1,7 +1,8 @@
 
 \chapter{Planteamiento del proyecto}
 
-En este cap\'\i tulo vamos a describir las ideas y contexto en el que vamos a desarrollar el contenido del proyecto.
+En este cap\'\i tulo vamos a describir el contexto en el que vamos a desarrollar el contenido del 
+proyecto y las ideas involucradas en su desarrollo.
 
 \section{Descripci\'on}
 Cuando un departamento de Recursos Humanos o una empresa de reclutamiento se enfrenta a una petici\'on para
@@ -246,7 +247,7 @@ en el trascurso de su quehacer. Este tipo de dispositivos también puede ayudar 
 de RRHH a cuidar estrechamente la seguridad del trabajador, el cumplimiento de las políticas
 de buenas prácticas, etc.
 
-\item Compensación monetaria: el dinero que ganan los empleados con su trabajo es el
+\item Compensación monetaria: el dinero que ganan los empleados con su trabajo es un
 factor básico de la satisfacción del empleado. Usando el análisis de datos, los equipos de 
 RRHH pueden desarrollar un modelo financiero optimizado. Esto es especialmente importante
 en compañías grandes, con empleados en distintas geografías, donde resulta difícil comparar 
@@ -255,7 +256,7 @@ una guía de cómo realizar una promoción adecuada de los trabajadores optimiza
 los costes asociados.
 
 \item Planificación: el análisis de datos puede ayudar a las compañías a identificar tendencias y 
-planificar acciones. Por ejemplo, se pueden detectar épocas de mayor absentismo por cuestiones de 
+pla\-ni\-ficar acciones. Por ejemplo, se pueden detectar épocas de mayor absentismo por cuestiones de 
 salud e implementar políticas para paliarlo (de prevención sanitaria o de contratación de refuerzos), o 
 detectar factores que conducen a una mayor incidencia de accidentes que pueden afectar a la producción
 y programar acciones para remediarlo.
@@ -397,25 +398,39 @@ información adicional (por ejemplo, lo que comentábamos a propósito de encont
 frecuentemente, el usuario de Twitter es parte de la información contenida en el mismo, y el CV está disponible en otros 
 portales). Sin embargo, en la política de privacidad de Twitter (\url{https://twitter.com/es/privacy })
 se establece que
-\begin{center}
-\noindent\begin{minipage}{0.9\linewidth}%{0.9\columnwidth}
-\centering%
-{\em ''Al utilizar cualquiera de nuestros Servicios, usted da su consentimiento para la recopilación, 
+% \begin{center}
+% \noindent\begin{minipage}{0.9\linewidth}%{0.9\columnwidth}
+% \centering%
+
+\leftskip=1cm
+\rightskip=1cm
+{\em \lq\lq Al utilizar cualquiera de nuestros Servicios, usted da su consentimiento para la recopilación, 
  la transferencia, la manipulación, el almacenamiento, la revelación y otros usos de su información 
  según lo descrito en esta Política de Privacidad. Esto incluye cualquier información que elija proporcionar que 
- se considere sensible según la legislación vigente."}
-\end{minipage}
-\end{center}
-Y también, en relación a la información del perfil o publicaciones:
-\begin{center}
-\noindent\begin{minipage}{0.9\linewidth}%{0.9\columnwidth}
-\centering%
+ se considere sensible según la legislación vigente.\rq\rq}
+
+\leftskip=0pt\rightskip=0pt
+% \end{minipage}
+% \end{center}
+
+
+
+
+\noindent Y también, en relación a la información del perfil o publicaciones:
+% \begin{center}
+% \noindent\begin{minipage}{0.9\linewidth}%{0.9\columnwidth}
+% \centering%
+
+\leftskip=1cm
+\rightskip=1cm
 {\em ''{\bf Información básica de la cuenta}: si opta por crear una cuenta de Twitter, debe promocionar cierta información personal, 
 como su nombre, nombre de usuario, contraseña, dirección de correo electrónico o número de teléfono. 
 En Twitter, su nombre y nombre de usuario siempre se hacen públicos, incluso en su página de perfil y en los resultados de búsqueda, 
-y puede utilizar su nombre real o un seudónimo."
+y puede utilizar su nombre real o un seudónimo."}
 
-''{\bf Tuits, gente que sigue, listas, perfil y otra información pública}: Twitter está principalmente diseñado para ayudarle a 
+\leftskip=1cm
+\rightskip=1cm
+{\em ''{\bf Tuits, gente que sigue, listas, perfil y otra información pública}: Twitter está principalmente diseñado para ayudarle a 
 compartir información con el mundo. La mayoría de la información que usted nos facilita a través de Twitter es información 
 que nos está pidiendo que hagamos pública. Puede facilitarnos información de perfil para hacerla pública en Twitter, como por 
 ejemplo, una breve biografía, su ubicación, su sitio web, fecha de nacimiento, o una fotografía. Además, su información pública 
@@ -426,8 +441,13 @@ hace clic o con las que se relaciona de alguna forma (por ejemplo, haciendo come
 Twitter disemina amplia e instantáneamente su información pública a una amplia gama de usuarios, clientes y servicios, incluyendo 
 motores de búsqueda, desarrolladores y editores que integran contenido de Twitter en sus servicios y organizaciones, tales como universidades, 
 agencias de salud pública y empresas de investigación de mercado que analizan la información en busque de tendencias y conocimiento."}
-\end{minipage}
-\end{center}
+% \end{minipage}
+% \end{center}
+
+\leftskip=0pt \rightskip=0pt
+
+
+
 A tenor de estas afirmaciones, la información que nosotros vamos a manejar en la implementación de este proyecto
 (nombre de usuario, información del perfil, tuits publicados)
 es una información de carácter público. 
@@ -436,9 +456,12 @@ En su enunciado, la LOPD establece que
 (texto extraído del informe jurídico  2013-0184 de la AEPD
 \url{http://www.agpd.es/portalwebAGPD/canaldocumentacion/informes_juridicos/otras_cuestiones/common/pdfs/2013-0184_Red-social-y-creaci-oo-n-de-perfiles-de-empleados..pdf%
 })
-\begin{center}
-\noindent\begin{minipage}{0.9\linewidth}%{0.9\columnwidth}
-\centering%
+% \begin{center}
+% \noindent\begin{minipage}{0.9\linewidth}%{0.9\columnwidth}
+% \centering%
+
+\leftskip=1cm
+\rightskip=1cm
 {\em Establece a este
 respecto la Ley Orgánica 15/1999 en su artículo 2 que ''El régimen de
 protección de los datos de carácter personal que se establece en la
@@ -446,16 +469,20 @@ presente Ley Orgánica no será de aplicación: a) A los ficheros
 mantenidos por personas físicas en el ejercicio de actividades
 exclusivamente personales o domésticas."
 }
-\end{minipage}
-\end{center}
 
-Y define las actividades personales a continuación:
+\leftskip=0pt 
+\rightskip=0pt
+% \end{minipage}
+% \end{center}
 
-\begin{center}
-\noindent\begin{minipage}{0.9\linewidth}%{0.9\columnwidth}
-\centering%
-{\em
-En cuanto a la determinación de que se entiende por actividades
+\noindent Y define las actividades personales a continuación:
+
+% \begin{center}
+% \noindent\begin{minipage}{0.9\linewidth}%{0.9\columnwidth}
+% \centering%
+\leftskip=1cm
+\rightskip=1cm
+{\em En cuanto a la determinación de que se entiende por actividades
 personales o domésticas dispone el Reglamento de desarrollo de la LOPD en
 su artículo 4 que ''Sólo se considerarán relacionados con actividades
 personales o domésticas los tratamientos relativos a las actividades que se
@@ -464,9 +491,11 @@ Esta es también la interpretación del término ''personal" contenida en la
 Sentencia de la Audiencia Nacional de 15 de junio de 2006 al señalar que ''(…)
 Será personal cuando los datos tratados afecten a la esfera más íntima de la
 persona, a sus relaciones familiares y de amistad y que la finalidad del
-tratamiento no sea otra que surtir efectos en esos ámbitos.
+tratamiento no sea otra que surtir efectos en esos ámbitos.}
 
-También dará lugar a la aplicación de la Ley Orgánica 15/1999, por
+\leftskip=1cm
+\rightskip=1cm
+{\em También dará lugar a la aplicación de la Ley Orgánica 15/1999, por
 superar el ámbito de la vida privada o familiar de los particulares la publicación
 de datos de terceros en la red cuando no existan limitaciones de acceso a su
 perfil, en cuanto que dicha publicación constituye una cesión de datos, definida
@@ -477,8 +506,11 @@ Tribunal de Justicia de las Comunidades Europeas, no se inscribe en el marco
 de la vida privada o familiar de los particulares “un tratamiento de datos
 personales consistente en la difusión de dichos datos por Internet de modo que
 resulten accesibles a un grupo indeterminado de personas.”}
-\end{minipage}
-\end{center}
+
+\leftskip=0pt
+\rightskip=0pt
+% \end{minipage}
+% \end{center}
 
 
 
@@ -489,32 +521,43 @@ en el caso en el que la finalidad de dicho uso sea comercial, es que el único m
 para legitimar el uso es el consentimiento explícito de la persona cuyos datos van 
 a utilizarse. Este consentimiento ha de cumplir unas determinadas condiciones
 (de nuevo extraemos del informe jurídico  2013-0184 de la AEPD)
-\begin{center}
-\noindent\begin{minipage}{0.9\linewidth}%{0.9\columnwidth}
-\centering%
+% \begin{center}
+% \noindent\begin{minipage}{0.9\linewidth}%{0.9\columnwidth}
+% \centering%
+
+\leftskip=1cm
+\rightskip=1cm
 {\em 
 El tratamiento de datos de carácter personal debe encontrarse fundado
 en alguna de las causas legitimadoras previstas en el artículo 6 de la Ley
 Orgánica 15/1999, disponiendo a este respecto su número primero que ''El
 tratamiento de los datos de carácter personal requerirá el consentimiento
-inequívoco del afectado, salvo que la ley disponga otra cosa."
+inequívoco del afectado, salvo que la ley disponga otra cosa."}
 
+\leftskip=1cm
+\rightskip=1cm
 (\dots)
 
-Dicho
-consentimiento debe reunir las características señaladas en el
+\leftskip=1cm
+\rightskip=1cm
+{\em Dicho consentimiento debe reunir las características señaladas en el
 artículo 3.h de la misma Ley que lo define como ''manifestación de
 voluntad, libre, inequívoca, específica e informada, mediante la que el
 interesado consienta el tratamiento de datos personales que le
-conciernen".
+conciernen".}
 
-Esta Agencia ha venido describiendo en sus informes dichas
+\leftskip=1cm
+\rightskip=1cm
+{\em Esta Agencia ha venido describiendo en sus informes dichas
 características de manera que se entiende por consentimiento libre aquel que
 ha sido obtenido sin la intervención de vicio alguno del consentimiento en los
 términos regulados por el Código Civil.
 }
-\end{minipage}
-\end{center}
+
+\leftskip=0pt
+\rightskip=0pt
+% \end{minipage}
+% \end{center}
 
 
 \myfigure{
@@ -539,6 +582,7 @@ y posible inclusión en un proceso de selección de personal. Esta fase quedará
 del proyecto.
 \end{itemize}
 {\bf\color{oblue}
+\label{note:why_only_user_id}
 Para eliminar el riesgo relativo a protección de datos en la elaboración del proyecto, 
 pero sin alterar su esencia, proponemos publicar los resultados enmascarando los nombres 
 de usuario de aquellos que aparezcan en nuestra base de datos. A pesar de no ser una solución
@@ -563,8 +607,14 @@ los hastags presentes en los mensajes. Esta tarea la llevaremos a cabo en el cap
 constuir una lista de usuarios que podamos recomendar a un profesional de Recursos Humanos como
 posibles candidatos para una oferta. El primer paso, realizado en el capítulo \ref{chap:extraccion_de_usuarios}, es entonces seleccionar, a partir de la información descargada de Twitter, los usuarios de interés. 
 
-\item La fase final será, con esa lista de usuarios extraídos en la fase anterior, ordenarlos
-en función de su comportamiento en Twitter. La metodología empleada en este apartado, así como una descripción de los resultados, se abordan en el capítulo \ref{chap:ordenacion_de_usuarios}.
+\item La fase siguiente será, con esa lista de usuarios extraídos en la fase anterior, ordenarlos
+en función de su comportamiento en Twitter (difusión e interacción con otros usuarios). 
+La metodología empleada en este apartado, así como una descripción de los resultados, 
+se abordan en el capítulo \ref{chap:ordenacion_de_usuarios}.
+
+\item Por último, pero no menos importante, desarrollaremos la fase de visualización de los
+datos, para aportar usabilidad a los resultados del proyecto, fase descrita en el
+capítulo \ref{chap:visualizacion}
 \end{enumerate}
 
 Este esquema corresponde con el esquema de la llamada general a las distintas funciones que se

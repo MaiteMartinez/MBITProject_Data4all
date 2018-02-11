@@ -12,7 +12,8 @@ repositorio \url{https://github.com/MaiteMartinez/MBITProject_Data4all}
 
 \section{Infraestructura para la obtención de datos}
 
-Como muchas redes sociales, Twitter ofrece acceso a la información que generan sus usuarios a través de un
+Como muchas redes sociales, Twitter facilita el acceso a la información que generan sus 
+usuarios a través de un
 API ({\em Application Programming Interface})\cite{twitter_dev_web}. El API de Twitter ofrece diversas opciones: 
 Webhook APIs, ADS API, REST APIs y Streaming APIs. La primera está enfocada a generar  
 notificaciones instantáneas a partir de detección de eventos y la segunda a la integración de aplicaciones con la 
@@ -68,10 +69,11 @@ lo cual nos aseguramos un barrido bastante exhaustivo de la actividad relevante.
 se produzcan en el tiempo que esté el proceso de \lq\lq escucha\rq\rq levantado.
 \end{enumerate}
 
-Con respecto al segundo punto, hemos bajado los tuits mediante un script de Python, 
-que usa la librería {\tt Tweepy}, y 
-en el que a medida que van llegando los tuits a un proceso de escucha, los vamos 
-almacenando en una base de datos MongoDB. 
+Con respecto al segundo punto,  el script
+{\bf Python/download\_tweets\_stream.py} de nuestro repositorio de GitHub
+es el encargado de bajar los tuits. Este script de Python usa la librería {\tt Tweepy}, y 
+va almacenando los tuits en una base de datos MongoDB a medida que el proceso de escucha los
+va captando. 
 
 \myfigure{\includegraphics[width=0.6\textwidth]{streamlistener1}%
 \figcaption{Función de escucha de tuits.}
@@ -86,7 +88,9 @@ incluimos en el script un control de incidencias:
 
 Y para refrescar el proceso, y que la conexión con Twitter funcione correctamente
 de forma continua, se programaron relanzamientos diarios del script en el programador 
-de tareas de Windows.
+de tareas de Windows (a través del ejecutable 
+{\bf Python/streaming\_process\_keeper/streaming\_upload.bat}, también en nuestro 
+repositorio de GitHub).
  
 \section{Lenguajes de implementación}
 
