@@ -3,7 +3,7 @@
 #  this will get much easier once we start converting
 #  htmlwidgets to work natively with crosstalk
 
-devtools::install_github("rstudio/crosstalk") #,force = TRUE)
+# devtools::install_github("rstudio/crosstalk") #,force = TRUE)
 library(crosstalk)
 
 library(shiny)
@@ -14,16 +14,22 @@ library(networkD3)
 library(dplyr)
 library(htmltools)
 
-nodos = read.csv("C:/Users/Silvia/Documents/GitHub/MBITProject_Data4all/Python/tables/relations_graph [Nodes].csv", 
+# nodos = read.csv("C:/Users/Silvia/Documents/GitHub/MBITProject_Data4all/Python/tables/relations_graph [Nodes].csv", 
+#                  header = TRUE, sep = ",")
+
+data_path = "C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/tables/"
+nodos = read.csv(paste0(data_path, "relations_graph [Nodes].csv"), 
                  header = TRUE, sep = ",")
 
+
+
 MisNodos = nodos[,c(1,2)]
-vertices = read.csv("C:/Users/Silvia/Documents/GitHub/MBITProject_Data4all/Python/tables/relations_graph [Edges].csv", 
+vertices = read.csv(paste0(data_path, "relations_graph [Edges].csv"), 
                     header = TRUE, sep = ",")
 
 MisVertices = vertices [,c(1,2)]
 
-data_cent = read_excel("C:/Users/Silvia/Documents/GitHub/MBITProject_Data4all/Python/tables/4_ranked_users.xlsx")
+data_cent = read_excel(paste0(data_path, "4_ranked_users.xlsx"))
 data_cent$user_id = as.numeric(data_cent$user_id)
 
 #nodos <- data_cent %>% left_join(nodos, by = c("user_id" = "label"))

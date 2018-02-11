@@ -6,32 +6,143 @@ hemos recurrido al paquete Shiny de R. El código con el desarrollo de esta visu
 está en la carpeta {\bf Visualizacion/Shiny} de nuestro repositorio de GitHub.
 
 \section{Descripción de la interfaz}
-Hemos considerado que los resultados mostrados al cliente serán los siguientes:
-\begin{itemize}
-\item Por un lado el grafo de los usuarios seleccionados, donde pinchando en cada nodo (usuario) 
-muestra la información del mismo.
-\item Por otro, una tabla donde cada usuario puede ser ordenado por los criterios más relevantes 
-como son el índice $h$ y los diferentes tipos de centralidades. Además de ese orden sencillo 
-hemos incluido una columna \lq\lq resultado\rq\rq donde ponderamos el resultado en función de los 
-distintos índices que el cliente escoja como más relevantes para la selección adecuada del 
-candidato. Para poder calcularlo adecuadamente hemos normalizado los datos ya que las escalas 
-entre el índice $h$ y las centralidades era muy distintos. Hemos incluido también varios 
-avisos para avisar al usuario en el caso de que los datos introducidos no sean correctos. 
-\end{itemize}
+La información a mostrar al potencial cliente del proyecto es por un lado 
+la lista de usuarios de Twitter susceptibles de ser candidatos a la oferta
+de trabajo y por otro, de forma accesoria, el grafo que muestra la relación
+entre la comunidad de usuarios identificados a lo largo del proceso de 
+selección de dichos usuarios. La interfaz dispone por ello de dos pestañas, \lq\lq Listado 
+de candidatos\rq\rq y \lq\lq Grafo\rq\rq:
 
+\myfigure{
+\includegraphics[width=0.8\textwidth]{Shiny_pestanas}
+\figcaption{Aspecto general de la visualización, con las dos pestañas disponibles}
+\label{fig:Shiny_pestanas} }
 
-Las definiciones de los diferentes índices se pueden obtener pasando el ratón por encima 
-de los títulos de la tabla para que el cliente pueda tener a mano su significado sin necesidad 
-de ir a otro sitio.
-
-
-La información relativa a los usuarios siempre se da en relación a su \lq\lq user.id\rq\rq. 
+Antes de describir estas dos pestañas en detalle,
+queremos hacer hincapié en que la información relativa a los usuarios siempre 
+se da en relación a su \lq\lq user.id\rq\rq. 
 En ningún caso proporcionamos nombres ni información obtenida personal directamente del análisis. 
 En caso de querer contactar con ese usuario se tendría que hacer a través del propio Twitter y 
 una vez obtenido el consentimiento del usuario a través de cualquier otra vía disponible 
 (LinkedIn, blog, e-mail...)\footnote{Esta decisión la explicamos con detalle en la página 
 \pageref{note:why_only_user_id}}. 
 
+
+
+\subsection{La pestaña con la lista de usuarios ordenados: \lq\lq Listado de candidatos\rq\rq}
+En esta pestaña aparece una tabla con diversos campos, comenzando
+por el campo \lq\lq user.id\rq\rq que identifica al usuario, y al que siguen varias columnas 
+con el índice $h$ y los diferentes tipos de centralidades. 
+Las definiciones de las cantidades reflejadas en cada columna
+se pueden obtener pasando el ratón por encima 
+de los títulos de la tabla para que el cliente pueda tener a mano su significado sin necesidad 
+de ir a otro sitio:
+
+\myfigure{
+\includegraphics[width=0.8\textwidth]{Shiny_info_campos}
+\figcaption{La definición de cada campo se puede ver al pasar el puntero del ratón 
+por encima del título de la columna.}
+\label{fig:Shiny_info_campos} }
+
+La pestaña permite la selección del número de usuarios a mostrar por página: 
+$10$, $25$, $50$ o $100$ usuarios por página:
+
+\myfigure{
+\includegraphics[width=0.8\textwidth]{Shiny_num_registros}
+\figcaption{Elección del número de registros por página a mostrar.}
+\label{fig:Shiny_num_registros} }
+
+La aplicación también permite buscar por cualquier valor mostrado:
+
+\myfigure{
+\includegraphics[width=0.8\textwidth]{Shiny_busqueda}
+\figcaption{Búsqueda por valores mostrados.}
+\label{fig:Shiny_busqueda} }
+
+Para ordenar a los usuarios por los valores de alguna de las columnas, basta 
+con usar las flechas que hay al lado de los nombres de las columnas (también se 
+puede ordenar por varias columnas y con diferentes criterios, orden ascendente o descendente):
+
+\myfigure{
+\includegraphics[width=0.5\textwidth]{Shiny_orden_1_campo}
+\figcaption{Flechas para ordenar los usuarios por una única columna.}
+\label{fig:Shiny_orden_1_campo} }
+
+
+Además de ese orden sencillo hemos incluido una columna \lq\lq resultado\rq\rq 
+donde ponderamos el resultado en función de los distintos índices que el cliente 
+escoja como más relevantes para la selección adecuada del 
+candidato. Para poder calcularlo adecuadamente hemos normalizado los datos ya que las escalas 
+entre el índice $h$ y las centralidades era muy distintos. Hemos incluido también varios 
+avisos para avisar al usuario en el caso de que los datos introducidos no sean correctos.
+Para acceder a la pantalla donde poder introducir los distintos pesos, hay que hacer
+click en el botón \rq\rq  Pondera el resultado\lq\lq, y aparece la siguiente pantalla:
+
+\myfigure{
+\includegraphics[width=0.5\textwidth]{Shiny_pondera_el_resultado}
+\figcaption{Acceso a la pantalla para introducir los pesos.}
+\label{fig:Shiny_pondera_el_resultado} }
+
+En la ventana emergente se indica que los datos a introducir deben sumar $100$. Si por error no 
+es así, vuelve a aparecer otra ventana adicional que indica que los resultados se deben revisar 
+para que sumen $100$. 
+
+\myfigure{
+\includegraphics[width=0.5\textwidth]{Shiny_pesos}
+\figcaption{Pantalla para introducir los pesos.}
+\label{fig:Shiny_pesos} }
+
+Si a pesar de ello no hacemos caso de estas advertencias en la 
+página principal aparece un mensaje en rojo donde se indica claramente que la suma 
+de los porcentajes no es correcta: 
+
+\myfigure{
+\begin{tabular}{cc}
+\includegraphics[width=0.45\textwidth]{Shiny_pesos_mal}
+&\includegraphics[width=0.45\textwidth]{Shiny_pesos_mal2}
+\end{tabular}
+\figcaption{Mensajes de error en el caso
+de que los pesos no sean valores válidos.}
+\label{fig:Shiny_pesos} }
+ 
+
+
+\subsection{La estructura de la red: pestaña \lq\lq Grafo\rq\rq}
+
+En la pestaña \lq\lq Grafo\rq\rq aparece una representación visual de los candidatos 
+y sus relaciones:
+
+\myfigure{
+\includegraphics[width=0.8\textwidth]{Shiny_grafo1}
+\figcaption{Aspecto general de la pantalla donde se muestra el grafo.}
+\label{fig:Shiny_grafo1} }
+
+Los nodos están representados con diferentes colores y tamaños, que son función del 
+índice $h$. Pasando el puntero del ratón por encima de cada nodo aparece su 
+\lq\lq user.id\rq\rq:
+
+\myfigure{
+\includegraphics[width=0.8\textwidth]{Shiny_grafo_user_id_nodo}
+\figcaption{\lq\lq user.id\rq\rq de un nodo por el que hemos pasado el puntero.}
+\label{fig:Shiny_grafo_user_id_nodo} }
+
+Y haciendo doble click sobre un nodo, aparece toda su información (la que 
+tenemos en la tabla):
+
+\myfigure{
+\includegraphics[width=0.8\textwidth]{Shiny_grafo_inf_nodo}
+\figcaption{Información de un nodo en el que hemos hecho doble click.}
+\label{fig:Shiny_grafo_inf_nodo} }
+
+Si queremos localizar a un nodo por su \lq\lq user.id\rq\rq, podemos introducirlo en la
+casilla de búsqueda y al pulsar \lq\lq Search\rq\rq, desaparecerán todos los nodos 
+quedándose tan solo resaltado el nodo buscado. 
+Esto durará unos segundos hasta que el grafo vuelve a aparecer normalmente:
+
+\myfigure{
+\includegraphics[width=0.8\textwidth]{Shiny_grafo_busqueda}
+\figcaption{Búsqueda de un usuario en el grafo por su \lq\lq user.id\rq\rq.}
+\label{fig:Shiny_grafo_busqueda} }
 
 Del grafo cabe destacar los siguientes comentarios:
 \begin{itemize}

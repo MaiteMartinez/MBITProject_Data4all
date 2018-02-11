@@ -66,5 +66,7 @@
 \contentsline {chapter}{\numberline {7}Visualizaci\'on de los resultados}{83}{chapter.189}
 \contentsline {section}{\numberline {7.1}Herramientas}{83}{section.190}
 \contentsline {section}{\numberline {7.2}Descripci\IeC {\'o}n de la interfaz}{83}{section.191}
-\contentsline {chapter}{\numberline {8}\'Areas de mejora}{85}{chapter.193}
-\contentsline {chapter}{Bibliograf\'\i a}{87}{chapter*.194}
+\contentsline {subsection}{\numberline {7.2.1}La pesta\IeC {\~n}a con la lista de usuarios ordenados: ``Listado de candidatos''}{84}{subsection.194}
+\contentsline {subsection}{\numberline {7.2.2}La estructura de la red: pesta\IeC {\~n}a ``Grafo''}{87}{subsection.202}
+\contentsline {chapter}{\numberline {8}\'Areas de mejora}{91}{chapter.207}
+\contentsline {chapter}{Bibliograf\'\i a}{93}{chapter*.208}
