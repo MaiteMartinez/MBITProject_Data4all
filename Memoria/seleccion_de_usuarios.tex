@@ -356,6 +356,11 @@ Dado que un usuario podría clasificarse de forma distinta con diferentes url, n
 descripción, en esta etapa vamos a considerar que un usuario es un usuario repetido si para dos 
 usuarios sus url, nombres de usuario, descripciones y por supuesto sus id, son iguales.
 
+En el proceso de selección de usuarios, el origen del tuit (el canal o herramienta a través del que 
+se publicó) también va a ser una característica relevante del proceso, pero solo para detectar bots. 
+Al quedarnos con los usuarios únicos, hemos elegido no tomar en consideración el valor de
+este campo, ya que en principio, un bot siempre publicará desde una fuente automática.
+
 \subsection{Resultados de la clasificación}
 De los $24128$ tuits analizados, hemos encontrado $365$ cuyo contenido hemos clasificado como
 relevante, lo que representa un $1.51$\% del total. De estos $365$ tuits
@@ -592,7 +597,7 @@ usuarios (sin repetición) no tienen nada en su campo descripción y un $0.2$\% 
 
 Con las observaciones anteriores se conseguía una buena clasificación de empresas y de personas. 
 Los fallos en la clasificación de usuarios reales provenían sobre todo de tuits con nombres 
-de usuario extraños o descripciones ambigüas, y fundamentalmente de etiquetar a bots como usuarios,  
+de usuario extraños o descripciones ambiguas, y fundamentalmente de etiquetar a bots como usuarios,  
 pero no a causa de una mala clasificación entre personas y organizaciones.
 
 
