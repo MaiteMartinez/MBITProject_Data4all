@@ -187,16 +187,30 @@ relacionadas con ellos, sino tiene que mostrar algún signo de dichas habilidade
 Para ello, hemos desarrollado un modelo {\em ad-hoc} que pasamos a describir a continuación.
 
 \subsection{Construcción del modelo}
-En este apartado hemos elegido la opción de un {\bf modelo supervisado}. La clasificación de los
+\label{sect:construccion_modelo_tuits_relevantes}
+En este apartado hemos elegido la opción de un {\bf modelo supervisado} con el objetivo de tener más eficiencia en la selección de usuarios relevantes.
+Por otro lado, la clasificación de los
 tuits mediante un modelo no supervisado (tipo \lq\lq bag of words\rq\rq, por ejemplo), 
 es una técnica que ya exploramos en la clasificación del idioma del tuit que hemos 
 tratado en la sección anterior, y en la clasificación del perfil de usuario que trataremos
 a continuación.  
 
-Para ello, obtuvimos una nueva base de datos de Twitter, con una búsqueda distinta
+\myfigure{
+\includegraphics[width=0.8\textwidth]{tuit_content_model_flow}
+\figcaption{Proceso de construcción y funcionamiento del modelo para clasificación de textos.}
+\label{fig:tuit_content_model_flow} }
+
+En la figura \ref{fig:tuit_content_model_flow} se describen esqumáticamente los pasos que hemos llevado a cabo para construir el modelo:
+
+\subsubsection{Textos de entrenamiento}
+
+Obtuvimos una nueva base de datos de Twitter con $50000$ tuits, con una búsqueda distinta
 a la descrita en la sección \ref{sect:obtencion_datos} pero también por palabras clave,
 a través del API Search de Twitter, y procedimos como en el caso
 de la base de datos para la extracción de candidatos, a almacenarla en local en una base de MongoDB.
+
+
+\subsubsection{Etiquetado del texto}
 Trabajamos sobre esa base de datos para construir un data frame que contuviera los textos de los tuits,
 así como otra información relevante de los tuits (aunque luego no se usa en el modelo), y procedimos
 a etiquetar manualmente $2000$ de esos tuits. Los tuits etiquetados están almacenados en un fichero
@@ -204,7 +218,8 @@ Excel {\bf Python/relevance\_model/ds\_sample2.xlsx} de nuestro repositorio de G
 Como curiosidad, nos gustaría comentar que al bajar los tuits por palabras claves como Python o SAS, 
 obtuvimos tuits que hablaban de serpientes o de los problemas del Sistema Andaluz de Salud. 
 
-Para entrenar el modelo, intentamos eliminar el \lq\lq ruido\rq\rq de los textos 
+\subsubsection{Limpieza de los tuits}
+Antes de entrenar el modelo, intentamos eliminar el \lq\lq ruido\rq\rq de los textos 
 sobre los que se va a realizar, sometiéndolos a una limpieza en la que retiramos
 de los mismos urls, números, signos de puntuación, \lq\lq stop words\rq\rq, palabras de menos
 de dos letras y distinción entre mayúsculas y minúsculas.
@@ -216,14 +231,15 @@ archivo {\bf Python/relevance\_model/Clasification1.py} de nuestro repositorio d
 \figcaption{Función para limpiar los tuits y entrenar el modelo de clasificación.}
 \label{fig:clean_text_relevance_model} 
 }
-
-Dividimos esta muestra en un $30$\% de datos de test y los restantes datos de entrenamiento,
-y con esta división procedimos a entrenar el modelo\footnote{Los métodos y algoritmos usados 
+\subsubsection{Vector de características}
+Los métodos y algoritmos usados 
 en el entrenamiento y predicción con este modelo son
-los que nos ofrece el paquete {\tt  scikit-learn} de Python.}.
-Antes de entrenar cualquier modelo, los estimadores implementados en {\tt  scikit-learn}
-necesitan transformar las palabras en vectores de características.
-El método {\tt TfidfVectorizer} convierte una colección de textos
+los que nos ofrece el paquete {\tt  scikit-learn} de Python. 
+
+Los estimadores implementados en {\tt  scikit-learn}
+necesitan transformar las palabras en vectores de características. Para eso elegimos el método {\tt TfidfVectorizer},  porque los textos de tuits son imprevisibles y el algoritmo TF-IDF ajusta la situación de que hay palabras que son más comunes y menos relevantes, además de ser  altamente recomendado en análisis de textos por su facilidad de uso y su parametrización. 
+  
+Este método convierte una colección de textos
 a una matriz de características TF-IDF. Para ello, crea un  \lq\lq vocabulario\rq\rq 
 con las palabras que aparecen en los textos y sus características TF-IDF en forma de diccionario.
 En nuestro contexto, los niveles o características TF-IDF, son números que reflejan la 
@@ -256,8 +272,14 @@ del corpus es codificado como un vector cuyas entradas son los índices TF-IDF d
 una de las palabras de dicho documento, con respecto a ese mismo documento.
 
 Con esta manera de codificar los textos de los tuits, ya podemos entrenar un modelo 
-de clasificación. Nos hemos decidido por un modelo de tipo Naïve Bayes, que 
-invocaremos a través del modelo {\tt MultinomialNB()} de {\tt  scikit-learn}.
+de clasificación.
+
+\subsubsection{Algoritmo de machine learning}
+Para entrenar el modelo, dividimos esta muestra codificada en un $30$\% de datos de test y los restantes datos de entrenamiento,
+y con esta división procedimos a entrenar el modelo.
+
+Nos hemos decidido por un modelo de tipo Naïve Bayes, que 
+invocaremos a través del modelo {\tt MultinomialNB()} de {\tt  scikit-learn}. Después de buscar e investigar, concluimos que este algoritmo,  aunque sea uno de los algoritmos más sencillos (lo que también hace que sea más fácil de usar y comprender), tiene muy buen desempeño, velocidad de procesamiento y funciona muy bien en clasificación de textos, por ejemplo al clasificar spam.
 
 Un modelo de clasificación de tipo Naïve Bayes, \cite{notas_antonio}, se basa en asignar
 a cada observación aquella clase o resultado de la clasificación, a la que es más probable que
@@ -301,6 +323,8 @@ Las siguientes líneas de código son las que hacen el trabajo de entrenamiento 
 \label{fig:model_training} 
 }
 
+
+\subsubsection{Uso del modelo}
 Una vez entrenado el modelo, lo queremos usar en dos fases: en esta de selección de 
 usuarios y en una posterior para la ordenación de los candidatos (ver sección 
 \ref{subsect:indice_h}). Por ello, hemos guardado el modelo para 
@@ -324,6 +348,110 @@ a esta función, hay que procesar los textos sobre los que vamos a aplicarlo:
 \includegraphics[width=0.7\textwidth]{cleaning_before_classification}
 \figcaption{Código para limpiar los textos y posteriormente usar el modelo Naïve Bayes de clasificación de contenidos ya entrenado en {\bf Python/user\_selection.py}.}
 \label{fig:cleaning_before_classification} 
+}
+
+\subsection{Resultados del modelo de clasificación}
+
+\begin{wrapfigure}[14]{L}{0.5\textwidth}
+\includegraphics[width=0.45\textwidth]{confussion_matrix_definition}
+\caption{Definición de la matriz de confusión.}\label{fig:confussion_matrix_definition}
+\end{wrapfigure} 
+
+Para entender mejor como está funcionando el modelo  tenemos las métricas de precision, recall, f1-score y la matriz de confusión. Antes, recordemos la terminología que vamos a usar:
+\begin{itemize}
+\item[$TP$]: \lq\lq true positive\rq\rq: observaciones clasificadas correctamente en la clase positiva.
+\item[$TN$] \lq\lq true negative\rq\rq: observaciones clasificadas correctamente en la clase negativa.
+\item[$FP$] \lq\lq false positive\rq\rq: observaciones clasificadas incorrectamente en la clase positiva.
+\item[$FN$] \lq\lq false negative\rq\rq: observaciones clasificadas incorrectamente en la clase negativa.	 
+\end{itemize}
+Con esta matriz de confusión obtenemos las siguientes métricas:
+\begin{itemize}
+\item Precisión: mide cómo de preciso es el modelo para detectar positivos, y se define como
+$$Pr = \frac{TP}{TP + FP}$$ 
+
+\item Recall: mide la sensibilidad del modelo para detectar positivos 	
+$$Rc = \frac{TP}{TP + FN}$$ 
+\item F1-Score: es una métrica más completa para medir la eficiencia del modelo, y se define como:
+$$F1 = \frac{2Pr Rc}{Pr+Rc}.$$ 
+\end{itemize}
+
+En nuestro caso, los resultados del entrenamiento son los siguientes:
+
+\begin{center}
+\begin{tabular}{ccc}
+
+\begin{tabular}{r|cc}
+\multicolumn{3}{c}{\bf Matriz} \\
+\multicolumn{3}{c}{\bf de confusión} \\
+\hline
+\hline
+     &$1$&$0$\\
+\hline
+$1$&$11$&$61$\\
+\hline
+$0$&$12$&$516$\\
+\hline
+\end{tabular}
+
+&$$\hspace{2cm}
+
+&\begin{tabular}{r|cccc}
+\multicolumn{5}{c}{\bf Métricas de clasificación} \\
+\hline
+\hline
+&Precisión &Recall&F1-score&Support\\
+\hline
+$0$&$0.89$&$0.98$&$0.93$&$528$\\
+\hline
+$1$&$0.48$&$0.15$&$0.23$&$72$\\
+\hline\hline
+Avg/total&$0.84$&$0.88$&$0.85$&$600$\\
+\hline
+\end{tabular}
+
+\end{tabular}
+\end{center}
+
+Hemos calculado también la curva ROC, obteniendo
+una exactitud (\lq\lq accuracy\rq\rq)
+de $0.842500526094$, y la siguiente curva ROC:
+
+\myfigure{
+\includegraphics[width=0.7\textwidth]{first_ROC_curve}
+\figcaption{Curva ROC del modelo de clasificación de textos según su relevancia.}
+\label{fig:first_ROC_curve} 
+}
+
+Aceptamos estos primeros resultados y decidimos empezar el proyecto con este modelo para hacer las pruebas hasta el final del proyecto. Sin embargo, estamos seguros de que es posible mejorarlo, principalmente en la precisión de los aciertos en la clase positivas ($TP$) y en la curva ROC. Hemos empezado a hacer pruebas con otros algoritmos y métodos de optimización (ver sección \ref{sect:mejoras_alg_clasificacion_tuit}).
+
+
+\subsection{Resultados de la clasificación del contenido del tuit}
+De los $24128$ tuits analizados, hemos encontrado $365$ cuyo contenido hemos clasificado como
+relevante, lo que representa un $1.51$\% del total. 
+Los siguientes tuits fueron clasificados como no relevantes:
+
+\myfigure{
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{text_not_relevant1}
+&\includegraphics[width=0.4\textwidth]{text_not_relevant2}\\
+\includegraphics[width=0.4\textwidth]{text_not_relevant3}
+&\includegraphics[width=0.4\textwidth]{text_not_relevant4}\\
+\end{tabular}
+\figcaption{Tuits no relevantes.}
+\label{fig:tuits_no_relevantes} 
+}
+
+Y los siguientes tuits fueron clasificados como relevantes:
+
+\myfigure{
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{relevant_text1}
+&\includegraphics[width=0.4\textwidth]{relevant_text2}\\
+\includegraphics[width=0.4\textwidth]{relevant_text3}
+&\includegraphics[width=0.4\textwidth]{relevant_text4}\\
+\end{tabular}
+\figcaption{Tuits relevantes.}
+\label{fig:tuits_relevantes} 
 }
 
 \subsection{Listado de usuarios únicos}
@@ -361,38 +489,12 @@ se publicó) también va a ser una característica relevante del proceso, pero s
 Al quedarnos con los usuarios únicos, hemos elegido no tomar en consideración el valor de
 este campo, ya que en principio, un bot siempre publicará desde una fuente automática.
 
-\subsection{Resultados de la clasificación}
-De los $24128$ tuits analizados, hemos encontrado $365$ cuyo contenido hemos clasificado como
-relevante, lo que representa un $1.51$\% del total. De estos $365$ tuits
-cuyo contenido es relevante, podemos extraer $231$ usuarios cuyos campos
+
+\subsection{Listado final de usuarios}
+De los $365$ tuits cuyo contenido es relevante, podemos extraer $231$ usuarios cuyos campos
 \lq\lq user\_id\rq\rq, \lq\lq url\rq\rq, \lq\lq user\_name\rq\rq y \lq\lq user\_bio\rq\rq
-no están duplicados.
+no están duplicados. Estos $231$ usuarios son los que pasarán la fase de análisis descrita a continuación.
 
-Los siguientes tuits fueron clasificados como no relevantes:
-
-\myfigure{
-\begin{tabular}{cc}
-\includegraphics[width=0.4\textwidth]{text_not_relevant1}
-&\includegraphics[width=0.4\textwidth]{text_not_relevant2}\\
-\includegraphics[width=0.4\textwidth]{text_not_relevant3}
-&\includegraphics[width=0.4\textwidth]{text_not_relevant4}\\
-\end{tabular}
-\figcaption{Tuits no relevantes.}
-\label{fig:tuits_no_relevantes} 
-}
-
-Y los siguientes tuits fueron clasificados como relevantes:
-
-\myfigure{
-\begin{tabular}{cc}
-\includegraphics[width=0.4\textwidth]{relevant_text1}
-&\includegraphics[width=0.4\textwidth]{relevant_text2}\\
-\includegraphics[width=0.4\textwidth]{relevant_text3}
-&\includegraphics[width=0.4\textwidth]{relevant_text4}\\
-\end{tabular}
-\figcaption{Tuits relevantes.}
-\label{fig:tuits_relevantes} 
-}
 
 \section{Tipo de usuario}
 \label{sect:tipo_de_usuario}
