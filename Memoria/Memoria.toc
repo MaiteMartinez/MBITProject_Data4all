@@ -78,7 +78,7 @@
 \contentsline {subsection}{\numberline {7.2.2}La estructura de la red: pesta\IeC {\~n}a ``Grafo''}{89}{subsection.212}
 \contentsline {chapter}{\numberline {8}\'Areas de mejora}{93}{chapter.217}
 \contentsline {section}{\numberline {8.1}Mejoras en el algoritmo de clasificaci\IeC {\'o}n del contenido del tuit}{94}{section.218}
-\contentsline {subsubsection}{Mejorando el modelo {\tt MultinomialNB()} con {\tt GridSearchCV()}}{94}{section*.219}
-\contentsline {subsubsection}{Cambiamos el modelo a {\tt SVM} con {\tt GridSearchCV()}}{95}{section*.221}
+\contentsline {subsubsection}{Mejorando el modelo {\tt MultinomialNB()} con {\tt GridSearchCV()} y ``$K$-fold cross validation''}{94}{section*.219}
+\contentsline {subsubsection}{Cambiamos el modelo a {\tt SVM} con {\tt GridSearchCV()}, tambi\IeC {\'e}n con ``$K$-fold cross validation''}{95}{section*.221}
 \contentsline {subsubsection}{Conclusi\IeC {\'o}n}{96}{section*.223}
 \contentsline {chapter}{Bibliograf\'\i a}{97}{chapter*.224}

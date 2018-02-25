@@ -45,12 +45,18 @@ Para ello, hemos hechos pruebas con el mismo modelo usado en esa sección, el Mu
 \begin{itemize}
 \item buscando los mejores parámetros para optimizar la eficiencia del modelo 
 (Hyperparameters Optimization) a través del método {\tt GridSearchCV()} y 
-\item cambiando el método de entrenamiento, desde
-el método sencillo de separación entre entrenamiento y test (que habíamos establecido en $70/30$) a un método \lq\lq $K$-fold cross validation\rq\rq, que separa el conjunto de datos en $K$ \lq\lq folds\rq\rq o subconjuntos de igual tamaño y cada \lq\lq fold\rq\rq actúa una vez como conjunto de test y $K-1$ veces como parte del conjunto de entrenamiento.
+\item cambiando el método de entrenamiento, añadiendo al
+método sencillo de separación entre entrenamiento y test (que habíamos establecido en $70/30$), 
+un algoritmo \lq\lq $K$-fold cross validation\rq\rq, que separa el conjunto de datos en $K$ 
+\lq\lq folds\rq\rq o subconjuntos de igual tamaño y cada \lq\lq fold\rq\rq actúa una vez como 
+conjunto de test y $K-1$ veces como parte del conjunto de entrenamiento.
 \end{itemize}
 
-\subsubsection{Mejorando el modelo {\tt MultinomialNB()} con {\tt GridSearchCV()}}
-Con el siguiente código:
+\subsubsection{Mejorando el modelo {\tt MultinomialNB()} con {\tt GridSearchCV()}
+y \lq\lq $K$-fold cross validation\rq\rq}
+
+Con el siguiente código especificamos los parámetros a optimizar, y el método para hacerlo,
+un método \lq\lq $K$-fold cross validation\rq\rq (en concreto, con la opción \lq\lq cv = 5\rq\rq):
 
 \medskip
 
@@ -65,10 +71,7 @@ parameters &$=$& $\{$'tfidf\_ngram\_range': $[(1,1),(1,2)]$,\\
 			  &&$\}$
 \end{tabular}
 
-\noindent text\_cl $=$ Pipeline([('tfidf', TfidfVectorizer()),
-					('clf', MultinomialNB())])
-
-
+\noindent text\_cl $=$ Pipeline([('tfidf', TfidfVectorizer()),('clf', MultinomialNB())])
 
 \noindent gs\_clf $=$ GridSearchCV(text\_cl, parameters, cv = 5, scoring='roc\_auc', n\_jobs=-1)
 
@@ -80,7 +83,9 @@ parameters &$=$& $\{$'tfidf\_ngram\_range': $[(1,1),(1,2)]$,\\
 
 }
 
-Obtenemos estos resultados:
+
+La última línea es la aplicación del modelo al conjunto de test (el $30$\% de los tuits), 
+y obtenemos estos resultados:
 
 \begin{center}
 \begin{tabular}{ccc}
@@ -128,8 +133,11 @@ de $0.910208859428$, y la siguiente curva ROC:
 }
 
 
-\subsubsection{Cambiamos el modelo a {\tt SVM} con {\tt GridSearchCV()}}
-Usamos el siguiente código:
+\subsubsection{Cambiamos el modelo a {\tt SVM} con {\tt GridSearchCV()},
+también con \lq\lq $K$-fold cross validation\rq\rq}
+El código para entrenar este modelo es muy similar al del ejemplo anterior,
+y de nuevo tenemos unos parámetros que indican cuáles vamos a optimizar, y una opción
+(\lq\lq cv=5\rq\rq) para incluir el algoritmo del \lq\lq $K$-fold cross validation\rq\rq:
 
 \medskip
 
@@ -160,7 +168,7 @@ parameters &$=$& $\{$'tfidf\_ngram\_range': $[(1,1),(1,2)]$,\\
 
 }
 
-Obtenemos estos resultados:
+A partir de la última línea, la aplicación del modelo al conjunto de test, obtenemos estos resultados:
 
 \begin{center}
 \begin{tabular}{ccc}
