@@ -17,7 +17,7 @@ obtenemos mucha más información, en formato JSON.
 El formato JSON ({\em Javascript Object Notation})\footnote{\url{http://www.json.org/json-es.html}} 
 es un formato ligero de intercambio de datos, fácilmente interpretable (por humanos y por
 máquinas). Es un formato ampliamente utilizado, siendo numerosos los
-lenguajes que son capaces de usar este formato (lenguajes de la familia C,Javascript, PHP, Python, etc.). 
+lenguajes que son capaces de usar este formato (lenguajes de la familia C, Javascript, PHP, Python, etc.). 
 En JSON se pueden representar dos tipos
 de estructuras: un conjunto de pares (clave,valor) con la sintaxis \{clave1:valor1, clave2:valor2,\dots\}, también
 denominado {\em objeto}, y un conjunto ordenado de valores con la sintaxis [valor1, valor 2,\dots] (que se denomina {\em arreglo}). 
@@ -218,8 +218,9 @@ se ha realizado a través de palabras clave, asociadas a la actividad de data sc
 \end{center}
 
 Esta petición se define como un vector en Python, donde la coma significa \lq\lq OR\rq\rq y el espacio
-dentro de las comillas significa \lq\lq AND\rq\rq, y se incluyeron dichos términos con y sin almohadilla 
-(\#). Las palabras clave de la búsqueda se almacenan en un fichero de texto {\bf query.txt},
+dentro de las comillas significa \lq\lq AND\rq\rq, y se incluyeron dichos términos con almohadilla 
+(\#) para obtener datos lo más adecuados al tema de referencia posible
+(ver sección sobre hashtags en la página \pageref{sect:hashtags}). Las palabras clave de la búsqueda se almacenan en un fichero de texto {\bf query.txt},
 de tal forma que la extensión del proyecto a búsquedas relacionadas con otras ofertas de trabajo
 pueda realizarse de una forma sencilla y directa, sin cambiar el código.
 
@@ -251,8 +252,9 @@ GitHub.
 \subsubsection{Tuits repetidos}
 Aunque hemos usado una conexión con el API Streaming de Twitter, que va almacenando los
 tuits según van publicándose,  de los $14.736$ documentos que hemos recogido en la base de datos, 
-solo $14.727$ son únicos, y hay $9$ repetidos. Esto es extraño, pero podría deberse a dos procesos
-de Streaming corriendo en paralelo sobre la misma base de datos momentáneamente. Como son muy pocos, no los hemos eliminado para hacer este estudio previo de los datos.
+solo $14.727$ son únicos, y hay $9$ repetidos. Esto es extraño, dado el método empleado para obtener
+los tuits, pero podría deberse a dos procesos de Streaming corriendo en paralelo sobre la misma base de datos momentáneamente. Son muy pocos, y la presencia de tuits repetidos no afecta al desarrollo ni al
+resultado del proyecto, así que no los hemos eliminado.
 
 \subsubsection{El texto de los tuits}
 Nuestra primera duda es si los tuits que hemos bajado corresponden realmente a contenido relacionado
@@ -371,8 +373,7 @@ De estos usuarios:
 \end{itemize}
 
 En resumen, solo ocho de los veinte usuarios con mayor actividad parecen adecuados para
-nuestro proyecto. Esto es indicativo de que la labor de filtrado de la base de datos
-va a ser clave para conseguir un producto exitoso.
+ser propuestos como candidatos. Esto es indicativo de que, en nuestro desarrollo, la labor de filtrado de la base de datos va a ser clave para conseguir un producto exitoso.
 
 \subsubsection{Localización de los tuits}
 Desde el punto de vista de la comercialización del producto, parece relevante incorporar información geográfica acerca de los candidatos. Para ello, siguiendo el enfoque de este trabajo, deberíamos usar información de este tipo extraída del corpus de tuits descargados de Twitter. Esto nos lleva a preguntarnos cuántos de ellos tienen el dato disponible. 
@@ -389,6 +390,7 @@ podemos apreciar que, salvo que cambiásemos la búsqueda en Twitter, no es un c
 
 
 \subsubsection{Hashtags: distribución}
+\label{sect:hashtags}
 En nuestro proyecto, va a ser muy importante cómo clasifiquemos los contenidos de los tuits. 
 Los propios usuarios clasifican los contenidos de los tuits cuando los etiquetan a través
 de los denominados \lq\lq hashtags\rq\rq,  que son palabras precedidas por el símbolo \# 
@@ -444,7 +446,8 @@ Aparentemente, las descripciones de los usuarios coinciden con los perfiles que 
 \subsubsection{Origen de los tuits}
 \label{subsubsect:origen_tuits}
 Otro elemento que podría proporcionarnos información relevante para nuestro objetivo
-es la aplicación de origen del tuit. Un tuit emitido desde un dispositivo móvil es muy
+es la aplicación de origen del tuit, es decir, aquella a través de la
+cual se publicó dicho tuit. Un tuit emitido desde un dispositivo móvil es muy
 probable que haya sido emitido por una persona y no por un bot o una empresa. 
 Entre los campos del tuit, hay uno que refleja esta información: \lq\lq source\rq\rq\footnote{
 \url{https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object }}.
@@ -454,7 +457,7 @@ de la aplicación tienen un valor en el campo \lq\lq web\rq\rq.
 
 A continuación describimos los principales orígenes de los tuits almacenados en 
 nuestra base de datos, y al igual que con los hashtags, comparamos los de los tuits
-descargados, y los de aquellos citados o retuiteados en ellos:
+descargados, y los del total de tuits, que incluyen también aquellos citados o retuiteados en ellos:
 
 \myfigure{
 \begin{tabular}{cc}
@@ -493,13 +496,14 @@ automática entradas antiguas de un blog alojado en dicha plataforma.
 \item Buffer, Py\_FeS2, tempfiles, twitterbot\_validado: no está muy claro lo que representan. 
 En Twitter, @Py\_FeS2 es un usuario nuevo, de Noviembre de 2017, que por el volumen 
 tuiteado parece un bot.
-\item VoiceStorm: es una aplicación que permite a los empleados de una empresa
-promocionar la entidad en la que trabajan a través de las redes sociales.
+\item VoiceStorm (ahora Dynamic Signal): es una aplicación que permite a las
+empresas comunicarse con sus empleados, y que éstos puedan comunicar y difundir el contenido
+que se les hace llegar, aportando su opinión sobre el mismo.
 \end{itemize}
 
 De este análisis parece que si un tuit proviene de un origen como Twitter web client,
-Twitter for Android, Twitter for iPhone, Twitter for iPad, Twitter Lite, Tweet Old Post
-y VoiceStorm, es bastante probable que el usuario sea una persona (y por tanto un posible
+Twitter for Android, Twitter for iPhone, Twitter for iPad o Twitter Lite,
+es bastante probable que el usuario sea una persona (y por tanto un posible
 usuario relevante para el objetivo del proyecto). A continuación mostramos
 los tuits clasificados como \lq\lq posibles personas\rq\rq y \lq\lq posibles otros\rq\rq
 atendiendo a lo expuesto anteriormente (en la sección \ref{sect:tipo_de_usuario} volveremos

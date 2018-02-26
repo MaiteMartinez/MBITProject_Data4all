@@ -58,7 +58,8 @@ un modelo del lenguaje (tal vez uno por lenguaje), y una fase de reconocimiento,
 el lenguaje de mayor verosimilitud para el texto se extrae a partir de la aplicación de los 
 distintos modelos. La clave de todos estos métodos es la modelización del lenguaje, algo que puede 
 conseguirse atendiendo a diversas características diferenciadoras: fonemas, morfología, 
-sintaxis y/o prosodia. 
+sintaxis y/o prosodia\footnote{Entonación, acento, melodía; relevante en el
+caso de detección de idioma en textos hablados.}. 
 
 La aplicación de dichas técnicas a textos provenientes de entornos web, blogs,  foros, etc. 
 no está exenta de problemas, ver por ejemplo \cite{almeida_estevez_piad}.
@@ -83,13 +84,12 @@ que pudieran servir para entrenar un modelo que determinara el lenguaje,
 hemos optado por usar un clasificador que no necesite entrenar un modelo, 
 ya que esta parte del proyecto no es la principal. Hemos encontrado
 referencias, como \cite{almeida_estevez_piad}, que apuntan al buen comportamiento de 
-clasificadores que no depende de conjuntos de entrenamiento (basados en \lq\lq small words\rq\rq,
-también denominadas \lq\lq stop words\rq\rq, y trigramas). Pero este método requiere de una implementación
-{\em ad-hoc}, y las opciones disponibles, listas para usar, nos han parecido lo suficientemente
-buenas para el objetivo que perseguimos en este apartado.
+clasificadores que no dependen de conjuntos de entrenamiento (basados en \lq\lq small words\rq\rq,
+también denominadas \lq\lq stop words\rq\rq, y trigramas). Este método requiere de una implementación
+{\em ad-hoc}.
 
-
-En el entorno de Python, hemos encontrado varios paquetes que tratan el 
+Hemos explorado las opciones disponibles, listas para usar, en el entorno de Python, 
+y hemos encontrado varios paquetes que tratan el 
 problema de detectar el idioma de un texto automáticamente. Los más
 comentados son los siguientes:
 \begin{itemize} 
@@ -109,8 +109,11 @@ que comentábamos caracteriza los textos de Twitter. Está concebido para identi
 dialectos urbanos y tratar correctamente expresiones de jerga.
 \end{itemize}
 
+Los resultados mostrados para estos modelos nos han parecido lo suficientemente
+buenos para el objetivo que perseguimos en este apartado, y hemos decidido adoptar esta solución.
 Dado el tema que nos ocupa, relacionado con ciencia de datos, la especialización 
-de {\tt equilid} y la dificultad de su instalación en el sistema disponible
+de {\tt equilid} (no esperamos un lenguaje excesivamente alterado) 
+y la dificultad de su instalación en el sistema disponible
 (usa una versión de TensorFlow que aparentemente no está desarrollada para Windows),
 nos hace descartarlo de entrada. 
 En \cite{langid2} se muestra que el comportamiento de cualquiera de los clasificadores 
@@ -151,7 +154,7 @@ idiomas diferentes. Mostramos a continuación un resumen de los resultados del c
 &\includegraphics[width=0.4\textwidth]{C:/DATOS/MBIT/Proyecto/MBITProject_Data4all/Python/images/assigned_languages_proportions.png}
 \end{tabular}
 \figcaption{Clasificación por lenguaje del texto del tuit. Del $4.2$\% de \lq\lq others\rq\rq
-hay un $2.9$\% de \lq\lq unknown\rq\rq. ¿Errores de clasificación?}
+hay un $2.9$\% de \lq\lq unknown\rq\rq.}
 \label{fig:assigned_languages} }
 
 Echando un vistazo a los resultados, aquellos que no están clasificados o que están
@@ -195,12 +198,14 @@ es una técnica que ya exploramos en la clasificación del idioma del tuit que h
 tratado en la sección anterior, y en la clasificación del perfil de usuario que trataremos
 a continuación.  
 
+En la figura \ref{fig:tuit_content_model_flow} se describen esqumáticamente los pasos que hemos llevado a cabo para construir el modelo:
+
 \myfigure{
 \includegraphics[width=0.8\textwidth]{tuit_content_model_flow}
 \figcaption{Proceso de construcción y funcionamiento del modelo para clasificación de textos.}
 \label{fig:tuit_content_model_flow} }
 
-En la figura \ref{fig:tuit_content_model_flow} se describen esqumáticamente los pasos que hemos llevado a cabo para construir el modelo:
+
 
 \subsubsection{Textos de entrenamiento}
 
@@ -279,7 +284,7 @@ Para entrenar el modelo, dividimos esta muestra codificada en un $30$\% de datos
 y con esta división procedimos a entrenar el modelo.
 
 Nos hemos decidido por un modelo de tipo Naïve Bayes, que 
-invocaremos a través del modelo {\tt MultinomialNB()} de {\tt  scikit-learn}. Después de buscar e investigar, concluimos que este algoritmo,  aunque sea uno de los algoritmos más sencillos (lo que también hace que sea más fácil de usar y comprender), tiene muy buen desempeño, velocidad de procesamiento y funciona muy bien en clasificación de textos, por ejemplo al clasificar spam.
+invocaremos a través del modelo {\tt MultinomialNB()} de {\tt  scikit-learn}. Después de buscar e investigar, concluimos que este algoritmo,  aunque sea uno de los algoritmos más sencillos (lo que también hace que sea más fácil de usar y comprender), tiene muy buen desempeño, velocidad de procesamiento y funciona muy bien en clasificación de textos, por ejemplo al clasificar spam (\cite{notas_antonio}, \cite{nltk_book}).
 
 Un modelo de clasificación de tipo Naïve Bayes, \cite{notas_antonio}, se basa en asignar
 a cada observación aquella clase o resultado de la clasificación, a la que es más probable que
@@ -297,7 +302,7 @@ Por la fórmula de Bayes,
 &=&\frac{P(X_1=x_1,X_2=x_2,X_3=x_3,\dots|Y=y_i)P(Y=y_i)}
 {\sum_jP(X_1=x_1,X_2=x_2,X_3=x_3,\dots|Y=y_j)P(Y=y_j)}
 \end{eqnarray*}
-El cálculo de probabilidades condicionadas en la muestra puede ser muy costoso. El nombre 
+El cálculo de todas estas probabilidades condicionadas en la muestra puede ser muy costoso. El nombre 
 de Naïve en el método viene de la simplificación que el método Naïve Bayes adopta para
 llevar a cabo estos cálculos, y que consiste en suponer que 
 las variables  $X_1=x_1,X_2=x_2,X_3=x_3,\dots$
@@ -330,7 +335,7 @@ usuarios y en una posterior para la ordenación de los candidatos (ver sección
 \ref{subsect:indice_h}). Por ello, hemos guardado el modelo para 
 exportarlo al fichero {\bf Python/relevance\_model/modelo\_clf.sav}
 y tener la ocasión posteriormente de importarlo de nuevo. El uso que
-vamos a hacer del modelo para clasificación es por ello  a través de 
+vamos a hacer del modelo para clasificación es entonces a través de 
 una importación:
 
 \myfigure{
@@ -341,7 +346,7 @@ entrenado en {\bf Python/relevance\_model/Clasificacion1.py}.}
 }
 
 Previo a predecir con el modelo, los textos han de pasar por el mismo proceso de 
-limpieza que aquellos textos con los que se entrenó el modelo. Por ello, antes de llamar
+limpieza que aquellos textos con los que se entrenó el modelo. Antes de llamar
 a esta función, hay que procesar los textos sobre los que vamos a aplicarlo:
 
 \myfigure{
@@ -351,13 +356,14 @@ a esta función, hay que procesar los textos sobre los que vamos a aplicarlo:
 }
 
 \subsection{Resultados del modelo de clasificación}
+\label{sect:ajuste_modelo_contenido_tuit}
 
 \begin{wrapfigure}[14]{L}{0.5\textwidth}
 \includegraphics[width=0.45\textwidth]{confussion_matrix_definition}
 \caption{Definición de la matriz de confusión.}\label{fig:confussion_matrix_definition}
 \end{wrapfigure} 
 
-Para entender mejor como está funcionando el modelo  tenemos las métricas de precision, recall, f1-score y la matriz de confusión. Antes, recordemos la terminología que vamos a usar:
+Para entender mejor como está funcionando el modelo  tenemos las métricas de precision, recall, f1-score y la matriz de confusión. Recordemos la terminología que vamos a usar:
 \begin{itemize}
 \item[$TP$]: \lq\lq true positive\rq\rq: observaciones clasificadas correctamente en la clase positiva.
 \item[$TN$] \lq\lq true negative\rq\rq: observaciones clasificadas correctamente en la clase negativa.
@@ -366,16 +372,16 @@ Para entender mejor como está funcionando el modelo  tenemos las métricas de p
 \end{itemize}
 Con esta matriz de confusión obtenemos las siguientes métricas:
 \begin{itemize}
-\item Precisión: mide cómo de preciso es el modelo para detectar positivos, y se define como
+\item Precisión: mide cómo de preciso es el modelo para detectar verdaderos positivos, y se define como
 $$Pr = \frac{TP}{TP + FP}$$ 
 
-\item Recall: mide la sensibilidad del modelo para detectar positivos 	
+\item Recall (sensibilidad): tasa de verdaderos positivos, mide la sensibilidad del modelo para detectar los positivos 	
 $$Rc = \frac{TP}{TP + FN}$$ 
 \item F1-Score: es una métrica más completa para medir la eficiencia del modelo, y se define como:
 $$F1 = \frac{2Pr Rc}{Pr+Rc}.$$ 
 \end{itemize}
 
-En nuestro caso, los resultados del entrenamiento son los siguientes:
+En nuestro caso, los resultados del modelo entrenado sobre los datos de test son los siguientes:
 
 \begin{center}
 \begin{tabular}{ccc}
@@ -422,12 +428,12 @@ de $0.842500526094$, y la siguiente curva ROC:
 \label{fig:first_ROC_curve} 
 }
 
-Aceptamos estos primeros resultados y decidimos empezar el proyecto con este modelo para hacer las pruebas hasta el final del proyecto. Sin embargo, estamos seguros de que es posible mejorarlo, principalmente en la precisión de los aciertos en la clase positivas ($TP$) y en la curva ROC. Hemos empezado a hacer pruebas con otros algoritmos y métodos de optimización (ver sección \ref{sect:mejoras_alg_clasificacion_tuit}).
+Aceptamos estos primeros resultados y decidimos empezar el proyecto con este modelo para hacer las pruebas hasta el final. Sin embargo, estamos seguros de que es posible mejorarlo, principalmente en la precisión de los aciertos en la clase positivas ($TP$) y en la curva ROC, para lo cual hemos empezado a hacer pruebas con otros algoritmos y métodos de optimización (ver sección \ref{sect:mejoras_alg_clasificacion_tuit}).
 
 
 \subsection{Resultados de la clasificación del contenido del tuit}
 De los $24128$ tuits analizados, hemos encontrado $365$ cuyo contenido hemos clasificado como
-relevante, lo que representa un $1.51$\% del total. 
+re\-le\-van\-te, lo que representa un $1.51$\% del total. 
 Los siguientes tuits fueron clasificados como no relevantes:
 
 \myfigure{
@@ -473,7 +479,7 @@ A lo largo de los procesos descritos en este capítulo y en el capítulo
 la referencia que vamos a usar para seguir a los usuarios es el número de identificación 
 de usuario de Twitter, al que nos referiremos habitualmente como id.
 Sin embargo, no es conveniente en esta etapa del proceso, quitar simplemente los id 
-repetidos. Como veremos en la sección \ref{sect:tipo_de_usuario}, los campos relevantes
+repetidos. Como veremos en la sección \ref{sect:tipo_de_usuario}, algunos campos relevantes
 para la clasificación de un usuario en persona o no persona, son 
 la url, el nombre de usuario y la descripción del usuario. Todos estos campos
 pueden ser modificados por el usuario, y podría darse el caso de haber descargado
@@ -660,8 +666,8 @@ Esta inspección, así como la realizada anteriormente a través de las nubes de
 de las figuras \ref{fig:bios_worldcloud2} y \ref{fig:bios_worldcloud},
 nos sugieren que si aparecen palabras como \lq\lq emprendedor\rq\rq, \lq\lq consultor\rq\rq, 
 \lq\lq profesional\rq\rq o \lq\lq persona\rq\rq, el  usuario es una persona. 
-Se evitó poner las palabras \lq\lq I am\rq\rq o \lq\lq soy\rq\rq porque en el caso de 
-algunos bots, en este campo aparecen textos similares a \lq\lq I am a bot\rq\rq. 
+Se evitó poner las pa\-la\-bras \lq\lq I am\rq\rq o \lq\lq soy\rq\rq porque en el caso de 
+algunos bots, en este campo aparecen textos si\-mi\-la\-res a \lq\lq I am a bot\rq\rq. 
 Por otro lado, la aparición de palabras como \lq\lq negocio\rq\rq, \lq\lq empresa\rq\rq, 
 \lq\lq compañía\rq\rq,\lq\lq somos\rq\rq, \lq\lq we\rq\rq\dots en el campo descripción o
 en el campo nombre, indicarían que el usuario es una empresa u organización.
@@ -694,7 +700,7 @@ inmediata de personas tal y como proponen en \cite{user_class}, no nos daba buen
 Ellos fundamentalmente lo utilizan para el caso en el que los usuarios no puedan ser clasificados
 por alguno de los otros criterios debido a que no comparten información sobre su \lq\lq user.name\rq\rq 
 o su \lq\lq user.description\rq\rq. Sin embargo, en nuestro caso, tan solo el $0.09$\% de los 
-usuarios (sin repetición) no tienen nada en su campo descripción y un $0.2$\% en su campo nombre y tan solo 1 que no tiene ni en su campo descripción ni en su campo nombre. Por todo ello, rechazamos el criterio directo sobre el  orígen.
+usuarios (sin repetición) no tienen nada en su campo descripción y un $0.2$\% en su campo nombre y tan solo 1 que no tiene ni en su campo descripción ni en su campo nombre. Por todo ello, rechazamos el criterio directo sobre el  origen.
 \end{enumerate}
 
 Con las observaciones anteriores se conseguía una buena clasificación de empresas y de personas. 
@@ -769,6 +775,55 @@ consideradas.
 \item La lista de aplicaciones identificadas como productoras de tuits automatizados también
 está consignada en un fichero fácilmente modificable.
 \end{itemize}
+
+\subsection{Evaluación del modelo}
+Para evaluar la precisión del modelo hemos etiquetado manualmente $1364$ de los registros que 
+teníamos que clasificar(en el fichero 
+{\bf Detect\_Pers/Filtro\_pers\_30\_01.xlsx} de nuestro repositorio de GitHub se pueden encontrar
+dichos datos), 
+y hemos calculado la matriz de confusión (figura \ref{fig:confussion_matrix_definition} 
+de la sección \ref{sect:ajuste_modelo_contenido_tuit}) de los resultados de aplicar el
+modelo de clasificación anterior a esos datos etiquetados. Es la siguiente:
+
+\begin{center}
+\begin{tabular}{r|cc}
+\multicolumn{3}{c}{\bf Matriz de confusión} \\
+\hline
+\hline
+     &$1$&$0$\\
+\hline
+$1$&$687$&$110$\\
+\hline
+$0$&$26$&$541$\\
+\hline
+\end{tabular}
+\end{center}
+
+A partir de esta matriz de confusión, y siendo el $N$ el total de las observaciones,
+calculamos las siguientes métricas para el modelo:
+\begin{itemize}
+\item Exactitud (\lq\lq accuracy\rq\rq): $\displaystyle Ac =\frac{TP+TN}{N} = 90$\%	
+\item Tasa de error (\lq\lq misclassification \rq\rq): $\displaystyle TE =\frac{FP+FN}N = 10$\%
+\item Sensibilidad (recall), tasa de verdaderos positivos:												
+$\displaystyle Rc =\frac{TP}{TP+FN}= 86,2$\%
+\item Especificidad, tasa de verdaderos negativos:														
+$\displaystyle Es =\frac{TN}{TN+FP}= 95,4$\%			
+\item Precisión:													
+$\displaystyle Pr =\frac{TP}{TP+FP}= 96,4$\%	
+\item Valor de predicción del tipo negativo:
+$\displaystyle VPN =\frac{TN}{TN+FN}= 83,1$\%										
+\end{itemize}														
+														
+Observamos que la proporción mayor de mal clasificados está en personas que no han sido 
+clasificadas como tal. Un porcentaje se debe a personas con falta de información  en su bio 
+o cuya descripción del perfil profesional no es acorde con los perfiles buscados. 
+Con estos resultados, aceptamos el modelo propuesto.
+
+% Realmente muchos de ellos se solucionan al seleccionar usuarios a través del tema tratado.
+
+% Por otro lado, \lq\lq Voicestorm\rq\rq se incluyó como filtro para clasificar como \lq\lq no persona\rq\rq
+% cuando debería ser al contrario. El impacto es pequeño ya que solo hay $26$ usuarios que utilizan este 
+% origen,  pero hay que tenerlo en cuenta para futuras clasificaciones.
 
 \subsection{Eliminación de duplicados}
 \label{subsect:duplicados2}

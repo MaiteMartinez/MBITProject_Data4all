@@ -7,7 +7,8 @@ mejorarse. A continuación, exponemos algunas de ellas:
 \item Por supuesto, implementar los recursos adecuados para que la 
 LOPD no sea un obstáculo para la comercialización del proyecto.
 \item Usar un acceso a Twitter que nos permita descargar de forma exhaustiva
-la información en relación al perfil de referencia de la oferta de trabajo.
+la información en relación al perfil de referencia de la oferta de trabajo,
+y refinar el método de búsqueda de tuits.
 \item Implementar una estructura más escalable, en la nube,
 para el manejo de un mayor volumen de datos.
 \item En la fase de selección de usuarios:
@@ -40,14 +41,16 @@ Github o un usuario activo en StackOverflow para reforzar la relevancia de su pe
 
 \section{Mejoras en el algoritmo de clasificación del contenido del tuit}
 \label{sect:mejoras_alg_clasificacion_tuit}
-En esta sección explicaremos cómo hemos comenzado a trabajar en la mejora del modelo de clasificación descrito en la sección \ref{sect:construccion_modelo_tuits_relevantes}.
+En esta sección explicaremos cómo hemos comenzado a trabajar en la mejora del modelo de 
+clasificación descrito en la sección \ref{sect:construccion_modelo_tuits_relevantes} sobre
+el mismo conjunto de $2000$ tuits etiquetados.
 Para ello, hemos hechos pruebas con el mismo modelo usado en esa sección, el Multinomial NB, y con otro modelo de clasificación, un SVM, tratando de mejorar los resultados de dos maneras:
 \begin{itemize}
 \item buscando los mejores parámetros para optimizar la eficiencia del modelo 
 (Hyperparameters Optimization) a través del método {\tt GridSearchCV()} y 
 \item cambiando el método de entrenamiento, añadiendo al
 método sencillo de separación entre entrenamiento y test (que habíamos establecido en $70/30$), 
-un algoritmo \lq\lq $K$-fold cross validation\rq\rq, que separa el conjunto de datos en $K$ 
+un algoritmo \lq\lq $K$-fold cross va\-li\-da\-tion\rq\rq, que separa el conjunto de datos en $K$ 
 \lq\lq folds\rq\rq o subconjuntos de igual tamaño y cada \lq\lq fold\rq\rq actúa una vez como 
 conjunto de test y $K-1$ veces como parte del conjunto de entrenamiento.
 \end{itemize}
@@ -84,7 +87,7 @@ parameters &$=$& $\{$'tfidf\_ngram\_range': $[(1,1),(1,2)]$,\\
 }
 
 
-La última línea es la aplicación del modelo al conjunto de test (el $30$\% de los tuits), 
+La última línea es la aplicación del modelo al conjunto de test (el $30$\% de los tuits etiquetados), 
 y obtenemos estos resultados:
 
 \begin{center}

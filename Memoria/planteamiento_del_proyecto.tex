@@ -47,7 +47,7 @@ prop\'osito general, tal vez en mayor medida personal que profesional.
 
 El objetivo de nuestro proyecto es complementar el 
 trabajo habitual de un departamento de Recursos Humanos o de un seleccionador de personal en
-los portales y redes sociales dedicados al mundo laboral, con informaci\'on laboral extra\'\i da 
+los portales y redes sociales dedicados al mundo laboral, con otra informaci\'on laboral extra\'\i da 
 de fuentes menos est\'andar, como son las redes sociales de prop\'osito general. 
 Estas redes son a menudo aprovechadas por los usuarios para difundir mensajes relacionados con su actividad
 laboral, y una descripción de su actividad en las redes es relevante desde el punto de vista 
@@ -115,10 +115,8 @@ El proceso para producir la información que ayudará al reclutador en el proces
 para la oferta en cuestión y extraer de Twitter aquellos tuits con contenido relacionado con ellos.
 \item Dados esos tuits, construir un conjunto de usuarios, que entendemos como posibles candidatos 
 a la oferta.
-\item Usar la información publicada por los usuarios para determinar el grado de adecuación a la oferta
-(serán más adecuados aquellos que hayan publicado información sobre todos los conocimientos requeridos que 
-aquellos que solo hayan publicado sobre alguno de ellos, y más relevantes aquellos más activos, según el
-número de tuits publicados sobre cada área).
+\item Usar la información publicada por los usuarios para determinar la relevancia del candidato
+en función del impacto de sus publicaciones.
 \item Estudiar la relación entre los usuarios de este conjunto, y determinar los más relevantes en sentido
 relativo (en términos de actividad en la red, cuáles son los más ``retuiteados", cuáles los más seguidos, etc.).
 \end{enumerate}
@@ -173,7 +171,7 @@ al respecto (ver, por ejemplo \url{http://www.whatishumanresource.com/hrm-text-b
 primera aproximación). Seguramente, la componente humana del profesional de RRHH no puede ser sustituida
 en numerosas circunstancias. Sin embargo, el cambio que las tecnologías digitales
 suponen en todos los ámbitos de la actividad humana sin duda impacta en las
-actividades de los departamentos de RRHH. El principal uso del Big Data y del análisis
+actividades de los departamentos de RRHH. Además, el principal uso del Big Data y del análisis
 de datos debe ser la ayuda en la toma de decisiones, idealmente en todos los niveles
 organizativos. Y es en los departamentos de RRHH donde se toman muchas decisiones sobre el
 activo más valorable que compone las organizaciones: las personas. \lq\lq People analytics\rq\rq
@@ -204,7 +202,7 @@ técnicas Big Data pueden jugar en el área de RRHH\footnote{Entre muchos otros:
 
 \noindent\url{https://www.cornerstoneondemand.com/glossary/big-data-hr }
 } y también recientes estudios que intentan formalizar y dar contexto a dicho papel \cite{libro_rrhh}.
-Entre otras, algunos de los aspectos de la labor de los departamentos de RRHH en los que
+Entre otros, algunos de los aspectos de la labor de los departamentos de RRHH en los que
 la aplicación de la tecnología Big Data puede ser de utilidad son los siguientes:
 \begin{itemize}
 \item \label{item:puntodeproyecto} Procesos de selección: incorporando datos de redes sociales y portales de empleo,
@@ -230,7 +228,7 @@ la más adecuada para cada profesional, y evaluar los beneficios de dicha formac
 las técnicas de análisis de datos pueden ayudar a identificar las causas por las que un empleado
 deja de formar parte de la misma. A partir de ahí, se pueden identificar aquellos que no 
 permanecerán en la compañía, así como aquellos factores que mejor funcionan para retener a los empleados,
-y potencialmente optimizar el uso de los recursos destinados a fidelización de empleados. 
+y potencialmente optimizar el uso de los recursos destinados a su fidelización. 
 Medir la percepción de la sociedad de la compañía como lugar de trabajo a través de las impresiones
 reflejadas en redes sociales, por ejemplo, también puede ayudar a los profesionales de RRHH a
 identificar áreas de mejora o áreas a potenciar,
@@ -283,13 +281,12 @@ Nuestro proyecto se encuadra dentro del primer punto mencionado en la página
 \pageref{item:puntodeproyecto}, y el objetivo es, como ya se ha mencionado,
 ayudar en la labor de localizar candidatos a un puesto de trabajo
 a través de la extracción y análisis de información de Twitter.
-Es por tanto un proyecto que clasificará perfiles de usuarios de Twitter.
 
-
+El nuestro es por tanto un proyecto que clasificará perfiles de usuarios de Twitter.
 Numerosos  trabajos han explorado la clasificación de usuarios de Twitter
 atendiendo a su actividad (ver \cite{tesis_mariluz} y las referencias
 incluidas, \cite{user_class5}), para descubrir 
-características de usuarios como etnia o género(\cite{user_class1}, \url{https://www.kaggle.com/crowdflower/twitter-user-gender-classification }),
+características de usuarios como etnia o género (\cite{user_class1}, \url{https://www.kaggle.com/crowdflower/twitter-user-gender-classification }),
 para clasificar la orientación política (\cite{user_class2}) o 
 detectar usuarios similares adecuados para seguir (\cite{user_class3}),
 detección de bots (\cite{user_class4}), entre otros enfoques.
@@ -382,6 +379,13 @@ del proyecto la hemos dejado deliberadamente fuera del planteamiento de este pro
 \subsection{La Ley Orgánica 15/1999, de 13 de diciembre, de Protección de Datos
 de Carácter Personal}
 \label{subsection:LOPD}
+
+Vaya por delante que ninguno de los componentes del equipo de Octopus Data Insights 
+tiene la formación ni la experiencia adecuadas para emitir un juicio sobre la aplicación
+de la LOPD en un contexto de negocio, 
+y que lo que aquí se expone es fruto de una investigación {\em ad-hoc}
+para nuestro caso. Es posible que alguna de las opiniones o valoraciones emitidas en esta
+sección no sean lo suficientemente precisas, o incluso que sean  incorrectas.
 
 La Agencia Española de Protección de Datos, AEDP, define un dato de carácter personal del siguiente modo:
 
@@ -573,9 +577,9 @@ Como consecuencia de toda esta información, entendemos lo siguiente:
 tienen carácter público.
 \item Que el carácter público de dichos datos no es óbice para poder manipularlos y distribuirlos
 a terceros, en ninguna actividad que no se circunscriba al ámbito personal o familiar.
-\item La elaboración de un proyecto de fin de máster no tiene por qué entenderse como una 
-actividad del ámbito personal o familiar, con lo cual no estaría en disposición de difundir esa información
-a terceros, salvo en las condiciones previstas en la LOPD.
+\item La elaboración de un proyecto de fin de máster no está claro
+que pueda entenderse como una actividad del ámbito personal o familiar, con lo cual no estaría en disposición de difundir esa información a terceros, salvo en las condiciones previstas en la LOPD,
+a pesar de no perseguir más fines que los didácticos.
 \item Cualquier versión comercializable de este proyecto debería contar con los mecanismos
 adecuados para obtener el consentimiento explícito de los usuarios para el uso de sus perfiles, 
 y posible inclusión en un proceso de selección de personal. Esta fase quedará fuera del plan de elaboración
