@@ -22,7 +22,7 @@ donde se consignan los datos originales (el CV, por ejemplo) y los datos a\~nadi
 \item {\bf Presentaci\'on de candidatos}: el empleador recibe el informe elaborado en el punto anterior, y selecciona aquellos
 que mejor se ajusten a sus necesidades, muy habitualmente realizando nuevas entrevistas con ellos.
 \item {\bf Decisi\'on}: es el momento en que se elige el candidato al que se se le va a ofrecer el puesto, etapa en la 
-que puede complementarse la informaci\'on recogida hasta el momento con referencias recabadas de anteriores empleadores.
+que puede complementarse la informaci\'on recogida hasta el momento con re\-fe\-ren\-cias recabadas de anteriores empleadores.
 \item {\bf Oferta}: etapa en la que la empresa presenta al candidato la oferta en firme, habitualmente por escrito, consignando 
 la voluntad de la empresa de incorporar al candidato y los detalles econ\'omicos. 
 \item {\bf Seguimiento}:  para comprobar que una vez incorporado a la empresa, tanto empleado como empleador est\'an conformes con
@@ -73,11 +73,12 @@ la información que atesora, con ciertas limitaciones, pero de forma relativamen
 \label{fig:Twitter_uso} }
 
 
-Esta red da cabida a relaciones diversas, entre usuarios de variada índole. Dado que muchos de los usuarios 
-publican información relacionada con su ocupación laboral, es natural esperar que en Twitter 
-se formen comunidades de individuos que comparten interés en diferentes aspectos de dicho ámbito.
-Nuestro propósito es definir e implementar un proceso que permita agregar información referente a 
-esas comunidades a un determinado proceso de selección.
+Esta red da cabida a relaciones diversas, entre usuarios de variada índole, y en particular
+muchos de los usuarios  publican información relacionada con su ocupación laboral. Esperamos
+detectar en Twitter comunidades de individuos que comparten interés en diferentes 
+aspectos de dicho ámbito laboral, con el objetivo de definir e 
+implementar un proceso que permita extraer información referente a 
+esas comunidades para contribuir a un determinado proceso de selección.
 
 Observemos las dos siguientes ofertas de trabajo aparecidas recientemente (Septiembre 2017) en LinkedIn,
 incluyendo los requisitos solicitados a los posibles candidatos:
@@ -380,10 +381,10 @@ del proyecto la hemos dejado deliberadamente fuera del planteamiento de este pro
 de Carácter Personal}
 \label{subsection:LOPD}
 
-Vaya por delante que ninguno de los componentes del equipo de Octopus Data Insights 
+Conviene aquí destacar que ninguno de los componentes del equipo de Octopus Data Insights 
 tiene la formación ni la experiencia adecuadas para emitir un juicio sobre la aplicación
-de la LOPD en un contexto de negocio, 
-y que lo que aquí se expone es fruto de una investigación {\em ad-hoc}
+de la LOPD en un contexto de negocio, y que lo que aquí se expone es fruto de una 
+investigación {\em ad-hoc}
 para nuestro caso. Es posible que alguna de las opiniones o valoraciones emitidas en esta
 sección no sean lo suficientemente precisas, o incluso que sean  incorrectas.
 
@@ -595,7 +596,7 @@ de Twitter o simplemente id\footnote{Con \lq\lq id\rq\rq nos referiremos al iden
 que asigna Twitter a cada usuario, que está asociado a la cuenta del usuario, \url{https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object },
 y no puede ser modificado por él salvo creando una cuenta distinta.}
 a partir del nombre de usuario, y viceversa), hemos decidido que, salvo 
-para la exploración inicial de los datos, usaremos siempre el id de Twitter de
+a efectos exploratotios de los datos, usaremos siempre el id de Twitter de
 cada usuario para mostrar los resultados. }
 
 \section{Esquema de desarrollo del proyecto}
@@ -622,7 +623,7 @@ capítulo \ref{chap:visualizacion}
 \end{enumerate}
 
 Este esquema corresponde con el esquema de la llamada general a las distintas funciones que se
-ejecutan en el proyecto (en el fichero {\bf master.py} del repositorio, ver la sección
+ejecutan en el proyecto (en el fichero {\bf Python/master.py} del repositorio, ver la sección
 \ref{sect:repositorio}):
 
 \myfigure{

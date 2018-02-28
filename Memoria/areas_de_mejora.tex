@@ -37,6 +37,8 @@ potenciales candidatos (para un servicio continuado a clientes).
 \item Añadir otras características a la clasificación final de los candidatos: por ejemplo,
 investigar a partir del nombre de usuario de Twitter si dicho usuario tiene un repositorio en 
 Github o un usuario activo en StackOverflow para reforzar la relevancia de su perfil.
+\item Mejorar el proceso cruzando la información con la contenida en otros portales como 
+LinkedIn,  Facebook, Academia.edu, ResearchGate, Glassdoor, etc..
 \end{itemize} 
 
 \section{Mejoras en el algoritmo de clasificación del contenido del tuit}
@@ -98,11 +100,11 @@ y obtenemos estos resultados:
 \multicolumn{3}{c}{\bf de confusión} \\
 \hline
 \hline
-     &$1$&$0$\\
+     &$0$&$1$\\
 \hline
-$1$&$524$&$4$\\
+$0$&$524$&$4$\\
 \hline
-$0$&$30$&$42$\\
+$1$&$30$&$42$\\
 \hline
 \end{tabular}
 
@@ -181,11 +183,11 @@ A partir de la última línea, la aplicación del modelo al conjunto de test, ob
 \multicolumn{3}{c}{\bf de confusión} \\
 \hline
 \hline
-     &$1$&$0$\\
+     &$0$&$1$\\
 \hline
-$1$&$521$&$7$\\
+$0$&$521$&$7$\\
 \hline
-$0$&$26$&$46$\\
+$1$&$26$&$46$\\
 \hline
 \end{tabular}
 

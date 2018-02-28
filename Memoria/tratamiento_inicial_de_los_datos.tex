@@ -233,10 +233,10 @@ nos obligará a incluir esta variable en el proceso de selección de usuarios, c
 \ref{sect:deteccion_idioma}.
 
 El script en el que se realiza la llamada al API de Twitter y el primer almacenamiento de los tuits
-es el script llamado {\bf download\_tweets\_stream.py}. Este script importa otros
+es el script llamado {\bf Python/download\_tweets\_stream.py}. Este script importa otros
 de nuestro proyecto, como {\bf OpenMongoDB.py}, que gestiona la conexión a la base de datos MongoDB
-en el que se almacenarán los tuits. El lanzamiento programado de la tarea se hizo con una entrada en el gestor
-de Tareas Programadas del portátil, a través del archivo {\bf streaming\_upload.bat}. Todos estos
+en el que se almacenarán los tuits. El lanzamiento programado de la tarea se hizo a través del archivo {\bf Python/streaming\_process\_keeper/streaming\_upload.bat}, con una entrada en el gestor
+de Tareas Programadas del portátil. Todos estos
 archivos se encuentran en el repositorio de GitHub descrito en la sección \ref{sect:repositorio}.
 
 
@@ -246,7 +246,7 @@ en una base de datos de MongoDB, en local.
 
 
 \section{Revisión inicial de los datos}
-Una vez almacenados los tuits, realizamos un análisis exploratorio para estudiar con qué material contábamos para el desarrollo del proyecto. Este estudio se lleva a cabo en el archivo {\bf descriptives.py} del repositorio de
+Una vez almacenados los tuits, realizamos un análisis exploratorio para estudiar con qué material contábamos para el desarrollo del proyecto. Este estudio se lleva a cabo en el archivo {\bf Python/descriptives.py} del repositorio de
 GitHub.
 
 \subsubsection{Tuits repetidos}
@@ -313,7 +313,8 @@ veces (entre 1 y 5), y que solo unos pocos han sido retuiteados muchas veces. Lo
 \figcaption{Retuits: los dos tuits más retuiteados.}
 \label{fig:tuit_mas_tuiteado} }
 
-Algo importante es que a partir de este análisis, parece que podemos encontrar usuarios relevantes 
+A partir de este análisis, una consecuencia que podemos extraer es que 
+parece que podemos encontrar usuarios relevantes 
 para nuestro proyecto no solo en los usuarios que han publicado los tuits que hemos descargado, 
 sino también en los usuarios que han publicado los tuits que los primeros han retuiteado.
 
